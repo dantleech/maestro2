@@ -1,0 +1,8 @@
+parameters:
+    level: 7
+    inferPrivatePropertyTypeFromConstructor: true
+    ignoreErrors:
+
+    paths:
+        - src
+
