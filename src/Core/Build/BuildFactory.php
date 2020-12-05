@@ -3,12 +3,17 @@
 namespace Maestro2\Core\Build;
 
 use Maestro2\Core\Config\MainNode;
+use Maestro2\Core\Config\RepositoryNode;
+use Maestro2\Core\Exception\RuntimeException;
+use Maestro2\Core\Pipeline\RepositoryPipeline;
+use Maestro2\Core\Pipeline\Repository\NullRepositoryPipeline;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Task\CommandsTask;
 use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\GitRepositoryTask;
 use Maestro2\Core\Task\HandlerFactory;
+use Maestro2\Core\Task\NullTask;
 use Maestro2\Core\Task\ProcessTask;
 use Maestro2\Core\Task\SequentialTask;
 
@@ -41,17 +46,38 @@ class BuildFactory
                     url: $repository->url(),
                     path: $cwd,
                 ),
-                new CommandsTask(
-                    commands: [
-                        [ 'php7.4', '/usr/local/bin/composer', 'install' ],
-                        [ 'php7.4', './vendor/bin/phpunit' ],
-                        [ 'php7.4', './vendor/bin/phpstan analyse' ],
-                    ],
-                    cwd: $cwd
-                ),
+                $this->resolvePipeline($repository)->build($repository)
             ]);
         }
 
         return new Build($this->queue, $tasks, $this->worker);
+    }
+
+    private function resolvePipeline(RepositoryNode $repository): RepositoryPipeline
+    {
+        return (function (?string $pipeline): RepositoryPipeline {
+            if (null === $pipeline) {
+                return new NullRepositoryPipeline();
+            }
+
+            $pipeline = str_replace('.', '\\', $pipeline);
+
+            if (!class_exists($pipeline)) {
+                throw new RuntimeException(sprintf(
+                    'Pipeline class "%s" cannot be found',
+                    $pipeline
+                ));
+            }
+            $pipeline = new $pipeline;
+            if (!$pipeline instanceof RepositoryPipeline) {
+                throw new RuntimeException(sprintf(
+                    'Class "%s" is not a repository pipeline (implementing %s)',
+                    get_class($pipeline),
+                    RepositoryPipeline::class
+                ));
+            }
+
+            return $pipeline;
+        })($repository->pipeline());
     }
 }

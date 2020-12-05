@@ -19,7 +19,9 @@ final class MainNode
     public function __construct(string $workspacePath, array $repositories)
     {
         $this->repositories = array_map(
-            fn (array $repository) => Invoke::new(RepositoryNode::class, $repository),
+            fn (array $repository): RepositoryNode => Invoke::new(RepositoryNode::class, array_merge([
+                'main' => $this,
+            ], $repository)),
             $repositories
         );
         $this->workspacePath = $workspacePath;

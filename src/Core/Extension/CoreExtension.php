@@ -15,6 +15,7 @@ use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
+use Maestro2\Core\Task\NullTaskHandler;
 use Maestro2\Core\Task\ProcessTaskHandler;
 use Maestro2\Core\Task\SequentialTaskHandler;
 use Maestro2\Maestro;
@@ -72,6 +73,7 @@ class CoreExtension implements Extension
                 new GitRepositoryHandler($container->get(ProcessRunner::class)),
                 new ProcessTaskHandler($container->get(ProcessRunner::class)),
                 new CommandsTaskHandler($container->get(Queue::class)),
+                new NullTaskHandler()
             ]);
         });
 

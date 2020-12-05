@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 class RunCommand extends Command
 {
@@ -29,6 +30,9 @@ class RunCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        Loop::setErrorHandler(function (Throwable $error) use ($output) {
+            $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
+        });
         Loop::run(function () use ($input) {
             yield $this->maestro->run($input->getArgument(self::ARG_TARGET));
         });
