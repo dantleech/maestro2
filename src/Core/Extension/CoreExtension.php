@@ -7,6 +7,8 @@ use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
 use Maestro2\Core\Process\ProcessRunner;
+use Maestro2\Core\Queue\Queue;
+use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
@@ -51,12 +53,15 @@ class CoreExtension implements Extension
         });
 
         $container->register(BuildFactory::class, function (Container $container) {
-            return new BuildFactory($container->get(HandlerFactory::class));
+            return new BuildFactory(
+                $container->get(Queue::class),
+                $container->get(Worker::class),
+            );
         });
         
         $container->register(HandlerFactory::class, function (Container $container) {
             return new HandlerFactory([
-                new SequentialTaskHandler(),
+                new SequentialTaskHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class)),
             ]);
@@ -68,6 +73,18 @@ class CoreExtension implements Extension
 
         $container->register(LoggerInterface::class, function (Container $container) {
             return new ConsoleLogger($container->get(OutputInterface::class));
+        });
+
+        $container->register(Queue::class, function (Container $container) {
+            return new Queue();
+        });
+
+        $container->register(Worker::class, function (Container $container) {
+            return new Worker(
+                $container->get(Queue::class),
+                $container->get(LoggerInterface::class),
+                $container->get(HandlerFactory::class)
+            );
         });
     }
 

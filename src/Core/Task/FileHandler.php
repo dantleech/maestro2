@@ -21,7 +21,7 @@ class FileHandler implements Handler
         return FileTask::class;
     }
 
-    public function run(HandlerFactory $handlerFactory, Task $task): Promise
+    public function run(Task $task): Promise
     {
         return call(function () use ($task) {
             assert($task instanceof FileTask);

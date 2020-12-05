@@ -8,5 +8,5 @@ interface Handler
 {
     public function taskFqn(): string;
 
-    public function run(HandlerFactory $handlerFactory, Task $task): Promise;
+    public function run(Task $task): Promise;
 }

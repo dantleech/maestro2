@@ -8,6 +8,14 @@
         {
             "name": "text-document",
             "url": "git@github.com:phpactor/text-document"
+        },
+        {
+            "name": "code-transform",
+            "url": "git@github.com:phpactor/code-transform"
+        },
+        {
+            "name": "completion",
+            "url": "git@github.com:phpactor/completion"
         }
     ]
 }

@@ -3,6 +3,8 @@
 namespace Maestro2\Core\Build;
 
 use Maestro2\Core\Config\MainNode;
+use Maestro2\Core\Queue\Enqueuer;
+use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\GitRepositoryTask;
 use Maestro2\Core\Task\HandlerFactory;
@@ -10,7 +12,7 @@ use Maestro2\Core\Task\SequentialTask;
 
 class BuildFactory
 {
-    public function __construct(private HandlerFactory $handlerFactory)
+    public function __construct(private Enqueuer $queue, private Worker $worker)
     {
     }
 
@@ -38,6 +40,6 @@ class BuildFactory
             ]);
         }
 
-        return new Build($this->handlerFactory, $tasks);
+        return new Build($this->queue, $tasks, $this->worker);
     }
 }
