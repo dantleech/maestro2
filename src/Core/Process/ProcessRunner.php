@@ -20,7 +20,7 @@ class ProcessRunner
     private int $running = 0;
     private array $locks = [];
 
-    public function __construct(private LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger, private int $concurrency = 10)
     {
     }
 
@@ -45,7 +45,11 @@ class ProcessRunner
     public function run(array $args, ?string $cwd = null) : Promise
     {
         return call(function () use ($args, $cwd) {
-            if ($this->running > 1) {
+            if ($this->running >= $this->concurrency) {
+                $this->logger->debug(sprintf(
+                    'Process concurrency limit "%s" reached, waiting',
+                    $this->concurrency
+                ));
                 $lock = new Deferred();
                 $this->locks[] = $lock;
                 yield $lock->promise();
@@ -55,7 +59,7 @@ class ProcessRunner
             $this->running++;
             $pid = yield $process->start();
 
-            $this->logger->info(sprintf(
+            $this->logger->debug(sprintf(
                 'pid:%s cwd:%s %s',
                 $pid,
                 $cwd ?? '<none>',

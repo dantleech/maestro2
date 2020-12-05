@@ -28,9 +28,10 @@ class FileHandler implements Handler
             return match ($task->type()) {
                 'directory' => $this->handleDirectory($task),
                 'file' => $this->handleFile($task),
-                default => throw new RuntimeException(sprintf(
-                    'Invalid file type "%s"', $task->type()
-                ))
+            default => throw new RuntimeException(sprintf(
+                'Invalid file type "%s"',
+                $task->type()
+            ))
             };
         });
     }
