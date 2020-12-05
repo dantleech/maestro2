@@ -21,7 +21,11 @@ class SequentialTaskHandler implements Handler
     public function run(Task $task): Promise
     {
         assert($task instanceof SequentialTask);
-        $this->taskEnqueuer->enqueueAll($task->tasks());
+        return call(function () use ($task) {
+            foreach ($task->tasks() as $task) {
+                yield $this->taskEnqueuer->enqueue($task);
+            }
+        });
 
         return new Success();
     }

@@ -23,6 +23,7 @@ class ProcessRunner
     {
         return call(function () use ($args) {
             $result = yield $this->run($args);
+
             if (0 !== $result->exitCode()) {
                 throw new ProcessFailure(sprintf(
                     '`%s` exited with code "%s"',
@@ -36,15 +37,16 @@ class ProcessRunner
     /**
      * @return Promise<ProcessResult>
      */
-    public function run(array $args): Promise
+    public function run(array $args, ?string $cwd = null) : Promise
     {
-        return call(function () use ($args) {
-            $process = new Process($args);
+        return call(function () use ($args, $cwd) {
+            $process = new Process($args, $cwd);
             $pid = yield $process->start();
 
             $this->logger->info(sprintf(
-                'pid:%s %s',
+                'pid:%s cwd: %s %s',
                 $pid,
+                $cwd ?? '<none>',
                 implode(' ', array_map('escapeshellarg', $args)),
             ));
             asyncCall(function (ProcessInputStream $stream, int $pid) {

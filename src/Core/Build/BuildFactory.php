@@ -8,6 +8,7 @@ use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\GitRepositoryTask;
 use Maestro2\Core\Task\HandlerFactory;
+use Maestro2\Core\Task\ProcessTask;
 use Maestro2\Core\Task\SequentialTask;
 
 class BuildFactory
@@ -24,18 +25,24 @@ class BuildFactory
                 path: $config->workspacePath(),
                 exists: false,
             ),
+            new FileTask(
+                type: 'directory',
+                path: $config->workspacePath(),
+                mode: 0777,
+                exists: true,
+            ),
         ];
+
         foreach ($config->repositories() as $repository) {
+            $cwd = sprintf('%s/%s', $config->workspacePath(), $repository->name());
             $tasks[] = new SequentialTask([
-                new FileTask(
-                    type: 'directory',
-                    path: $config->workspacePath(),
-                    mode: 0777,
-                    exists: true,
-                ),
                 new GitRepositoryTask(
                     url: $repository->url(),
-                    path: sprintf('%s/%s', $config->workspacePath(), $repository->name()),
+                    path: $cwd,
+                ),
+                new ProcessTask(
+                    args: [ 'composer', 'install' ],
+                    cwd: $cwd,
                 )
             ]);
         }

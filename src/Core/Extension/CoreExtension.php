@@ -2,6 +2,7 @@
 
 namespace Maestro2\Core\Extension;
 
+use Amp\Process\Internal\ProcessRunner as AmpProcessRunner;
 use Maestro2\Core\Build\BuildFactory;
 use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Extension\Command\RunCommand;
@@ -12,6 +13,7 @@ use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
+use Maestro2\Core\Task\ProcessTaskHandler;
 use Maestro2\Core\Task\SequentialTaskHandler;
 use Maestro2\Maestro;
 use Phpactor\Container\Container;
@@ -21,6 +23,7 @@ use Phpactor\MapResolver\Resolver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Maestro2\Core\Task\ProcessTask;
 
 class CoreExtension implements Extension
 {
@@ -64,6 +67,7 @@ class CoreExtension implements Extension
                 new SequentialTaskHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class)),
+                new ProcessTaskHandler($container->get(ProcessRunner::class)),
             ]);
         });
 
