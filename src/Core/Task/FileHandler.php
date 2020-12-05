@@ -8,6 +8,8 @@ use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
+use SplFileInfo;
+use Symfony\Component\Filesystem\Filesystem;
 use function Amp\call;
 
 class FileHandler implements Handler
@@ -68,16 +70,7 @@ class FileHandler implements Handler
 
         $this->logger->info(sprintf('Removing directory "%s" recursively', $path));
 
-        $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
-        );
-
-        foreach ($files as $fileinfo) {
-            $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
-            $todo($fileinfo->getRealPath());
-        }
-
-        rmdir($path);
+        $fs = new Filesystem();
+        $fs->remove($path);
     }
 }

@@ -69,9 +69,17 @@ class ProcessRunner
             asyncCall(function (ProcessInputStream $stream, int $pid) {
                 $reader = new LineReader($stream);
                 while ($line = yield $reader->readLine()) {
-                    $this->logger->info(sprintf('pid:%s %s', $pid, $line));
+                    $this->logger->info(sprintf('pid:%s ERR: %s', $pid, $line));
                 }
             }, $process->getStderr(), $pid);
+
+            asyncCall(function (ProcessInputStream $stream, int $pid) {
+                $reader = new LineReader($stream);
+                while ($line = yield $reader->readLine()) {
+                    $this->logger->info(sprintf('pid:%s OUT: %s', $pid, $line));
+                }
+            }, $process->getStdout(), $pid);
+
 
             $exitCode = yield $process->join();
 
@@ -80,6 +88,19 @@ class ProcessRunner
             if ($lock = array_shift($this->locks)) {
                 $lock->resolve();
             }
+
+            (function (string $message) use ($exitCode) {
+                if ($exitCode === 0) {
+                    $this->logger->info($message);
+                    return;
+                }
+                $this->logger->error($message);
+            })(sprintf(
+                'pid:%s %s exited with %s',
+                $pid,
+                implode(' ', array_map('escapeshellarg', $args)),
+                $exitCode,
+            ));
 
             return new ProcessResult(
                 $exitCode

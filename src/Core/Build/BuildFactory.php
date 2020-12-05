@@ -5,6 +5,7 @@ namespace Maestro2\Core\Build;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Queue\Worker;
+use Maestro2\Core\Task\CommandsTask;
 use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\GitRepositoryTask;
 use Maestro2\Core\Task\HandlerFactory;
@@ -40,10 +41,14 @@ class BuildFactory
                     url: $repository->url(),
                     path: $cwd,
                 ),
-                new ProcessTask(
-                    args: [ 'composer', '--version' ],
-                    cwd: $cwd,
-                )
+                new CommandsTask(
+                    commands: [
+                        [ 'php7.4', '/usr/local/bin/composer', 'install' ],
+                        [ 'php7.4', './vendor/bin/phpunit' ],
+                        [ 'php7.4', './vendor/bin/phpstan analyse' ],
+                    ],
+                    cwd: $cwd
+                ),
             ]);
         }
 

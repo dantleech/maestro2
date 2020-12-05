@@ -5,11 +5,13 @@ namespace Maestro2\Core\Extension;
 use Amp\Process\Internal\ProcessRunner as AmpProcessRunner;
 use Maestro2\Core\Build\BuildFactory;
 use Maestro2\Core\Config\ConfigLoader;
+use Maestro2\Core\Extension\Command\ReplCommand;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
+use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
@@ -30,11 +32,12 @@ class CoreExtension implements Extension
     /**
      * {@inheritDoc}
      */
-    public function load(ContainerBuilder $container)
+    public function load(ContainerBuilder $container): void
     {
         $container->register(OutputInterface::class, function (Container $container) {
             return new ConsoleOutput();
         });
+
         $container->register(RunCommand::class, function (Container $container) {
             return new RunCommand(
                 $container->get(Maestro::class)
@@ -68,6 +71,7 @@ class CoreExtension implements Extension
                 new FileHandler($container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class)),
                 new ProcessTaskHandler($container->get(ProcessRunner::class)),
+                new CommandsTaskHandler($container->get(Queue::class)),
             ]);
         });
 

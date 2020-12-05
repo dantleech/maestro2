@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+use Maestro2\Core\Extension\Command\ReplCommand;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\CoreExtension;
 use Phpactor\Container\PhpactorContainer;
@@ -27,7 +28,7 @@ $container = PhpactorContainer::fromExtensions([
 ]);
 
 $application->addCommands([
-    $container->get(RunCommand::class)
+    $container->get(RunCommand::class),
 ]);
 $application->run(new ArgvInput(), $container->get(OutputInterface::class));
 

@@ -17,13 +17,13 @@ class Maestro
     /**
      * @param array<string> $targets
      */
-    public function run(array $targets): Promise
+    public function run(array $targets = []): Promise
     {
         $config = $this->loader->load();
 
         return call(function () use ($config, $targets) {
             foreach ($targets as $target) {
-                $build = $this->factory->createBuild($config, $target);
+                $build = $this->factory->createBuild($config);
                 yield $build->start();
             }
         });
