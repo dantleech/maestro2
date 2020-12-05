@@ -18,25 +18,33 @@ class Worker
 {
     private array $running = [];
 
+    private bool $isRunning = true;
+
     public function __construct(
         private Dequeuer $dequeuer,
         private LoggerInterface $logger,
-        private HandlerFactory $handlerFactory,
-        private int $concurrency = 10
+        private HandlerFactory $handlerFactory
     ) {
     }
 
     public function start(): Promise
     {
         return call(function () {
-            $this->logger->info(sprintf('Worker starting with max concurrnecy %s', $this->concurrency));
             $promises = [];
             $id = 0;
+
+            asyncCall(function () {
+                while ($this->isRunning) {
+                    $this->logger->debug(sprintf('Running %s tasks', count($this->running)));
+                    yield delay(1000);
+                }
+            });
 
             while (true) {
                 $task = $this->dequeuer->dequeue();
 
                 if (null === $task && $id > 0 && count($this->running) === 0) {
+                    $this->isRunning = false;
                     break;
                 }
 

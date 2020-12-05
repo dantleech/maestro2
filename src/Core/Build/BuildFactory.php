@@ -41,7 +41,7 @@ class BuildFactory
                     path: $cwd,
                 ),
                 new ProcessTask(
-                    args: [ 'composer', 'install' ],
+                    args: [ 'composer', '--version' ],
                     cwd: $cwd,
                 )
             ]);
