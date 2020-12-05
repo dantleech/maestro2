@@ -11,6 +11,7 @@ use Maestro2\Core\Extension\Logger\ConsoleLogger;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
+use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
@@ -41,7 +42,8 @@ class CoreExtension implements Extension
 
         $container->register(RunCommand::class, function (Container $container) {
             return new RunCommand(
-                $container->get(Maestro::class)
+                $container->get(Maestro::class),
+                $container->get(ReportManager::class)
             );
         });
 
@@ -71,7 +73,7 @@ class CoreExtension implements Extension
                 new SequentialTaskHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class)),
-                new ProcessTaskHandler($container->get(ProcessRunner::class)),
+                new ProcessTaskHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new CommandsTaskHandler($container->get(Queue::class)),
                 new NullTaskHandler()
             ]);
@@ -95,6 +97,10 @@ class CoreExtension implements Extension
                 $container->get(LoggerInterface::class),
                 $container->get(HandlerFactory::class)
             );
+        });
+
+        $container->register(ReportManager::class, function (Container $container) {
+            return new ReportManager();
         });
     }
 
