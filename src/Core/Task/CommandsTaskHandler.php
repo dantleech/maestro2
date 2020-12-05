@@ -23,10 +23,15 @@ class CommandsTaskHandler implements Handler
         assert($task instanceof CommandsTask);
         return call(function () use ($task) {
             foreach ($task->commands() as $command) {
-                yield $this->enqueuer->enqueue(new ProcessTask(
+                $result = yield $this->enqueuer->enqueue(new ProcessTask(
+                    group: $task->group(),
                     args: $command,
                     cwd: $task->cwd()
                 ));
+
+                if ($task->failFast() && false === $result->isOk()) {
+                    break;
+                }
             }
         });
     }

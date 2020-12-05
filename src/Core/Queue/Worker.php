@@ -35,7 +35,11 @@ class Worker
 
             asyncCall(function () {
                 while ($this->isRunning) {
-                    $this->logger->debug(sprintf('Running %s tasks', count($this->running)));
+                    $this->logger->debug(sprintf(
+                        'Running %s tasks, memory %sb',
+                        count($this->running),
+                        number_format(memory_get_usage(true))
+                    ));
                     yield delay(1000);
                 }
             });

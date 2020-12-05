@@ -11,6 +11,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
 
 class RunCommand extends Command
@@ -41,19 +42,30 @@ class RunCommand extends Command
             yield $this->maestro->run($input->getArgument(self::ARG_TARGET));
         });
 
+        $style = new SymfonyStyle($input, $output);
+
+        $output->writeln('');
         foreach ($this->reportProvider->groups() as $group) {
-            $output->writeln($group->name());
-            $table = new Table($output);
+            $style->section($group->name());
             foreach ($group->reports() as $report) {
-                $table->addRow([
+                $output->writeln(sprintf(
+                    "  %s %s",
                     match ($report->level()) {
-                        Report::LEVEL_OK => '<info>OK!</info>',
-                        Report::LEVEL_FAIL => '<error>NOK</error>',
+                        Report::LEVEL_OK => '<fg=green>✔</>',
+                        Report::LEVEL_FAIL => '<fg=red>✘</>',
                     },
-                    $report->title()
-                ]);
+                        $report->title()
+                ));
+                if ($report->body()) {
+                    $style->block(
+                        trim($report->body()),
+                        escape: false,
+                        padding: true,
+                        prefix: '    ',
+                    );
+                }
             }
-            $table->render();
+            $output->writeln('');
         }
 
         return 0;

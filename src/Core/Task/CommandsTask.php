@@ -4,7 +4,12 @@ namespace Maestro2\Core\Task;
 
 class CommandsTask implements Task
 {
-    public function __construct(private array $commands, private ?string $cwd = null)
+    public function __construct(
+        private array $commands,
+        private string $group = 'commands',
+        private bool $failFast = false,
+        private ?string $cwd = null,
+    )
     {
     }
 
@@ -16,5 +21,15 @@ class CommandsTask implements Task
     public function cwd(): ?string
     {
         return $this->cwd;
+    }
+
+    public function group(): string
+    {
+        return $this->group;
+    }
+
+    public function failFast(): bool
+    {
+        return $this->failFast;
     }
 }

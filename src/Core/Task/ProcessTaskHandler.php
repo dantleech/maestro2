@@ -36,16 +36,19 @@ class ProcessTaskHandler implements Handler
     private function publishReport(ProcessTask $task, ProcessResult $result): void
     {
         match ($result->exitCode()) {
-            0 => $this->reportPublisher->publish('result', Report::ok(sprintf(
+            0 => $this->reportPublisher->publish($task->group(), Report::ok(sprintf(
                     '%s exited with code %s',
                     implode(' ', $task->args()),
                     $result->exitCode()
             ))),
-            default => $this->reportPublisher->publish('result', Report::fail(sprintf(
+            default => $this->reportPublisher->publish($task->group(), Report::fail(
+                title: sprintf(
                     '%s exited with code %s',
                     implode(' ', $task->args()),
                     $result->exitCode()
-            ))),
+                ),
+                body: $result->stdErr()
+            )),
         };
     }
 }

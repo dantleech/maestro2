@@ -20,7 +20,7 @@ class ProcessRunner
     private int $running = 0;
     private array $locks = [];
 
-    public function __construct(private LoggerInterface $logger, private int $concurrency = 10)
+    public function __construct(private LoggerInterface $logger, private int $concurrency = 4)
     {
     }
 
@@ -66,19 +66,19 @@ class ProcessRunner
                 implode(' ', array_map('escapeshellarg', $args)),
             ));
 
-            asyncCall(function (ProcessInputStream $stream, int $pid) {
-                $reader = new LineReader($stream);
-                while ($line = yield $reader->readLine()) {
-                    $this->logger->info(sprintf('pid:%s ERR: %s', $pid, $line));
-                }
-            }, $process->getStderr(), $pid);
+            //asyncCall(function (ProcessInputStream $stream, int $pid) {
+            //    $reader = new LineReader($stream);
+            //    while ($line = yield $reader->readLine()) {
+            //        $this->logger->info(sprintf('pid:%s ERR: %s', $pid, $line));
+            //    }
+            //}, $process->getStderr(), $pid);
 
-            asyncCall(function (ProcessInputStream $stream, int $pid) {
-                $reader = new LineReader($stream);
-                while ($line = yield $reader->readLine()) {
-                    $this->logger->info(sprintf('pid:%s OUT: %s', $pid, $line));
-                }
-            }, $process->getStdout(), $pid);
+            //asyncCall(function (ProcessInputStream $stream, int $pid) {
+            //    $reader = new LineReader($stream);
+            //    while ($line = yield $reader->readLine()) {
+            //        $this->logger->info(sprintf('pid:%s OUT: %s', $pid, $line));
+            //    }
+            //}, $process->getStdout(), $pid);
 
 
             $exitCode = yield $process->join();
@@ -103,7 +103,9 @@ class ProcessRunner
             ));
 
             return new ProcessResult(
-                $exitCode
+                $exitCode,
+                '',//yield buffer($process->getStdout()),
+                '',//yield buffer($process->getStderr()),
             );
         });
     }
