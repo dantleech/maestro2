@@ -1,0 +1,48 @@
+<?php
+
+namespace Maestro2\Core\Config;
+
+use DTL\Invoke\Invoke;
+use Maestro2\Core\Config\Exception\ConfigError;
+
+final class MainNode
+{
+    /**
+     * @var array<RepositoryNode>
+     */
+    private array $repositories;
+    private string $workspacePath;
+
+    /**
+     * @param array<array<string, mixed>> $repositories
+     */
+    public function __construct(string $workspacePath, array $repositories)
+    {
+        $this->repositories = array_map(
+            fn (array $repository) => Invoke::new(RepositoryNode::class, $repository),
+            $repositories
+        );
+        $this->workspacePath = $workspacePath;
+    }
+
+    /**
+     * @param array<string, mixed> $main
+     */
+    public function fromArray(array $main): self
+    {
+        return Invoke::new(self::class, $main);
+    }
+
+    /**
+     * @return array<RepositoryNode>
+     */
+    public function repositories(): array
+    {
+        return $this->repositories;
+    }
+
+    public function workspacePath(): string
+    {
+        return $this->workspacePath;
+    }
+}

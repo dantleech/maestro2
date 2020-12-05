@@ -2,6 +2,9 @@ parameters:
     level: 7
     inferPrivatePropertyTypeFromConstructor: true
     ignoreErrors:
+       -  '/Unable to resolve the template type.*/'
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
 
     paths:
         - src

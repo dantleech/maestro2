@@ -1,0 +1,13 @@
+{
+    "workspacePath": "/home/daniel/www/dantleech/maestro-two/var",
+    "repositories": [
+        {
+            "name": "worse-reflection",
+            "url": "git@github.com:phpactor/worse-reflection"
+        },
+        {
+            "name": "text-document",
+            "url": "git@github.com:phpactor/text-document"
+        }
+    ]
+}

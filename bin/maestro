@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+
+use Maestro2\Core\Extension\Command\RunCommand;
+use Maestro2\Core\Extension\CoreExtension;
+use Phpactor\Container\PhpactorContainer;
+use Phpactor\Extension\Console\ConsoleExtension;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\OutputInterface;
+
+if (is_file(__DIR__ . '/../vendor/autoload.php')) {
+    $autoloader = require __DIR__ . '/../vendor/autoload.php';
+} elseif (is_file(__DIR__ . '/../../../autoload.php')) {
+    $autoloader = require __DIR__ . '/../../../autoload.php';
+} else {
+    echo 'Cannot find the vendor directory, have you executed composer install?' . PHP_EOL;
+    echo 'See https://getcomposer.org to get Composer.' . PHP_EOL;
+    exit(1);
+}
+
+
+$application = new Application('Maestro 2');
+$container = PhpactorContainer::fromExtensions([
+    CoreExtension::class
+]);
+
+$application->addCommands([
+    $container->get(RunCommand::class)
+]);
+$application->run(new ArgvInput(), $container->get(OutputInterface::class));
+

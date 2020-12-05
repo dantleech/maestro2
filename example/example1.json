@@ -1,0 +1,14 @@
+{
+    "rootStage": "initial",
+    "repositories": {
+        "phpactor": {
+            "url": "https://github.com/phpactor/phpactor"
+        },
+        "indexer-extension": {
+            "url": "https://github.com/phpactor/indexer-extension"
+        },
+        "class-to-file": {
+            "url": "https://github.com/phpactor/class-to-file"
+        }
+    }
+}
