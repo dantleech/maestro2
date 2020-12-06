@@ -37,6 +37,7 @@ class RunCommand extends Command
     {
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
+            throw $error;
         });
         Loop::run(function () use ($input) {
             yield $this->maestro->run($input->getArgument(self::ARG_TARGET));

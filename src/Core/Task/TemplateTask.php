@@ -9,7 +9,8 @@ final class TemplateTask implements Task
         private string $target,
         private array $vars = [],
         private int $mode = 0644,
-        private bool $overwrite = false
+        private bool $overwrite = false,
+        private string $group = 'template',
     ) {
     }
 
@@ -36,5 +37,10 @@ final class TemplateTask implements Task
     public function overwrite(): bool
     {
         return $this->overwrite;
+    }
+
+    public function group(): string
+    {
+        return $this->group;
     }
 }

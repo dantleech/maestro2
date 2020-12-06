@@ -87,7 +87,7 @@ class CoreExtension implements Extension
                 new ProcessTaskHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new CommandsTaskHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
-                new TemplateHandler($container->get(WorkspacePathResolver::class), $container->get(Environment::class))
+                new TemplateHandler($container->get(WorkspacePathResolver::class), $container->get(Environment::class), $container->get(ReportManager::class))
             ]);
         });
 

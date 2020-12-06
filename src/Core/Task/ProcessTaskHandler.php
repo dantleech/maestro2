@@ -43,11 +43,12 @@ class ProcessTaskHandler implements Handler
             ))),
             default => $this->reportPublisher->publish($task->group(), Report::fail(
                 title: sprintf(
-                    '%s exited with code %s',
+                    '%s in "%s" exited with code %s',
                     implode(' ', $task->args()),
+                    $task->cwd(),
                     $result->exitCode()
                 ),
-                body: $result->stdErr()
+                body: sprintf("OUT: \n%s\nERR: %s", $result->stdOut(), $result->stdErr())
             )),
         };
     }

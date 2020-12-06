@@ -73,4 +73,13 @@ class FileHandler implements Handler
         $fs = new Filesystem();
         $fs->remove($path);
     }
+
+    private function handleFile(FileTask $task): void
+    {
+        if (file_exists($task->path()) && $task->exists() === false) {
+            $fs = new Filesystem();
+            $fs->remove($path);
+            return;
+        }
+    }
 }

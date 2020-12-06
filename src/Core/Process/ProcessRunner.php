@@ -104,8 +104,8 @@ class ProcessRunner
 
             return new ProcessResult(
                 $exitCode,
-                '',//yield buffer($process->getStdout()),
-                '',//yield buffer($process->getStderr()),
+                yield buffer($process->getStdout()),
+                yield buffer($process->getStderr()),
             );
         });
     }

@@ -6,13 +6,20 @@ use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Path\WorkspacePathResolver;
+use Maestro2\Core\Report\Publisher\NullPublisher;
+use Maestro2\Core\Report\Report;
+use Maestro2\Core\Report\ReportPublisher;
+use Maestro2\Core\Util\PermissionUtil;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 class TemplateHandler implements Handler
 {
-    public function __construct(private WorkspacePathResolver $pathResolver, private Environment $twig)
+    private ReportPublisher $publisher;
+
+    public function __construct(private WorkspacePathResolver $pathResolver, private Environment $twig, ?ReportPublisher $publisher = null)
     {
+        $this->publisher = $publisher ?: new NullPublisher();
     }
 
     public static function createForBasePath(string $basePath): self
@@ -58,6 +65,14 @@ class TemplateHandler implements Handler
                 )
             );
             chmod($path, $task->mode());
+
+            // required?
+            clearstatcache(true);
+
+            $this->publisher->publish(
+                $task->group(),
+                Report::ok(sprintf('Applied "%s" to "%s" (mode: %s)', $task->template(), $path, PermissionUtil::formatOctal($task->mode())))
+            );
         })($this->pathResolver->resolve($task->target()));
         return new Success();
     }
