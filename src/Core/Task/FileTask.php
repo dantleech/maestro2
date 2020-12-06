@@ -8,7 +8,8 @@ class FileTask implements Task
         private string $path,
         private string $type = 'file',
         private bool $exists = true,
-        private int $mode = 0777
+        private int $mode = 0755,
+        private ?string $content = null,
     ) {
     }
 
@@ -30,5 +31,10 @@ class FileTask implements Task
     public function exists(): bool
     {
         return $this->exists;
+    }
+
+    public function content(): ?string
+    {
+        return $this->content;
     }
 }

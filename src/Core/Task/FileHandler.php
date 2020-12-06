@@ -40,6 +40,11 @@ class FileHandler implements Handler
 
     private function handleDirectory(FileTask $task): void
     {
+        if ($task->content()) {
+            throw new TaskError(
+                'Content provided but file type is "directory"'
+            );
+        }
         if (file_exists($task->path())) {
             if ($task->exists() === false) {
                 $this->removeDirectory($task->path());
@@ -48,7 +53,7 @@ class FileHandler implements Handler
 
             if (!is_dir($task->path())) {
                 throw new TaskError(sprintf(
-                    'Expected "%s" to be a file, but it\'s not',
+                    'Expected "%s" to be a directory, but it\'s not',
                     $task->path()
                 ));
             }
@@ -68,6 +73,7 @@ class FileHandler implements Handler
             ));
         }
 
+
         $this->logger->info(sprintf('Removing directory "%s" recursively', $path));
 
         $fs = new Filesystem();
@@ -78,8 +84,20 @@ class FileHandler implements Handler
     {
         if (file_exists($task->path()) && $task->exists() === false) {
             $fs = new Filesystem();
-            $fs->remove($path);
+            $fs->remove($task->path());
             return;
+        }
+
+        $createDir = new FileTask(
+            path: dirname($task->path()),
+            type: 'directory',
+            exists: true
+        );
+
+        $this->handleDirectory($createDir);
+
+        if ($task->exists()) {
+            file_put_contents($task->path(), $task->content() ?? '');
         }
     }
 }

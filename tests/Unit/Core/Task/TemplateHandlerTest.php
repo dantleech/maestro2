@@ -12,11 +12,6 @@ use function Amp\Promise\wait;
 
 class TemplateHandlerTest extends IntegrationTestCase
 {
-    protected function setUp(): void
-    {
-        $this->workspace()->reset();
-    }
-
     public function testAppliesTemplate(): void
     {
         $this->workspace()->reset();

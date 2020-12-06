@@ -16,6 +16,10 @@
         steps:
 {% include "example/pipeline/template/ci-setup.yml.twig" %}
 
+            - name: "Add PHPUnit matcher"
+              run: echo "::add-matcher::${{ '{{' }} runner.tool_cache {{ '}}' }}/phpunit.json"
+
+
 {% if 'php-cs-fixer' in jobs %}
             - name: "Remove friendsofphp/php-cs-fixer"
               run: composer remove --dev friendsofphp/php-cs-fixer --no-update

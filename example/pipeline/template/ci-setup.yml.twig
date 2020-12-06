@@ -1,5 +1,11 @@
             - name: "Checkout code"
               uses: actions/checkout@v2.3.3
+{% if checkoutParams %}
+              with:
+{% for key, value in checkoutParams %}
+                  {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
 
             - name: "Install PHP with extensions"
               uses: shivammathur/setup-php@2.7.0
@@ -7,7 +13,3 @@
                   coverage: "none"
                   php-version: "${{ '{{' }} matrix.php-version {{ '}}' }}"
                   tools: composer:v2
-
-            - name: "Add PHPUnit matcher"
-              run: echo "::add-matcher::${{ '{{' }} runner.tool_cache {{ '}}' }}/phpunit.json"
-

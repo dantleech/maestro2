@@ -17,10 +17,7 @@
             "url": "git@github.com:phpactor/worse-reflection",
             "vars": {
                 "jobs": [
-                    "php-cs-fixer",
-                    "phpbench",
-                    "phpstan",
-                    "tests"
+                    "phpbench"
                 ]
             }
         },

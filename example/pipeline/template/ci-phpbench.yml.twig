@@ -1,5 +1,42 @@
-    phpbench:
-        name: "PHPBench ${{ '{{' }} matrix.php-version {{ '}}' }} + ${{ '{{' }} matrix.dependency {{ '}}' }}"
+{% set phpbenchArgs = "--progress=travis --report=aggregate --report=env --ansi --retry-threshold=5 --ansi --iterations=30" %}
+
+    phpbench-master:
+        name: "PHPBench Baseline ${{ '{{' }} matrix.php-version {{ '}}' }} + ${{ '{{' }} matrix.dependency {{ '}}' }}"
+
+        runs-on: ubuntu-latest
+
+        continue-on-error: ${{ '{{' }} matrix.allow-failures {{ '}}' }}
+
+        strategy:
+            matrix:
+                php-version: 
+                    - '{{ phpVersions|last }}'
+                allow-failures: [false]
+
+        steps:
+{% include "example/pipeline/template/ci-setup.yml.twig" with {"checkoutParams": {
+    "ref": "master"
+}} %}
+
+            - name: "Composer install"
+              uses: "ramsey/composer-install@v1"
+              with:
+                  dependency-versions: "${{ '{{' }} matrix.dependency {{ '}}' }}"
+
+            - name: "Run Benchmarks"
+              run: vendor/bin/phpbench run {{ phpbenchArgs }} --tag=master 
+
+            - name: Save results
+              uses: actions/upload-artifact@v2
+              with:
+                  name: results
+                  path: .phpbench
+
+
+    phpbench-pr:
+        needs:
+            - "phpbench-master"
+        name: "PHPBench Regression ${{ '{{' }} matrix.php-version {{ '}}' }} + ${{ '{{' }} matrix.dependency {{ '}}' }}"
 
         runs-on: ubuntu-latest
 
@@ -13,6 +50,11 @@
 
         steps:
 {% include "example/pipeline/template/ci-setup.yml.twig" %}
+            - name: Download master results
+              uses: actions/download-artifact@v2
+              with:
+                  name: results
+                  path: .phpbench
 
             - name: "Composer install"
               uses: "ramsey/composer-install@v1"
@@ -20,5 +62,4 @@
                   dependency-versions: "${{ '{{' }} matrix.dependency {{ '}}' }}"
 
             - name: "Run Benchmarks"
-              run: vendor/bin/phpbench run --progress=dots --report=aggregate --ansi
-
+              run: vendor/bin/phpbench run {{ phpbenchArgs }} --uuid=tag:master --ansi
