@@ -83,7 +83,7 @@ class CoreExtension implements Extension
             return new HandlerFactory([
                 new SequentialTaskHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
-                new GitRepositoryHandler($container->get(ProcessRunner::class)),
+                new GitRepositoryHandler($container->get(ProcessRunner::class), $container->get(WorkspacePathResolver::class)),
                 new ProcessTaskHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new CommandsTaskHandler($container->get(Queue::class)),
                 new NullTaskHandler(),

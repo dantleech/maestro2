@@ -7,26 +7,6 @@
             "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"
         },
         {
-            "name": "language-server",
-            "url": "git@github.com:phpactor/language-server",
-            "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"
-        },
-        {
-            "name": "language-server-extension",
-            "url": "git@github.com:phpactor/language-server-extension",
-            "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"
-        },
-        {
-            "name": "worse-reflection-extension",
-            "url": "git@github.com:phpactor/worse-reflection-extension",
-            "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"
-        },
-        {
-            "name": "text-document",
-            "url": "git@github.com:phpactor/text-document",
-            "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"
-        },
-        {
             "name": "code-transform",
             "url": "git@github.com:phpactor/code-transform",
             "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"

@@ -1,0 +1,14 @@
+name: "CI"
+
+on:
+    pull_request:
+    push:
+        branches:
+            - 'master'
+
+env:
+    fail-fast: true
+    TZ: "Europe/Paris"
+
+jobs:
+{% for job in jobs %}{% include "example/pipeline/template/ci-" ~ job ~ ".yml.twig" %}{% endfor %}

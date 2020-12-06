@@ -23,21 +23,26 @@ class BuildFactory
     {
     }
 
+
+
     public function createBuild(MainNode $config): Build
     {
-        $tasks = [
-            new FileTask(
-                type: 'directory',
-                path: $config->workspacePath(),
-                exists: false,
-            ),
-            new FileTask(
-                type: 'directory',
-                path: $config->workspacePath(),
-                mode: 0777,
-                exists: true,
-            ),
-        ];
+        $tasks = [];
+
+        $tasks[] = new FileTask(
+
+            type: 'directory',
+
+            path: $config->workspacePath(),
+            exists: false,
+        );
+
+        $tasks[] = new FileTask(
+            type: 'directory',
+            path: $config->workspacePath(),
+            mode: 0777,
+            exists: true,
+        );
 
         foreach ($config->repositories() as $repository) {
             $cwd = sprintf('%s/%s', $config->workspacePath(), $repository->name());

@@ -10,11 +10,11 @@ class WorkspacePathResolver
     {
     }
 
-    public function resolve(string $path): string
+    public function resolve(string $path, ?string $cwd = null): string
     {
         if (Path::isAbsolute($path)) {
             return $path;
         }
-        return Path::join([$this->workspacePath, $path ]);
+        return Path::join([$cwd ?: $this->workspacePath, $path ]);
     }
 }
