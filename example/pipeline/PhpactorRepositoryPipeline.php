@@ -8,10 +8,22 @@ use Maestro2\Core\Task\CommandsTask;
 use Maestro2\Core\Task\GitRepositoryTask;
 use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\Task;
+use Maestro2\Core\Task\TemplateTask;
 
 class PhpactorRepositoryPipeline implements RepositoryPipeline
 {
     public function build(RepositoryNode $repository): Task
+    {
+        return new SequentialTask([
+            new TemplateTask(
+                template: '.maestro/workflow/ci.yml.twig',
+                target: '.github/workflows/ci.yml',
+            )
+            $this->buildCi($repository)
+        ]);
+    }
+
+    private function buildCi(RepositoryNode $repository)
     {
         return new SequentialTask(array_map(function (string $phpVersion) use ($repository) {
             return new CommandsTask(
