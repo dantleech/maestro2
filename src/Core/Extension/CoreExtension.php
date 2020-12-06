@@ -18,6 +18,7 @@ use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
+use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\NullTaskHandler;
 use Maestro2\Core\Task\ProcessTaskHandler;
 use Maestro2\Core\Task\SequentialTaskHandler;
@@ -87,7 +88,8 @@ class CoreExtension implements Extension
                 new ProcessTaskHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new CommandsTaskHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
-                new TemplateHandler($container->get(WorkspacePathResolver::class), $container->get(Environment::class), $container->get(ReportManager::class))
+                new TemplateHandler($container->get(WorkspacePathResolver::class), $container->get(Environment::class), $container->get(ReportManager::class)),
+                new JsonMergeHandler()
             ]);
         });
 

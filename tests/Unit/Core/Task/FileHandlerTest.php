@@ -6,14 +6,17 @@ use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\FileTask;
+use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\HandlerFactory;
+use Maestro2\Core\Task\NullTaskHandler;
 use Maestro2\Tests\IntegrationTestCase;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use SplFileInfo;
 use function Amp\Promise\wait;
 
-class FileHandlerTest extends IntegrationTestCase
+class FileHandlerTest extends HandlerTestCase
 {
     public function testCreatesDirectory(): void
     {
@@ -102,10 +105,19 @@ class FileHandlerTest extends IntegrationTestCase
         self::assertFileExists($this->workspace()->path('barfoo/foobar/file'));
     }
 
-    private function runTask(FileTask $fileTask)
+    public function testCreatesFileWithPermission(): void
     {
-        return wait((new HandlerFactory([
-            new FileHandler(new NullLogger())
-        ]))->handlerFor($fileTask)->run($fileTask));
+        $this->runTask(new FileTask(
+            path: $this->workspace()->path('README.md'),
+            type: 'file',
+            mode: 0777
+        ));
+        $info = new SplFileInfo($this->workspace()->path('README.md'));
+        self::assertEquals('0777', substr(sprintf('%o', fileperms($this->workspace()->path('README.md'))), -4));
+    }
+
+    protected function createHandler(): Handler
+    {
+        return new FileHandler(new NullLogger());
     }
 }

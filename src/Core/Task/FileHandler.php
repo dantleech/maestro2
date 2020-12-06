@@ -82,7 +82,10 @@ class FileHandler implements Handler
 
     private function handleFile(FileTask $task): void
     {
-        if (file_exists($task->path()) && $task->exists() === false) {
+        if ($task->exists() === false) {
+            if (file_exists($task->path())) {
+                return;
+            }
             $fs = new Filesystem();
             $fs->remove($task->path());
             return;
@@ -96,8 +99,7 @@ class FileHandler implements Handler
 
         $this->handleDirectory($createDir);
 
-        if ($task->exists()) {
-            file_put_contents($task->path(), $task->content() ?? '');
-        }
+        file_put_contents($task->path(), $task->content() ?? '');
+        chmod($task->path(), $task->mode());
     }
 }

@@ -11,10 +11,9 @@
         steps:
 {% include "example/pipeline/template/ci-setup.yml.twig" %}
             -
-                name: "Composer install"
                 uses: "ramsey/composer-install@v1"
                 with:
-                    composer-options: "--no-scripts"
+                    dependency-versions: "${{ '{{' }} matrix.dependency {{ '}}' }}"
 
             -
                 name: "Run friendsofphp/php-cs-fixer"

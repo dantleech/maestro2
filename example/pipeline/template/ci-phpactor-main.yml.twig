@@ -1,0 +1,19 @@
+{% include "example/pipeline/template/_step.yml.twig" with {stepName: "PHPUnit"} %}
+
+            - name: "PHPUnit"
+              run: ./vendor/bin/phpunit
+
+{% include "example/pipeline/template/_step.yml.twig" with {stepName: "Dependencies", phpVersions: [ phpVersions|last ] } %}
+
+            - name: "Set git author"
+              run: git config --global user.email "test@example.com"
+            - name: "Set git username"
+              run: git config --global user.name "Phpactor"
+            - name: "Test Dependencies"
+              run: config/travis/testdeps
+
+
+{% include "example/pipeline/template/_step.yml.twig" with {stepName: "Extensions", phpVersions: [ phpVersions|last ]} %}
+
+            - name: "Test Extensions"
+              run: config/travis/testexts

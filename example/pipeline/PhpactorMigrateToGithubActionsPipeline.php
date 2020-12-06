@@ -7,6 +7,7 @@ use Maestro2\Core\Pipeline\RepositoryPipeline;
 use Maestro2\Core\Task\CommandsTask;
 use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\GitRepositoryTask;
+use Maestro2\Core\Task\NullTask;
 use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\Task;
 use Maestro2\Core\Task\TemplateTask;
@@ -17,20 +18,10 @@ class PhpactorMigrateToGithubActionsPipeline implements RepositoryPipeline
     {
         return new SequentialTask([
             new FileTask(
-                path: '.travis.yml',
-                exists: false
+                path: $repository->path('.travis.yml'),
+                exists: false,
             ),
-            new TemplateTask(
-                group: $repository->name(),
-                template: 'example/pipeline/template/ci.yml.twig',
-                target: $repository->path('.github/workflows/ci.yml'),
-                overwrite: true,
-                vars: [
-                    'name' => $repository->name(),
-                    'jobs' => $repository->vars()->get('jobs'),
-                    'phpVersions' => $repository->vars()->get('phpVersions')
-                ]
-            ),
+            (new GithubActionsPipeline())->build($repository),
             new CommandsTask(
                 group: $repository->name(),
                 commands: [
@@ -44,21 +35,5 @@ class PhpactorMigrateToGithubActionsPipeline implements RepositoryPipeline
                 failFast: true
             ),
         ]);
-    }
-
-    private function buildCi(RepositoryNode $repository): Task
-    {
-        return new SequentialTask(array_map(function (string $phpVersion) use ($repository) {
-            return new CommandsTask(
-                group: $repository->name(),
-                commands: [
-                    [ $phpVersion, '/usr/local/bin/composer', 'install' ],
-                    [ $phpVersion, 'vendor/bin/phpunit' ],
-                    [ $phpVersion, 'vendor/bin/phpstan', 'analyse' ],
-                ],
-                cwd: $repository->path(),
-                failFast: true
-            );
-        }, [ 'php7.3', 'php7.4', 'php8.0' ]));
     }
 }

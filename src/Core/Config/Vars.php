@@ -12,7 +12,7 @@ class Vars
 
     public function get(string $key): mixed
     {
-        if (!isset($this->vars[$key])) {
+        if (!array_key_exists($key, $this->vars)) {
             throw new RuntimeException(sprintf(
                 'Variable "%s" not found in scope, known variables "%s"',
                 $key,

@@ -9,7 +9,10 @@
             "php-cs-fixer",
             "phpstan",
             "tests"
-        ]
+        ],
+        "requireDev": [],
+        "phpstanArgs": null,
+        "dependencies": "highest"
     },
     "repositories": [
         {
@@ -17,8 +20,32 @@
             "url": "git@github.com:phpactor/worse-reflection",
             "vars": {
                 "jobs": [
-                    "phpbench"
+                    "phpbench",
+                    "php-cs-fixer",
+                    "phpstan",
+                    "tests"
                 ]
+            }
+        },
+        {
+            "name": "phpactor",
+            "url": "git@github.com:phpactor/phpactor",
+            "vars": {
+                "jobs": [
+                    "phpstan",
+                    "phpactor-main"
+                ],
+                "phpstanArgs": "--level=1 lib",
+                "dependencies": "locked"
+            }
+        },
+        {
+            "name": "text-document",
+            "url": "git@github.com:phpactor/text-document",
+            "vars": {
+                "requireDev": {
+                    "infection/infection": "^20.0"
+                }
             }
         },
         {
@@ -27,7 +54,10 @@
         },
         {
             "name": "completion",
-            "url": "git@github.com:phpactor/completion"
+            "url": "git@github.com:phpactor/completion",
+            "vars": {
+                "phpstanArgs": "lib"
+            }
         }
     ]
 }
