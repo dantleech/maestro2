@@ -18,13 +18,11 @@ class Maestro
     /**
      * @param array<string> $targets
      */
-    public function run(array $targets = []): Promise
+    public function run(string $pipeline): Promise
     {
-        return call(function () use ($targets) {
-            foreach ($targets as $target) {
-                $build = $this->factory->createBuild($this->mainNode);
-                yield $build->start();
-            }
+        return call(function () use ($pipeline) {
+            $build = $this->factory->createBuild($pipeline);
+            yield $build->start();
         });
     }
 }

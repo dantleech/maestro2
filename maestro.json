@@ -3,18 +3,15 @@
     "repositories": [
         {
             "name": "worse-reflection",
-            "url": "git@github.com:phpactor/worse-reflection",
-            "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"
+            "url": "git@github.com:phpactor/worse-reflection"
         },
         {
             "name": "code-transform",
-            "url": "git@github.com:phpactor/code-transform",
-            "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"
+            "url": "git@github.com:phpactor/code-transform"
         },
         {
             "name": "completion",
-            "url": "git@github.com:phpactor/completion",
-            "pipeline": "Maestro2.Examples.Pipeline.PhpactorRepositoryPipeline"
+            "url": "git@github.com:phpactor/completion"
         }
     ]
 }

@@ -74,6 +74,7 @@ class CoreExtension implements Extension
 
         $container->register(BuildFactory::class, function (Container $container) {
             return new BuildFactory(
+                $container->get(MainNode::class),
                 $container->get(Queue::class),
                 $container->get(Worker::class),
             );

@@ -19,70 +19,66 @@ use Maestro2\Core\Task\SequentialTask;
 
 class BuildFactory
 {
-    public function __construct(private Enqueuer $queue, private Worker $worker)
+    public function __construct(private MainNode $config, private Enqueuer $queue, private Worker $worker)
     {
     }
 
 
 
-    public function createBuild(MainNode $config): Build
+    public function createBuild(?string $pipeline = null): Build
     {
         $tasks = [];
 
         $tasks[] = new FileTask(
-
             type: 'directory',
-
-            path: $config->workspacePath(),
+            path: $this->config->workspacePath(),
             exists: false,
         );
 
         $tasks[] = new FileTask(
             type: 'directory',
-            path: $config->workspacePath(),
+            path: $this->config->workspacePath(),
             mode: 0777,
             exists: true,
         );
 
-        foreach ($config->repositories() as $repository) {
-            $cwd = sprintf('%s/%s', $config->workspacePath(), $repository->name());
+        foreach ($this->config->repositories() as $repository) {
+            $cwd = sprintf('%s/%s', $this->config->workspacePath(), $repository->name());
             $tasks[] = new SequentialTask([
                 new GitRepositoryTask(
                     url: $repository->url(),
                     path: $cwd,
                 ),
-                $this->resolvePipeline($repository)->build($repository)
+                $this->resolvePipeline($pipeline ?: $repository->pipeline())->build($repository)
             ]);
         }
 
         return new Build($this->queue, $tasks, $this->worker);
     }
 
-    private function resolvePipeline(RepositoryNode $repository): RepositoryPipeline
+    private function resolvePipeline(?string $pipeline): RepositoryPipeline
     {
-        return (function (?string $pipeline): RepositoryPipeline {
-            if (null === $pipeline) {
-                return new NullRepositoryPipeline();
-            }
+        if (null === $pipeline) {
+            return new NullRepositoryPipeline();
+        }
 
-            $pipeline = str_replace('.', '\\', $pipeline);
+        $pipeline = str_replace('.', '\\', $pipeline);
 
-            if (!class_exists($pipeline)) {
-                throw new RuntimeException(sprintf(
-                    'Pipeline class "%s" cannot be found',
-                    $pipeline
-                ));
-            }
-            $pipeline = new $pipeline;
-            if (!$pipeline instanceof RepositoryPipeline) {
-                throw new RuntimeException(sprintf(
-                    'Class "%s" is not a repository pipeline (implementing %s)',
-                    get_class($pipeline),
-                    RepositoryPipeline::class
-                ));
-            }
+        if (!class_exists($pipeline)) {
+            throw new RuntimeException(sprintf(
+                'Pipeline class "%s" cannot be found',
+                $pipeline
+            ));
+        }
+        $pipeline = new $pipeline;
+        if (!$pipeline instanceof RepositoryPipeline) {
+            throw new RuntimeException(sprintf(
+                'Class "%s" is not a repository pipeline (implementing %s)',
+                get_class($pipeline),
+                RepositoryPipeline::class
+            ));
+        }
 
-            return $pipeline;
-        })($repository->pipeline());
+        return $pipeline;
     }
 }

@@ -17,8 +17,7 @@ use Throwable;
 class RunCommand extends Command
 {
     const NAME = 'run';
-    const ARG_TARGET = 'target';
-
+    const ARG_PIPELINE = 'pipeline';
 
     public function __construct(
         private Maestro $maestro,
@@ -30,7 +29,7 @@ class RunCommand extends Command
     protected function configure(): void
     {
         $this->setName(self::NAME);
-        $this->addArgument(self::ARG_TARGET, InputArgument::IS_ARRAY, 'Targets to run');
+        $this->addArgument(self::ARG_PIPELINE, InputArgument::REQUIRED, 'Pipeline name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -40,7 +39,7 @@ class RunCommand extends Command
             throw $error;
         });
         Loop::run(function () use ($input) {
-            yield $this->maestro->run($input->getArgument(self::ARG_TARGET));
+            yield $this->maestro->run($input->getArgument(self::ARG_PIPELINE));
         });
 
         $style = new SymfonyStyle($input, $output);
