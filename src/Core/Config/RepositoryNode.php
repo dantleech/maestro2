@@ -9,12 +9,14 @@ class RepositoryNode
     private string $name;
     private string $url;
     private MainNode $main;
+    private array $vars;
 
-    public function __construct(MainNode $main, string $name, string $url)
+    public function __construct(MainNode $main, string $name, string $url, array $vars = [])
     {
         $this->name = $name;
         $this->url = $url;
         $this->main = $main;
+        $this->vars = $vars;
     }
 
     public function name(): string
@@ -41,5 +43,10 @@ class RepositoryNode
     public function main(): MainNode
     {
         return $this->main;
+    }
+
+    public function vars(): Vars
+    {
+        return $this->main()->vars()->merge(new Vars($this->vars));
     }
 }

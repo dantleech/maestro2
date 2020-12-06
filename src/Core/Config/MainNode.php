@@ -16,7 +16,7 @@ final class MainNode
     /**
      * @param array<array<string, mixed>> $repositories
      */
-    public function __construct(string $workspacePath, array $repositories)
+    public function __construct(string $workspacePath, array $repositories, private array $vars)
     {
         $this->repositories = array_map(
             fn (array $repository): RepositoryNode => Invoke::new(RepositoryNode::class, array_merge([
@@ -46,5 +46,10 @@ final class MainNode
     public function workspacePath(): string
     {
         return $this->workspacePath;
+    }
+
+    public function vars(): Vars
+    {
+        return new Vars($this->vars);
     }
 }

@@ -1,0 +1,24 @@
+    phpbench:
+        name: "PHPBench ${{ '{{' }} matrix.php-version {{ '}}' }} + ${{ '{{' }} matrix.dependency {{ '}}' }}"
+
+        runs-on: ubuntu-latest
+
+        continue-on-error: ${{ '{{' }} matrix.allow-failures {{ '}}' }}
+
+        strategy:
+            matrix:
+                php-version: 
+                    - '{{ phpVersions|last }}'
+                allow-failures: [false]
+
+        steps:
+{% include "example/pipeline/template/ci-setup.yml.twig" %}
+
+            - name: "Composer install"
+              uses: "ramsey/composer-install@v1"
+              with:
+                  dependency-versions: "${{ '{{' }} matrix.dependency {{ '}}' }}"
+
+            - name: "Run Benchmarks"
+              run: vendor/bin/phpbench run --progress=dots --report=aggregate --ansi
+

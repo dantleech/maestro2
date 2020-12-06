@@ -27,10 +27,8 @@ class PhpactorMigrateToGithubActionsPipeline implements RepositoryPipeline
                 overwrite: true,
                 vars: [
                     'name' => $repository->name(),
-                    'phpVersions' => [
-                        '7.3',
-                        '7.4',
-                    ]
+                    'jobs' => $repository->vars()->get('jobs'),
+                    'phpVersions' => $repository->vars()->get('phpVersions')
                 ]
             ),
             new CommandsTask(
@@ -40,7 +38,7 @@ class PhpactorMigrateToGithubActionsPipeline implements RepositoryPipeline
                     [ 'git',  'rm',  '.travis.yml' ],
                     [ 'git',  'add',  '.github' ],
                     [ 'git',  'commit',  '-m', 'Add github actions' ],
-                    //[ 'git',  'push',  'origin', 'HEAD', '-f' ],
+                    [ 'git',  'push',  'origin', 'HEAD', '-f' ],
                 ],
                 cwd: $repository->path(),
                 failFast: true

@@ -1,9 +1,28 @@
 {
     "workspacePath": "/home/daniel/www/dantleech/maestro-two/var",
+    "vars": {
+        "phpVersions": [
+            "7.3",
+            "7.4"
+        ],
+        "jobs": [
+            "php-cs-fixer",
+            "phpstan",
+            "tests"
+        ]
+    },
     "repositories": [
         {
             "name": "worse-reflection",
-            "url": "git@github.com:phpactor/worse-reflection"
+            "url": "git@github.com:phpactor/worse-reflection",
+            "vars": {
+                "jobs": [
+                    "php-cs-fixer",
+                    "phpbench",
+                    "phpstan",
+                    "tests"
+                ]
+            }
         },
         {
             "name": "code-transform",
