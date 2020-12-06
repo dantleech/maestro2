@@ -16,9 +16,9 @@ class PhpactorRepositoryPipeline implements RepositoryPipeline
     {
         return new SequentialTask([
             new TemplateTask(
-                template: '.maestro/workflow/ci.yml.twig',
-                target: '.github/workflows/ci.yml',
-            )
+                template: 'example/pipeline/template/ci.yml.twig',
+                target: $repository->path('.github/workflows/ci.yml'),
+            ),
             $this->buildCi($repository)
         ]);
     }

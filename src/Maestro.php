@@ -6,11 +6,12 @@ use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Build\BuildFactory;
 use Maestro2\Core\Config\ConfigLoader;
+use Maestro2\Core\Config\MainNode;
 use function Amp\call;
 
 class Maestro
 {
-    public function __construct(private ConfigLoader $loader, private BuildFactory $factory)
+    public function __construct(private MainNode $mainNode, private BuildFactory $factory)
     {
     }
 
@@ -19,11 +20,9 @@ class Maestro
      */
     public function run(array $targets = []): Promise
     {
-        $config = $this->loader->load();
-
-        return call(function () use ($config, $targets) {
+        return call(function () use ($targets) {
             foreach ($targets as $target) {
-                $build = $this->factory->createBuild($config);
+                $build = $this->factory->createBuild($this->mainNode);
                 yield $build->start();
             }
         });

@@ -25,6 +25,8 @@ if (is_file(__DIR__ . '/../vendor/autoload.php')) {
 $application = new Application('Maestro 2');
 $container = PhpactorContainer::fromExtensions([
     CoreExtension::class
+], [
+    'core.path.config' => getcwd(),
 ]);
 
 $application->addCommands([

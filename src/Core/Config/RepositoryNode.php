@@ -2,6 +2,8 @@
 
 namespace Maestro2\Core\Config;
 
+use Webmozart\PathUtil\Path;
+
 class RepositoryNode
 {
     private string $name;
@@ -22,9 +24,15 @@ class RepositoryNode
         return $this->name;
     }
 
-    public function path(): string
+    public function path(?string $subPath = null): string
     {
-        return $this->main()->workspacePath() . '/' . $this->name();
+        return (function (string $path) use ($subPath) {
+            if ($subPath) {
+                return Path::join([$path, $subPath]);
+            }
+
+            return $path;
+        })(Path::join([$this->main()->workspacePath(), $this->name() ]));
     }
 
     public function url(): string

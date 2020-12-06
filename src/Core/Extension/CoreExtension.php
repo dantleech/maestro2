@@ -5,9 +5,11 @@ namespace Maestro2\Core\Extension;
 use Amp\Process\Internal\ProcessRunner as AmpProcessRunner;
 use Maestro2\Core\Build\BuildFactory;
 use Maestro2\Core\Config\ConfigLoader;
+use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Extension\Command\ReplCommand;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
+use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
@@ -19,6 +21,7 @@ use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\NullTaskHandler;
 use Maestro2\Core\Task\ProcessTaskHandler;
 use Maestro2\Core\Task\SequentialTaskHandler;
+use Maestro2\Core\Task\TemplateHandler;
 use Maestro2\Maestro;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
@@ -28,6 +31,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Maestro2\Core\Task\ProcessTask;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class CoreExtension implements Extension
 {
@@ -49,9 +54,15 @@ class CoreExtension implements Extension
 
         $container->register(Maestro::class, function (Container $container) {
             return new Maestro(
-                $container->get(ConfigLoader::class),
+                $container->get(MainNode::class),
                 $container->get(BuildFactory::class)
             );
+        });
+
+        $container->register(MainNode::class, function (Container $container) {
+            return (function (ConfigLoader $loader) {
+                return $loader->load();
+            })($container->get(ConfigLoader::class));
         });
 
         $container->register(ConfigLoader::class, function (Container $container) {
@@ -75,7 +86,8 @@ class CoreExtension implements Extension
                 new GitRepositoryHandler($container->get(ProcessRunner::class)),
                 new ProcessTaskHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new CommandsTaskHandler($container->get(Queue::class)),
-                new NullTaskHandler()
+                new NullTaskHandler(),
+                new TemplateHandler($container->get(WorkspacePathResolver::class), $container->get(Environment::class))
             ]);
         });
 
@@ -102,12 +114,28 @@ class CoreExtension implements Extension
         $container->register(ReportManager::class, function (Container $container) {
             return new ReportManager();
         });
+
+        $container->register(Environment::class, function (Container $container) {
+            return new Environment(new FilesystemLoader([ $container->getParameter('core.path.config') ]));
+        });
+
+        $container->register(WorkspacePathResolver::class, function (Container $container) {
+            return new WorkspacePathResolver($this->getConfig($container)->workspacePath());
+        });
     }
 
     /**
      * {@inheritDoc}
      */
-    public function configure(Resolver $schema)
+    public function configure(Resolver $schema): void
     {
+        $schema->setRequired([
+            'core.path.config'
+        ]);
+    }
+
+    private function getConfig(Container $container): MainNode
+    {
+        return $container->get(MainNode::class);
     }
 }
