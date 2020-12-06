@@ -25,7 +25,7 @@ class BuildFactory
 
 
 
-    public function createBuild(?string $pipeline = null): Build
+    public function createBuild(string $pipeline, array $repos = []): Build
     {
         $tasks = [];
 
@@ -42,14 +42,20 @@ class BuildFactory
             exists: true,
         );
 
-        foreach ($this->config->repositories() as $repository) {
+        $repositories = $this->config->repositories();
+
+        if ($repos) {
+            $repositories = array_filter($repositories, fn (RepositoryNode $node) => in_array($node->name(), $repos));
+        }
+
+        foreach ($repositories as $repository) {
             $cwd = sprintf('%s/%s', $this->config->workspacePath(), $repository->name());
             $tasks[] = new SequentialTask([
                 new GitRepositoryTask(
                     url: $repository->url(),
                     path: $cwd,
                 ),
-                $this->resolvePipeline($pipeline ?: $repository->pipeline())->build($repository)
+                $this->resolvePipeline($pipeline)->build($repository)
             ]);
         }
 

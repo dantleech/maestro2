@@ -10,6 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
@@ -18,6 +19,7 @@ class RunCommand extends Command
 {
     const NAME = 'run';
     const ARG_PIPELINE = 'pipeline';
+    const OPT_REPO = 'repo';
 
     public function __construct(
         private Maestro $maestro,
@@ -30,6 +32,7 @@ class RunCommand extends Command
     {
         $this->setName(self::NAME);
         $this->addArgument(self::ARG_PIPELINE, InputArgument::REQUIRED, 'Pipeline name');
+        $this->addOption(self::OPT_REPO, null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Include this repository');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -39,7 +42,10 @@ class RunCommand extends Command
             throw $error;
         });
         Loop::run(function () use ($input) {
-            yield $this->maestro->run($input->getArgument(self::ARG_PIPELINE));
+            yield $this->maestro->run(
+                pipeline: $input->getArgument(self::ARG_PIPELINE),
+                repos: $input->getOption(self::OPT_REPO)
+            );
         });
 
         $style = new SymfonyStyle($input, $output);

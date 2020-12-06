@@ -54,7 +54,6 @@ class CoreExtension implements Extension
 
         $container->register(Maestro::class, function (Container $container) {
             return new Maestro(
-                $container->get(MainNode::class),
                 $container->get(BuildFactory::class)
             );
         });
