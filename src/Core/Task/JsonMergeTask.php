@@ -2,9 +2,11 @@
 
 namespace Maestro2\Core\Task;
 
+use Closure;
+
 class JsonMergeTask implements Task
 {
-    public function __construct(private $path, private array $data)
+    public function __construct(private $path, private array $data = [], private ?Closure $filter = null)
     {
     }
 
@@ -16,5 +18,10 @@ class JsonMergeTask implements Task
     public function path()
     {
         return $this->path;
+    }
+
+    public function filter(): ?Closure
+    {
+        return $this->filter;
     }
 }

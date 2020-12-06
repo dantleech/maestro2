@@ -13,10 +13,10 @@ abstract class HandlerTestCase extends IntegrationTestCase
 {
     abstract protected function createHandler(): Handler;
 
-    protected function runTask(Task $fileTask)
+    protected function runTask(Task $task)
     {
         return wait((new HandlerFactory([
             $this->createHandler()
-        ]))->handlerFor($fileTask)->run($fileTask));
+        ]))->handlerFor($task)->run($task));
     }
 }

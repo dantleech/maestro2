@@ -37,11 +37,16 @@ class JsonMergeHandler implements Handler
                 ), 0, $e);
             }
         }
+        $data = $this->mergeData($existingData, $task->data());
+
+        if ($filter = $task->filter()) {
+            $data = $filter($existingData);
+        }
 
         file_put_contents(
             $task->path(),
             json_encode(
-                $this->mergeData($existingData, $task->data()),
+                $data,
                 JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES
             ),
         );

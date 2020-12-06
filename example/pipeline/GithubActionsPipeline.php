@@ -5,6 +5,7 @@ namespace Maestro2\Examples\Pipeline;
 use Maestro2\Core\Config\RepositoryNode;
 use Maestro2\Core\Pipeline\RepositoryPipeline;
 use Maestro2\Core\Task\FileTask;
+use Maestro2\Core\Task\JsonMergeTask;
 use Maestro2\Core\Task\NullTask;
 use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\Task;
