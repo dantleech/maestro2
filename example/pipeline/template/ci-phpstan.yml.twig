@@ -1,0 +1,22 @@
+    phpstan:
+        name: "PHPStan (${{ '{{' }} matrix.php-version {{ '}}' }})"
+
+        runs-on: "ubuntu-latest"
+
+        strategy:
+            matrix:
+                php-version:
+                    - '{{ phpVersions|first }}'
+
+        steps:
+{% include "example/pipeline/template/ci-setup.yml.twig" %}
+            -
+                name: "Composer install"
+                uses: "ramsey/composer-install@v1"
+                with:
+                    composer-options: "--no-scripts"
+
+            -
+                name: "Run phpstan/phpstan"
+                run: "vendor/bin/phpstan analyse"
+

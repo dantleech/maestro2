@@ -1,0 +1,30 @@
+    tests:
+        name: "PHP ${{ '{{' }} matrix.php-version {{ '}}' }} + ${{ '{{' }} matrix.dependency {{ '}}' }}"
+
+        runs-on: ubuntu-latest
+
+        continue-on-error: ${{ '{{' }} matrix.allow-failures {{ '}}' }}
+
+        strategy:
+            matrix:
+                php-version: 
+{% for phpVersion in phpVersions %}
+                    - '{{ phpVersion }}'
+{% endfor %}
+                allow-failures: [false]
+
+        steps:
+{% include "example/pipeline/template/ci-setup.yml.twig" %}
+
+{% if 'php-cs-fixer' in jobs %}
+            - name: "Remove friendsofphp/php-cs-fixer"
+              run: composer remove --dev friendsofphp/php-cs-fixer --no-update
+{% endif %}
+
+            - name: "Composer install"
+              uses: "ramsey/composer-install@v1"
+              with:
+                  dependency-versions: "${{ '{{' }} matrix.dependency {{ '}}' }}"
+
+            - name: "Run tests with PHPUnit"
+              run: vendor/bin/phpunit
