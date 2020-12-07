@@ -11,6 +11,4 @@ interface Enqueuer
      * @return Promise<mixed>
      */
     public function enqueue(Task $task): Promise;
-
-    public function enqueueAll(array $tasks): void;
 }

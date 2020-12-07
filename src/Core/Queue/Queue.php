@@ -23,13 +23,6 @@ class Queue implements Enqueuer, Dequeuer
         return $deferred->promise();
     }
 
-    public function enqueueAll(array $tasks): void
-    {
-        foreach ($tasks as $task) {
-            $this->enqueue($task);
-        }
-    }
-
     public function dequeue(): ?Task
     {
         return array_shift($this->tasks);

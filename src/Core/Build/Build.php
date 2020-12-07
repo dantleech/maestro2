@@ -25,7 +25,9 @@ class Build
     public function start(): Promise
     {
         return call(function (array $tasks) {
-            $this->queue->enqueueAll($tasks);
+            foreach ($tasks as $task) {
+                $this->queue->enqueue($task);
+            }
             yield $this->worker->start();
         }, $this->tasks);
     }

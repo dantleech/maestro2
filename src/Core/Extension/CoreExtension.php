@@ -2,7 +2,6 @@
 
 namespace Maestro2\Core\Extension;
 
-use Amp\Process\Internal\ProcessRunner as AmpProcessRunner;
 use Maestro2\Core\Build\BuildFactory;
 use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Config\MainNode;
@@ -10,11 +9,13 @@ use Maestro2\Core\Extension\Command\ReplCommand;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
 use Maestro2\Core\Path\WorkspacePathResolver;
+use Maestro2\Core\Process\AmpProcessRunner;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CommandsTaskHandler;
+use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
@@ -24,6 +25,8 @@ use Maestro2\Core\Task\ProcessTaskHandler;
 use Maestro2\Core\Task\ReplaceLineHandler;
 use Maestro2\Core\Task\SequentialTaskHandler;
 use Maestro2\Core\Task\TemplateHandler;
+use Maestro2\Core\Task\YamlHandler;
+use Maestro2\Core\Task\YamlTask;
 use Maestro2\Maestro;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
@@ -91,12 +94,14 @@ class CoreExtension implements Extension
                 new NullTaskHandler(),
                 new TemplateHandler($container->get(WorkspacePathResolver::class), $container->get(Environment::class), $container->get(ReportManager::class)),
                 new JsonMergeHandler(),
-                new ReplaceLineHandler($container->get(ReportManager::class))
+                new YamlHandler(),
+                new ReplaceLineHandler($container->get(ReportManager::class)),
+                new ComposerHandler($container->get(Queue::class), $container->get(ProcessRunner::class)),
             ]);
         });
 
         $container->register(ProcessRunner::class, function (Container $container) {
-            return new ProcessRunner($container->get(LoggerInterface::class));
+            return new AmpProcessRunner($container->get(LoggerInterface::class));
         });
 
         $container->register(LoggerInterface::class, function (Container $container) {
