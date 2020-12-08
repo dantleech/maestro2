@@ -15,7 +15,7 @@ class TestProcessRunner implements ProcessRunner
     {
         if (!$process = array_shift($this->ran)) {
             throw new RuntimeException(
-                'No test processes were invoked'
+                'No more test processes on stack'
             );
         }
 
