@@ -2,6 +2,7 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Process\TestProcessRunner;
@@ -131,6 +132,7 @@ EOT
 
     public function testUpdate(): void
     {
+        $this->testRunner->push(ProcessResult::ok());
         $this->runTask(new ComposerTask(
             path: $this->workspace()->path(),
             update: true

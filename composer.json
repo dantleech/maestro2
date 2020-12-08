@@ -36,12 +36,14 @@
         "twig/twig": "9999999-dev",
         "phpactor/test-utils": "^1.0",
         "symfony/yaml": "9999999-dev",
-        "symfony/filesystem": "9999999-dev"
+        "symfony/filesystem": "9999999-dev",
+        "composer/semver": "3.x-dev"
     },
     "require-dev": {
         "vimeo/psalm": "^4.2",
         "phpunit/phpunit": "^9.4",
         "squizlabs/php_codesniffer": "3.*",
-        "doctrine/coding-standard": "9999999-dev"
+        "doctrine/coding-standard": "9999999-dev",
+        "symfony/process": "9999999-dev"
     }
 }

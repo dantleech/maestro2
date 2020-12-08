@@ -31,11 +31,9 @@ class AmpProcessRunner implements ProcessRunner
 
             if (0 !== $result->exitCode()) {
                 throw new ProcessFailure(sprintf(
-                    '`%s` exited with code "%s" in "%s": %s',
-                    implode(' ', array_map('escapeshellarg', $args)),
-                    $result->exitCode(),
-                    $cwd ?? '<none>',
-                    $result->stdOut()
+                    '`%s` exited with code "%s"',
+                    implode(' ', $args),
+                    $result->exitCode()
                 ));
             }
 

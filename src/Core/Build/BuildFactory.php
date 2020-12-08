@@ -5,8 +5,8 @@ namespace Maestro2\Core\Build;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Config\RepositoryNode;
 use Maestro2\Core\Exception\RuntimeException;
-use Maestro2\Core\Pipeline\RepositoryPipeline;
-use Maestro2\Core\Pipeline\Repository\NullRepositoryPipeline;
+use Maestro2\Core\Stage\RepositoryStage;
+use Maestro2\Core\Stage\Stage\NullRepositoryStage;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Task\CommandsTask;
@@ -62,10 +62,10 @@ class BuildFactory
         return new Build($this->queue, $tasks, $this->worker);
     }
 
-    private function resolvePipeline(?string $pipeline): RepositoryPipeline
+    private function resolvePipeline(?string $pipeline): RepositoryStage
     {
         if (null === $pipeline) {
-            return new NullRepositoryPipeline();
+            return new NullRepositoryStage();
         }
 
         $pipeline = str_replace('.', '\\', $pipeline);
@@ -77,11 +77,11 @@ class BuildFactory
             ));
         }
         $pipeline = new $pipeline;
-        if (!$pipeline instanceof RepositoryPipeline) {
+        if (!$pipeline instanceof RepositoryStage) {
             throw new RuntimeException(sprintf(
                 'Class "%s" is not a repository pipeline (implementing %s)',
                 get_class($pipeline),
-                RepositoryPipeline::class
+                RepositoryStage::class
             ));
         }
 
