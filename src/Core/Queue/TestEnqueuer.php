@@ -6,7 +6,7 @@ use Amp\Promise;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\Task;
 
-final class TestEnqueuer implements Enqueuer
+final class TestEnqueuer implements Enqueuer, Dequeuer
 {
     public function __construct(private HandlerFactory $handlerFactory)
     {
@@ -25,7 +25,12 @@ final class TestEnqueuer implements Enqueuer
         return $this->handlerFactory->handlerFor($task)->run($task);
     }
 
-    public function enqueueAll(array $tasks): void
+    public function dequeue(): ?Task
+    {
+        return null;
+    }
+
+    public function resolve(Task $task, $result): void
     {
     }
 }

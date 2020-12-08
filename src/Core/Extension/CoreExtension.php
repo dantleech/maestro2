@@ -12,11 +12,14 @@ use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Process\AmpProcessRunner;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
+use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\FileHandler;
+use Maestro2\Core\Task\GitCommitHandler;
+use Maestro2\Core\Task\GitCommitTask;
 use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\JsonMergeHandler;
@@ -97,6 +100,7 @@ class CoreExtension implements Extension
                 new YamlHandler(),
                 new ReplaceLineHandler($container->get(ReportManager::class)),
                 new ComposerHandler($container->get(Queue::class), $container->get(ProcessRunner::class)),
+                new GitCommitHandler($container->get(ProcessRunner::class)),
             ]);
         });
 
@@ -106,10 +110,6 @@ class CoreExtension implements Extension
 
         $container->register(LoggerInterface::class, function (Container $container) {
             return new ConsoleLogger($container->get(OutputInterface::class));
-        });
-
-        $container->register(Queue::class, function (Container $container) {
-            return new Queue();
         });
 
         $container->register(Worker::class, function (Container $container) {
