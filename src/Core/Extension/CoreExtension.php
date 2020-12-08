@@ -40,6 +40,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Maestro2\Core\Task\ProcessTask;
 use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 
 class CoreExtension implements Extension
@@ -49,10 +51,6 @@ class CoreExtension implements Extension
      */
     public function load(ContainerBuilder $container): void
     {
-        $container->register(OutputInterface::class, function (Container $container) {
-            return new ConsoleOutput();
-        });
-
         $container->register(RunCommand::class, function (Container $container) {
             return new RunCommand(
                 $container->get(Maestro::class),
@@ -95,7 +93,12 @@ class CoreExtension implements Extension
                 new ProcessTaskHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new CommandsTaskHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
-                new TemplateHandler($container->get(WorkspacePathResolver::class), $container->get(Environment::class), $container->get(ReportManager::class)),
+                new TemplateHandler(
+                    $container->get(WorkspacePathResolver::class),
+                    $container->get(Environment::class),
+                    $container->get(ArrayLoader::class),
+                    $container->get(ReportManager::class)
+                ),
                 new JsonMergeHandler(),
                 new YamlHandler(),
                 new ReplaceLineHandler($container->get(ReportManager::class)),
@@ -125,7 +128,16 @@ class CoreExtension implements Extension
         });
 
         $container->register(Environment::class, function (Container $container) {
-            return new Environment(new FilesystemLoader([ $container->getParameter('core.path.config') ]));
+            return new Environment(
+                new ChainLoader([
+                    $container->get(ArrayLoader::class),
+                    new FilesystemLoader([ $container->getParameter('core.path.config') ])
+                ])
+            );
+        });
+
+        $container->register(ArrayLoader::class, function (Container $container) {
+            return new ArrayLoader();
         });
 
         $container->register(WorkspacePathResolver::class, function (Container $container) {

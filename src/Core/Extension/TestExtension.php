@@ -10,6 +10,8 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\MapResolver\Resolver;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class TestExtension implements Extension
 {
@@ -18,6 +20,10 @@ class TestExtension implements Extension
      */
     public function load(ContainerBuilder $container)
     {
+        $container->register(OutputInterface::class, function (Container $container) {
+            return new BufferedOutput();
+        });
+
         $container->register(Queue::class, function (Container $container) {
             return new TestQueue($container);
         });
