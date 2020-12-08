@@ -1,6 +1,20 @@
 {
     "workspacePath": "/home/daniel/www/dantleech/maestro-two/var",
     "vars": {
+        "composer.require": {
+            "php": "^7.3"
+        },
+        "composer.require-dev": {
+            "phpunit/phpunit": "^9.0"
+        },
+        "rector": {
+            "phpunit/phpunit": [
+                "config/set/phpunit70.php",
+                "config/set/phpunit75.php",
+                "config/set/phpunit80.php",
+                "config/set/phpunit90.php"
+            ]
+        },
         "phpVersions": [
             "7.3",
             "7.4"
@@ -47,6 +61,18 @@
                     "infection/infection": "^20.0"
                 }
             }
+        },
+        {
+            "name": "amp-fswatch",
+            "url": "git@github.com:phpactor/amp-fswatch"
+        },
+        {
+            "name": "class-mover",
+            "url": "git@github.com:phpactor/class-mover"
+        },
+        {
+            "name": "class-to-file",
+            "url": "git@github.com:phpactor/class-to-file"
         },
         {
             "name": "code-transform",

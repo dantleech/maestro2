@@ -3,7 +3,7 @@
 namespace Maestro2\Examples\Pipeline;
 
 use Maestro2\Core\Config\RepositoryNode;
-use Maestro2\Core\Pipeline\RepositoryPipeline;
+use Maestro2\Core\Stage\RepositoryStage;
 use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\JsonMergeTask;
 use Maestro2\Core\Task\NullTask;
@@ -11,7 +11,7 @@ use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\Task;
 use Maestro2\Core\Task\TemplateTask;
 
-class GithubActionsPipeline implements RepositoryPipeline
+class GithubActionsPipeline implements RepositoryStage
 {
     public function build(RepositoryNode $repository): Task
     {
