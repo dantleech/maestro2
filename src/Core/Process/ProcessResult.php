@@ -11,6 +11,16 @@ class ProcessResult
     {
     }
 
+    public static function ok(string $stdOut = '', string $stdErr = ''): self
+    {
+        return new self(0, $stdOut, $stdErr);
+    }
+
+    public static function new(int $exitCode, string $stdOut = '', string $stdErr = ''): self
+    {
+        return new self($exitCode, $stdOut, $stdErr);
+    }
+
     public function exitCode(): int
     {
         return $this->exitCode;

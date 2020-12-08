@@ -17,4 +17,9 @@ class TestProcess
     {
         return $this->cwd;
     }
+
+    public function argsAsString(): string
+    {
+        return implode(' ', $this->args);
+    }
 }
