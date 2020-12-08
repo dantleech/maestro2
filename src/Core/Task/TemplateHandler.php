@@ -11,22 +11,40 @@ use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Util\PermissionUtil;
 use Twig\Environment;
+use Twig\Extension\StringLoaderExtension;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
+use Webmozart\PathUtil\Path;
 
 class TemplateHandler implements Handler
 {
     private ReportPublisher $publisher;
 
-    public function __construct(private WorkspacePathResolver $pathResolver, private Environment $twig, ?ReportPublisher $publisher = null)
-    {
+    public function __construct(
+        private WorkspacePathResolver $pathResolver,
+        private Environment $twig,
+        private ArrayLoader $arrayLoader,
+        ?ReportPublisher $publisher = null
+    ) {
         $this->publisher = $publisher ?: new NullPublisher();
     }
 
     public static function createForBasePath(string $basePath): self
     {
-        return new self(new WorkspacePathResolver($basePath), new Environment(new FilesystemLoader($basePath), [
-            'strict_variables' => true,
-        ]));
+        return (static function (string $basePath, ArrayLoader $arrayLoader) {
+            return new self(
+                new WorkspacePathResolver($basePath),
+                new Environment(
+                    new ChainLoader([
+                        $arrayLoader,
+                        new FilesystemLoader($basePath),
+                    ]),
+                    ['strict_variables' => true ]
+                ),
+                $arrayLoader
+            );
+        })($basePath, new ArrayLoader());
     }
 
     public function taskFqn(): string
@@ -56,6 +74,10 @@ class TemplateHandler implements Handler
                     $dir
                 ));
             })(dirname($path), $task->mode());
+
+            if (Path::isAbsolute($task->template())) {
+                $this->arrayLoader->setTemplate($task->template(), file_get_contents($task->template()));
+            }
 
             file_put_contents(
                 $path,
