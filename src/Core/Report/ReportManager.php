@@ -2,6 +2,8 @@
 
 namespace Maestro2\Core\Report;
 
+use RuntimeException;
+
 class ReportManager implements ReportPublisher, ReportProvider
 {
     private $reports = [];
@@ -13,6 +15,19 @@ class ReportManager implements ReportPublisher, ReportProvider
         }
 
         $this->reports[$group][] = $report;
+    }
+
+    public function group(string $name): ReportGroup
+    {
+        if (!isset($this->reports[$name])) {
+            throw new RuntimeException(sprintf(
+                'Report with group "%s" not know, known report groups: "%s"',
+                $name,
+                implode('", "', array_keys($this->reports))
+            ));
+        }
+
+        return new ReportGroup($name, $this->reports[$name]);
     }
 
     /**

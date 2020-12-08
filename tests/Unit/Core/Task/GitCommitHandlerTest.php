@@ -4,6 +4,8 @@ namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcessRunner;
+use Maestro2\Core\Report\ReportManager;
+use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\GitCommitHandler;
 use Maestro2\Core\Task\GitCommitTask;
@@ -14,22 +16,28 @@ class GitCommitHandlerTest extends HandlerTestCase
 {
     private TestProcessRunner $testRunner;
 
+    private ReportManager $reportPublisher;
+
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->testRunner = new TestProcessRunner();
+        $this->reportPublisher = new ReportManager();
     }
 
     protected function createHandler(): Handler
     {
         return new GitCommitHandler(
-            $this->testRunner
+            $this->testRunner,
+            $this->reportPublisher,
         );
     }
 
     public function testExecutedGitCommit(): void
     {
         $this->testRunner->push(ProcessResult::ok($this->workspace()->path()));
+        $this->testRunner->push(ProcessResult::ok('somefile.php'));
         $this->testRunner->push(ProcessResult::ok());
         $this->testRunner->push(ProcessResult::ok());
 
@@ -40,6 +48,7 @@ class GitCommitHandlerTest extends HandlerTestCase
         ));
 
         self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->pop()->argsAsString());
+        self::assertEquals('git ls-files -m foo bar', $this->testRunner->pop()->argsAsString());
         self::assertEquals('git add foo bar', $this->testRunner->pop()->argsAsString());
         self::assertEquals('git commit -m Foobar', $this->testRunner->pop()->argsAsString());
     }
@@ -69,5 +78,21 @@ class GitCommitHandlerTest extends HandlerTestCase
             message: 'Foobar',
             cwd: $this->workspace()->path()
         ));
+    }
+
+    public function testTaskWarningIfNoCommitsYet(): void
+    {
+        $this->testRunner->push(ProcessResult::ok($this->workspace()->path()));
+        $this->testRunner->push(ProcessResult::ok(''));
+        $this->testRunner->push(ProcessResult::ok());
+        $this->testRunner->push(ProcessResult::ok());
+
+        $this->runTask(new GitCommitTask(
+            paths: ['foo', 'bar'],
+            message: 'Foobar',
+            cwd: $this->workspace()->path()
+        ));
+
+        self::assertCount(1, $this->reportPublisher->group('git-commit')->reports()->warns());
     }
 }

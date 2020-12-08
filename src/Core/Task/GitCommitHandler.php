@@ -5,16 +5,21 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
+use Maestro2\Core\Report\Publisher\NullPublisher;
+use Maestro2\Core\Report\Report;
+use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
 use function Amp\call;
 
 class GitCommitHandler implements Handler
 {
     private ProcessRunner $runner;
+    private ?ReportPublisher $publisher;
 
-    public function __construct(ProcessRunner $runner)
+    public function __construct(ProcessRunner $runner, ?ReportPublisher $publisher = null)
     {
         $this->runner = $runner;
+        $this->publisher = $publisher ?: new NullPublisher();
     }
 
     public function taskFqn(): string
@@ -50,6 +55,18 @@ class GitCommitHandler implements Handler
                     $topLevelPath
                 ));
             })(trim($result->stdOut()));
+
+            $result = yield $this->runner->run(array_merge([
+                'git',
+                'ls-files',
+                '-m',
+            ], $task->paths()), $task->cwd());
+            assert($result instanceof ProcessResult);
+
+            if ($result->stdOut() === '') {
+                $this->publisher->publish($task->group(), Report::warn('No files modified'));
+                return;
+            }
 
             yield $this->runner->mustRun(
                 array_merge([

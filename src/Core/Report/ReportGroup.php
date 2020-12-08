@@ -13,11 +13,8 @@ class ReportGroup
         return $this->name;
     }
 
-    /**
-     * @return array<Report>
-     */
-    public function reports(): array
+    public function reports(): Reports
     {
-        return $this->reports;
+        return new Reports(...$this->reports);
     }
 }

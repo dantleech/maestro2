@@ -4,7 +4,7 @@ namespace Maestro2\Core\Task;
 
 class GitCommitTask implements Task
 {
-    public function __construct(private array $paths, private string $message, private string $cwd)
+    public function __construct(private array $paths, private string $message, private string $cwd, private string $group = 'git-commit')
     {
     }
 
@@ -21,5 +21,10 @@ class GitCommitTask implements Task
     public function cwd(): string
     {
         return $this->cwd;
+    }
+
+    public function group(): string
+    {
+        return $this->group;
     }
 }
