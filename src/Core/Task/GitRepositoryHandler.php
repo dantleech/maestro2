@@ -20,7 +20,7 @@ class GitRepositoryHandler implements Handler
         return GitRepositoryTask::class;
     }
 
-    public function run(Task $task): Promise
+    public function run(Task $task, Context $context): Promise
     {
         return call(function () use ($task) {
             assert($task instanceof GitRepositoryTask);

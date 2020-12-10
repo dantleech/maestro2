@@ -12,7 +12,7 @@ class NullTaskHandler implements Handler
         return NullTask::class;
     }
 
-    public function run(Task $task): Promise
+    public function run(Task $task, Context $context): Promise
     {
         return new Success();
     }

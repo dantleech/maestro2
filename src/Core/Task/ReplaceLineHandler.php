@@ -21,7 +21,7 @@ class ReplaceLineHandler implements Handler
         return ReplaceLineTask::class;
     }
 
-    public function run(Task $task): Promise
+    public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof ReplaceLineTask);
         if (!file_exists($task->path())) {

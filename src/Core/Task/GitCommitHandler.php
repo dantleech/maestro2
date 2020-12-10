@@ -27,7 +27,7 @@ class GitCommitHandler implements Handler
         return GitCommitTask::class;
     }
 
-    public function run(Task $task): Promise
+    public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof GitCommitTask);
         return call(function () use ($task) {

@@ -63,7 +63,7 @@ class RectorComposerUpgradeHandler implements Handler
                     require: [
                         'rector/rector' => $task->rectorVersion(),
                     ],
-                    update: true,
+                    update: false,
                 ),
                 new SequentialTask(array_map(fn (string $path) => new ProcessTask(
                     args: [ $task->phpBin(), 'vendor/bin/rector', 'process', $path ],

@@ -22,7 +22,7 @@ class ProcessTaskHandler implements Handler
         return ProcessTask::class;
     }
 
-    public function run(Task $task): Promise
+    public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof ProcessTask);
         return call(function () use ($task) {

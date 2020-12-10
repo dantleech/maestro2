@@ -18,15 +18,15 @@ class SequentialTaskHandler implements Handler
         return SequentialTask::class;
     }
 
-    public function run(Task $task): Promise
+    public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof SequentialTask);
-        return call(function () use ($task) {
+        return call(function () use ($task, $context) {
             foreach ($task->tasks() as $task) {
-                yield $this->taskEnqueuer->enqueue($task);
+                $context = $context->merge(yield $this->taskEnqueuer->enqueue($task, $context));
             }
-        });
 
-        return new Success();
+            return $context->vars();
+        });
     }
 }

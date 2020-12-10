@@ -26,12 +26,13 @@ class ComposerHandler implements Handler
         return ComposerTask::class;
     }
 
-    public function run(Task $task): Promise
+    public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof ComposerTask);
-        return call(function (string $requireType) use ($task) {
+        return call(function (string $requireType) use ($task, $context) {
             yield $this->enqueuer->enqueue(
-                $this->createJsonTask($task, $requireType)
+                $this->createJsonTask($task, $requireType),
+                $context
             );
 
 

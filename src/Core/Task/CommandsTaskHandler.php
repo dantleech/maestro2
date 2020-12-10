@@ -18,7 +18,7 @@ class CommandsTaskHandler implements Handler
         return CommandsTask::class;
     }
 
-    public function run(Task $task): Promise
+    public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof CommandsTask);
         return call(function () use ($task) {
