@@ -34,10 +34,10 @@ class ComposerHandler implements Handler
                 $this->createJsonTask($task, $requireType)
             );
 
-            $finder = new ExecutableFinder();
 
             if ($task->update() === true) {
-                yield $this->runner->mustRun([$task->phpBin(), $finder->find('composer'), 'update', '--working-dir=' . $task->path()]);
+                $finder = new ExecutableFinder();
+                yield $this->runner->mustRun([$task->phpBin(), $task->composerBin() ?: $finder->find('composer'), 'update', '--working-dir=' . $task->path()]);
             }
         }, $task->dev() ? 'require-dev' : 'require');
     }
@@ -55,6 +55,10 @@ class ComposerHandler implements Handler
                         unset($object->$requireType->$package);
                     }
                 }
+                if (is_array($object->{$requireType})) {
+                    $object->{$requireType} = (object)$object->{$requireType};
+                }
+
                 return $object;
             }
         );

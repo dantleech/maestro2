@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 use Phpactor\Container\Container;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\TestUtils\Workspace;
+use Symfony\Component\Debug\Debug;
+use Symfony\Component\ErrorHandler\ErrorHandler;
 use Throwable;
 
 class IntegrationTestCase extends TestCase

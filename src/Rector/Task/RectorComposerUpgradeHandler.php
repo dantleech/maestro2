@@ -29,60 +29,59 @@ class RectorComposerUpgradeHandler implements Handler
         return RectorComposerUpgradeTask::class;
     }
 
-    public function run(Task $task, Facts $facts): Promise
+    public function run(Task $task): Promise
     {
         assert($task instanceof RectorComposerUpgradeTask);
 
-        return call(
-            function (
-                array $autoloadPaths,
-                string $phpBin,
-                string $repoPath,
-            ) use ($task) {
-                return yield $this->enqueuer->enqueue(new SequentialTask([
-                    new TemplateTask(
-                        template: __DIR__ . '/template/rector.php.twig',
-                        target: $this->rectorConfigPath($task),
-                        vars: [
-                            'sets' => [
-                                'vendor/rector/rector/config/set/phpunit70.php',
-                                'vendor/rector/rector/config/set/phpunit80.php',
-                                'vendor/rector/rector/config/set/phpunit90.php',
-                            ]
+        return call(function (ComposerJson $composerJson) use ($task) {
+            return yield $this->enqueuer->enqueue(new SequentialTask([
+                new TemplateTask(
+                    template: __DIR__ . '/template/rector.php.twig',
+                    target: $this->rectorConfigPath($task),
+                    vars: [
+                        'sets' => [
+                            'vendor/rector/rector/config/set/phpunit70.php',
+                            'vendor/rector/rector/config/set/phpunit80.php',
+                            'vendor/rector/rector/config/set/phpunit90.php',
                         ]
-                    ),
-                    new ComposerTask(
-                        dev: true,
-                        update: true,
-                    ),
-                    new ComposerTask(
-                        dev: true,
-                        remove: [
-                            'phpstan/phpstan',
-                            'symfony/filesystem',
-                        ],
-                        require: [
-                            'rector/rector' => $task->rectorVersion(),
-                        ],
-                        update: true,
-                    ),
-                    new SequentialTask(array_map(fn (string $path) => new ProcessTask(
-                        args: [ $task->phpBin(), 'vendor/bin/rector', 'process', $path ],
-                    ), $autoloadPaths)),
-                    new ComposerTask(
-                        remove: ['rector/rector'],
-                        update: true,
-                    ),
-                    new GitCommitTask(
-                        paths: $autoloadPaths,
-                        message: 'Automated Rector upgrade by Maestro2',
-                    ),
-                ]));
-            },
-            $facts->get(ComposerFacts::class)->autoloadPaths(),
-            $facts->get(PhpRuntimeFacts::class)->phpBin(),
-            $facts->get(Cwd::class)->path(),
-        );
+                    ]
+                ),
+                new ComposerTask(
+                    phpBin: $task->phpBin(),
+                    path: $task->repoPath(),
+                    dev: true,
+                    update: true,
+                ),
+                new ComposerTask(
+                    phpBin: $task->phpBin(),
+                    path: $task->repoPath(),
+                    dev: true,
+                    remove: [
+                        'phpstan/phpstan',
+                        'symfony/filesystem',
+                    ],
+                    require: [
+                        'rector/rector' => $task->rectorVersion(),
+                    ],
+                    update: true,
+                ),
+                new SequentialTask(array_map(fn (string $path) => new ProcessTask(
+                    args: [ $task->phpBin(), 'vendor/bin/rector', 'process', $path ],
+                    cwd: $task->repoPath(),
+                ), $composerJson->autoloadPaths())),
+                new ComposerTask(
+                    phpBin: $task->phpBin(),
+                    path: $task->repoPath(),
+                    remove: ['rector/rector'],
+                    update: true,
+                ),
+                new GitCommitTask(
+                    paths: $composerJson->autoloadPaths(),
+                    message: 'Automated Rector upgrade by Maestro2',
+                    cwd: $task->repoPath(),
+                ),
+            ]));
+        }, ComposerJson::fromProjectRoot($task->repoPath()));
     }
 
     private function rectorConfigPath(RectorComposerUpgradeTask $task): string

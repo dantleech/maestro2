@@ -135,10 +135,12 @@ EOT
         $this->testRunner->push(ProcessResult::ok());
         $this->runTask(new ComposerTask(
             path: $this->workspace()->path(),
-            update: true
+            update: true,
+            composerBin: 'composer',
         ));
 
         $this->assertEquals([
+            PHP_BINARY,
             'composer',
             'update',
             '--working-dir=' . $this->workspace()->path()

@@ -13,13 +13,10 @@ use Maestro2\Core\Task\TemplateTask;
 class PhpStanHandler implements Handler
 {
     private Enqueuer $enqueuer;
-    private FactBook $book;
 
-
-    public function __construct(Enqueuer $enqueuer, FactBook $book)
+    public function __construct(Enqueuer $enqueuer)
     {
         $this->enqueuer = $enqueuer;
-        $this->book = $book;
     }
 
     public function taskFqn(): string
@@ -34,10 +31,9 @@ class PhpStanHandler implements Handler
             new TemplateTask(
                 template: __DIR__ . '/template/phpstan.neon.twig',
                 target: $task->repoPath() . '/phpstan.neon',
-                overwrite: true,
                 vars: [
                     'level' => $task->level(),
-                    'paths' => $task->paths() ?: $this->book->get('composer.autoload_paths')
+                    'paths' => $task->paths(),
                 ]
             ),
             new ComposerTask(

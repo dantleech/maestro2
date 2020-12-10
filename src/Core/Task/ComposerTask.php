@@ -14,6 +14,7 @@ class ComposerTask implements Task
         private string $group = 'composer',
         private bool $dev = false,
         private string $phpBin = PHP_BINARY,
+        private ?string $composerBin = null,
     ) {
     }
 
@@ -50,5 +51,10 @@ class ComposerTask implements Task
     public function phpBin(): string
     {
         return $this->phpBin;
+    }
+
+    public function composerBin(): ?string
+    {
+        return $this->composerBin;
     }
 }
