@@ -26,6 +26,20 @@ class TemplateHandlerTest extends IntegrationTestCase
         self::assertEquals('Hello world', file_get_contents($this->workspace()->path('README.md')));
     }
 
+    public function testAppliesTemplateWithAbsolutePath(): void
+    {
+        $this->workspace()->reset();
+        $this->workspace()->put('README.md.twig', 'Hello world');
+
+        $handler = TemplateHandler::createForBasePath($this->workspace()->path());
+        wait($handler->run(new TemplateTask(
+            template: $this->workspace()->path('README.md.twig'),
+            target: 'README.md',
+        )));
+        self::assertFileExists($this->workspace()->path('README.md'));
+        self::assertEquals('Hello world', file_get_contents($this->workspace()->path('README.md')));
+    }
+
     public function testAppliesTemplateWithVars(): void
     {
         $this->workspace()->reset();

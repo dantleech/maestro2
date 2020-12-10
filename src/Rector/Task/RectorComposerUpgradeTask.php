@@ -10,7 +10,7 @@ class RectorComposerUpgradeTask implements Task
     public function __construct(
         private string $repoPath,
         private string $phpBin = PHP_BINARY,
-        private string $rectorVersion = '@stable'
+        private string $rectorVersion = '0.8.52'
     ) {
     }
 

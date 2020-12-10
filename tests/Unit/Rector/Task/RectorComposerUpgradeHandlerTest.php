@@ -18,6 +18,12 @@ class RectorComposerUpgradeHandlerTest extends HandlerTestCase
     {
         parent::setUp();
         ProcessUtil::mustRun($this->workspace()->path(), 'git init');
+        $this->workspace()->put('composer.json', json_encode([
+            'name' => 'foobar/barfoo',
+            'autoload' => [
+                'Foobar\\' => 'src/',
+            ]
+        ]));
     }
 
     protected function createHandler(): Handler
@@ -31,6 +37,7 @@ class RectorComposerUpgradeHandlerTest extends HandlerTestCase
     {
         $this->runTask(
             new RectorComposerUpgradeTask(
+                phpBin: 'php7.3',
                 repoPath: $this->workspace()->path(),
             )
         );

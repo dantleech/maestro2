@@ -12,7 +12,8 @@ class ComposerTask implements Task
         private array $remove = [],
         private bool $update = false,
         private string $group = 'composer',
-        private bool $dev = false
+        private bool $dev = false,
+        private string $phpBin = PHP_BINARY,
     ) {
     }
 
@@ -44,5 +45,10 @@ class ComposerTask implements Task
     public function update(): bool
     {
         return $this->update;
+    }
+
+    public function phpBin(): string
+    {
+        return $this->phpBin;
     }
 }

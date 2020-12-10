@@ -1,11 +1,11 @@
 <?php
 
-namespace Maestro2\Core\Pipeline;
+namespace Maestro2\Core\Stage;
 
 use Maestro2\Core\Config\RepositoryNode;
 use Maestro2\Core\Task\Task;
 
-interface RepositoryPipeline
+interface RepositoryStage
 {
     public function build(RepositoryNode $repository): Task;
 }

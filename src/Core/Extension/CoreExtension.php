@@ -31,6 +31,8 @@ use Maestro2\Core\Task\TemplateHandler;
 use Maestro2\Core\Task\YamlHandler;
 use Maestro2\Core\Task\YamlTask;
 use Maestro2\Maestro;
+use Maestro2\Rector\Task\RectorComposerUpgradeHandler;
+use Maestro2\Rector\Task\RectorComposerUpgradeTask;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
@@ -43,6 +45,7 @@ use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
+use Maestro2\PhpStan\Task\PhpStanHandler;
 
 class CoreExtension implements Extension
 {
@@ -104,6 +107,8 @@ class CoreExtension implements Extension
                 new ReplaceLineHandler($container->get(ReportManager::class)),
                 new ComposerHandler($container->get(Queue::class), $container->get(ProcessRunner::class)),
                 new GitCommitHandler($container->get(ProcessRunner::class)),
+                new RectorComposerUpgradeHandler($container->get(Queue::class)),
+                new PhpStanHandler($container->get(Queue::class)),
             ]);
         });
 

@@ -10,6 +10,7 @@ use Maestro2\Core\Task\JsonMergeTask;
 use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\Task;
 use PhpCsFixer\Cache\FileHandler;
+use Symfony\Component\Process\ExecutableFinder;
 use Webmozart\PathUtil\Path;
 use stdClass;
 use function Amp\call;
@@ -33,8 +34,10 @@ class ComposerHandler implements Handler
                 $this->createJsonTask($task, $requireType)
             );
 
+            $finder = new ExecutableFinder();
+
             if ($task->update() === true) {
-                $this->runner->mustRun(['composer', 'update', '--working-dir=' . $task->path()]);
+                yield $this->runner->mustRun([$task->phpBin(), $finder->find('composer'), 'update', '--working-dir=' . $task->path()]);
             }
         }, $task->dev() ? 'require-dev' : 'require');
     }
