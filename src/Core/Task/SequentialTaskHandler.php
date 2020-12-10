@@ -26,7 +26,7 @@ class SequentialTaskHandler implements Handler
                 $context = $context->merge(yield $this->taskEnqueuer->enqueue($task, $context));
             }
 
-            return $context->vars();
+            return $context;
         });
     }
 }

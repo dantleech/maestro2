@@ -26,8 +26,16 @@ final class Context
         return $this->vars;
     }
 
-    public function merge(array $context): self
+    public function merge(Context $context): self
     {
-        return new self(array_merge($this->vars, $context));
+        return new self(array_merge($this->vars, $context->vars));
+    }
+
+    public function set(string $key, mixed $value): self
+    {
+        return (static function (array $vars) use ($key, $value): self {
+            $vars[$key] = $value;
+            return new self($vars);
+        })($this->vars);
     }
 }
