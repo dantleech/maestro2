@@ -2,9 +2,11 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Report\ReportManager;
+use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\GitCommitHandler;
 use Maestro2\Core\Task\GitCommitTask;
@@ -22,6 +24,13 @@ class GitCommitHandlerTest extends HandlerTestCase
         parent::setUp();
         $this->testRunner = new TestProcessRunner();
         $this->reportPublisher = new ReportManager();
+    }
+
+    protected function defaultContext(): Context
+    {
+        return Context::withFacts(
+            new GroupFact('git-commit')
+        );
     }
 
     protected function createHandler(): Handler

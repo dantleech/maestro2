@@ -87,7 +87,7 @@ final class Context
         return $this->facts[$factClass];
     }
 
-    public static function withFacts(PhpFact ...$phpFacts): self
+    public static function withFacts(Fact ...$phpFacts): self
     {
         return self::create([], $phpFacts);
     }

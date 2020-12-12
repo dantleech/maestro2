@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
+use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Report\Report;
@@ -63,7 +64,10 @@ class GitCommitHandler implements Handler
             assert($result instanceof ProcessResult);
 
             if ($result->stdOut() === '') {
-                $this->publisher->publish($task->group(), Report::warn('No files modified'));
+                $this->publisher->publish(
+                    $task->group() ?: $context->fact(GroupFact::class)->group(),
+                    Report::warn('No files modified')
+                );
                 return $context;
             }
 

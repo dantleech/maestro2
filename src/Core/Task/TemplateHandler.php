@@ -5,6 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Exception\RuntimeException;
+use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Report\Publisher\NullPublisher;
 use Maestro2\Core\Report\Report;
@@ -54,7 +55,7 @@ class TemplateHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof TemplateTask);
-        (function (string $path) use ($task) {
+        (function (string $path) use ($task, $context) {
             if (!$task->overwrite() && file_exists($path)) {
                 return;
             }
@@ -91,7 +92,7 @@ class TemplateHandler implements Handler
             clearstatcache(true);
 
             $this->publisher->publish(
-                $task->group(),
+                $task->group() ?: $context->fact(GroupFact::class)->group(),
                 Report::ok(sprintf('Applied "%s" to "%s" (mode: %s)', $task->template(), $path, PermissionUtil::formatOctal($task->mode())))
             );
         })($this->pathResolver->resolve($task->target()));

@@ -6,7 +6,7 @@ class CommandsTask implements Task
 {
     public function __construct(
         private array $commands,
-        private string $group = 'commands',
+        private ?string $group = null,
         private bool $failFast = false,
         private ?string $cwd = null,
     ) {
@@ -22,7 +22,7 @@ class CommandsTask implements Task
         return $this->cwd;
     }
 
-    public function group(): string
+    public function group(): ?string
     {
         return $this->group;
     }

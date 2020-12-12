@@ -5,6 +5,7 @@ namespace Maestro2\Examples\Pipeline;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Config\RepositoryNode;
 use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Pipeline\Pipeline;
 use Maestro2\Core\Task\FactTask;
 use Maestro2\Core\Task\FileTask;
@@ -36,6 +37,7 @@ abstract class BasePipeline implements Pipeline
                         url: $repositoryNode->url(),
                     ),
                     new FactTask(new CwdFact($repositoryNode->path())),
+                    new FactTask(new GroupFact($repositoryNode->name())),
                     $this->buildRepository($repositoryNode)
                 ]);
             }, $mainNode->selectedRepositories()))

@@ -9,14 +9,14 @@ class ComposerTask implements Task
         private array $require = [],
         private array $remove = [],
         private bool $update = false,
-        private string $group = 'composer',
+        private ?string $group = null,
         private bool $dev = false,
         private string $phpBin = PHP_BINARY,
         private ?string $composerBin = null,
     ) {
     }
 
-    public function group(): string
+    public function group(): ?string
     {
         return $this->group;
     }

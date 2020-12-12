@@ -6,7 +6,7 @@ class ProcessTask implements Task
 {
     public function __construct(
         private array $args,
-        private string $group = 'process',
+        private ?string $group = null,
         private ?string $cwd = null
     ) {
     }
@@ -21,7 +21,7 @@ class ProcessTask implements Task
         return $this->cwd;
     }
 
-    public function group(): string
+    public function group(): ?string
     {
         return $this->group;
     }

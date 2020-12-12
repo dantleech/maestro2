@@ -2,7 +2,9 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Report\Publisher\NullPublisher;
+use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\ReplaceLineHandler;
 use Maestro2\Core\Task\ReplaceLineTask;
@@ -12,6 +14,13 @@ class ReplaceLineHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new ReplaceLineHandler(new NullPublisher());
+    }
+
+    protected function defaultContext(): Context
+    {
+        return Context::withFacts(
+            new GroupFact('replace-line')
+        );
     }
 
     public function testReplacesLine(): void

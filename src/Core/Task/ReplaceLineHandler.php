@@ -4,6 +4,7 @@ namespace Maestro2\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
+use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
@@ -42,7 +43,10 @@ class ReplaceLineHandler implements Handler
 
         if ($before !== $after) {
             file_put_contents($task->path(), $after);
-            $this->publisher->publish($task->group(), Report::ok(sprintf('Replaced line(s) in "%s"', $task->path())));
+            $this->publisher->publish(
+                $task->group() ?: $context->fact(GroupFact::class)->group(),
+                Report::ok(sprintf('Replaced line(s) in "%s"', $task->path()))
+            );
         }
 
         return new Success($context);
