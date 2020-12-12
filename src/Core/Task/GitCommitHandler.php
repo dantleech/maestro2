@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
@@ -30,28 +31,28 @@ class GitCommitHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof GitCommitTask);
-        return call(function () use ($task, $context) {
+        return call(function (string $cwd) use ($task, $context) {
             $result = yield $this->runner->run([
                 'git',
                 'rev-parse',
                 '--show-toplevel',
-            ], $task->cwd());
+            ], $cwd);
             assert($result instanceof ProcessResult);
 
             if (!$result->isOk()) {
                 throw new TaskError(sprintf(
                     'Path "%s" is not a git repository',
-                    $task->cwd()
+                    $cwd
                 ));
             }
 
-            (function (string $topLevelPath) use ($task) {
-                if ($topLevelPath === $task->cwd()) {
+            (function (string $topLevelPath) use ($task, $cwd) {
+                if ($topLevelPath === $cwd) {
                     return;
                 }
                 throw new TaskError(sprintf(
                     'Path "%s" is not the root of a git repository (root is "%s")',
-                    $task->cwd(),
+                    $cwd,
                     $topLevelPath
                 ));
             })(trim($result->stdOut()));
@@ -60,13 +61,13 @@ class GitCommitHandler implements Handler
                 'git',
                 'ls-files',
                 '-m',
-            ], $task->paths()), $task->cwd());
+            ], $task->paths()), $cwd);
             assert($result instanceof ProcessResult);
 
             if ($result->stdOut() === '') {
                 $this->publisher->publish(
                     $task->group() ?: $context->fact(GroupFact::class)->group(),
-                    Report::warn('No files modified')
+                    Report::warn('Git commit: no files modified')
                 );
                 return $context;
             }
@@ -75,13 +76,19 @@ class GitCommitHandler implements Handler
                 array_merge([
                     'git', 'add'
                 ], $task->paths()),
-                $task->cwd(),
+                $cwd,
             );
+
             yield $this->runner->mustRun([
                 'git', 'commit', '-m', $task->message()
-            ], $task->cwd());
+            ], $cwd);
+
+            $this->publisher->publish(
+                $task->group() ?: $context->fact(GroupFact::class)->group(),
+                Report::ok('Git commit successful')
+            );
 
             return $context;
-        });
+        }, $task->cwd() ?: $context->fact(CwdFact::class)->cwd());
     }
 }

@@ -7,7 +7,7 @@ class GitCommitTask implements Task
     public function __construct(
         private array $paths,
         private string $message,
-        private string $cwd,
+        private ?string $cwd = null,
         private ?string $group = null
     ) {
     }
@@ -22,7 +22,7 @@ class GitCommitTask implements Task
         return $this->paths;
     }
 
-    public function cwd(): string
+    public function cwd(): ?string
     {
         return $this->cwd;
     }

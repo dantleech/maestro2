@@ -5,7 +5,7 @@ namespace Maestro2\Core\Task;
 class ComposerTask implements Task
 {
     public function __construct(
-        private string $path,
+        private ?string $path = null,
         private array $require = [],
         private array $remove = [],
         private bool $update = false,
@@ -21,7 +21,7 @@ class ComposerTask implements Task
         return $this->group;
     }
 
-    public function path(): string
+    public function path(): ?string
     {
         return $this->path;
     }

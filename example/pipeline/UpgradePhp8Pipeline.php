@@ -8,6 +8,7 @@ use Maestro2\Core\Pipeline\Pipeline;
 use Maestro2\Core\Task\CommandsTask;
 use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Task\FileTask;
+use Maestro2\Core\Task\GitCommitTask;
 use Maestro2\Core\Task\NullTask;
 use Maestro2\Core\Task\ProcessTask;
 use Maestro2\Core\Task\SequentialTask;
@@ -19,15 +20,21 @@ class UpgradePhp8Pipeline extends BasePipeline
     {
         return new SequentialTask([
             new ComposerTask(
-                path: $repository->path(),
                 dev: true,
                 require: [
-                    "phpunit/phpunit" => "^8.0"
+                    "phpunit/phpunit" => "^9.0"
                 ],
                 update: true,
             ),
             new ProcessTask(
-                args: [ $repository->main()->php()->phpBin(), 'vendor/bin/phpunit' ],
+                args: [
+                    $repository->main()->php()->phpBin(),
+                    'vendor/bin/phpunit'
+                ],
+            ),
+            new GitCommitTask(
+                paths: ['composer.json'],
+                message: "Updated PHPUnit"
             )
         ]);
     }
