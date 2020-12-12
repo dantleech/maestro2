@@ -2,12 +2,14 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Fact\PhpFact;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\TestEnqueuer;
+use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Tests\Unit\Core\Task\HandlerTestCase;
@@ -21,6 +23,11 @@ class ComposerHandlerTest extends HandlerTestCase
     {
         parent::setUp();
         $this->testRunner = new TestProcessRunner();
+    }
+
+    protected function defaultContext(): Context
+    {
+        return Context::withFacts(new PhpFact());
     }
 
     protected function createHandler(): Handler

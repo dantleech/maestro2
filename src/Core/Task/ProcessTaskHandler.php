@@ -34,7 +34,7 @@ class ProcessTaskHandler implements Handler
 
             $this->publishReport($task, $result);
 
-            return null;
+            return $context;
         });
     }
 

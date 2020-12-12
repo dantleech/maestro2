@@ -96,6 +96,7 @@ class TemplateHandler implements Handler
                 Report::ok(sprintf('Applied "%s" to "%s" (mode: %s)', $task->template(), $path, PermissionUtil::formatOctal($task->mode())))
             );
         })($this->pathResolver->resolve($task->target()));
-        return new Success();
+
+        return new Success($context);
     }
 }

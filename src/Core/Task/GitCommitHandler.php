@@ -30,7 +30,7 @@ class GitCommitHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof GitCommitTask);
-        return call(function () use ($task) {
+        return call(function () use ($task, $context) {
             $result = yield $this->runner->run([
                 'git',
                 'rev-parse',
@@ -65,7 +65,7 @@ class GitCommitHandler implements Handler
 
             if ($result->stdOut() === '') {
                 $this->publisher->publish($task->group(), Report::warn('No files modified'));
-                return;
+                return $context;
             }
 
             yield $this->runner->mustRun(
@@ -77,6 +77,8 @@ class GitCommitHandler implements Handler
             yield $this->runner->mustRun([
                 'git', 'commit', '-m', $task->message()
             ], $task->cwd());
+
+            return $context;
         });
     }
 }

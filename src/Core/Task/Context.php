@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Task;
 
 use Maestro2\Core\Fact\Fact;
+use Maestro2\Core\Fact\PhpFact;
 use Maestro2\Core\Task\Exception\FactNotFound;
 
 final class Context
@@ -12,7 +13,7 @@ final class Context
      * @param array<string,mixed> $vars
      * @psalm-param array<class-string<T>,T> $facts
      */
-    private function __construct(private array $vars = [], private array $facts = [])
+    private function __construct(private array $vars, private array $facts)
     {
     }
 
@@ -53,9 +54,9 @@ final class Context
 
     public function withVar(string $key, mixed $value): self
     {
-        return (static function (array $vars) use ($key, $value): self {
+        return (function (array $vars) use ($key, $value): self {
             $vars[$key] = $value;
-            return new self($vars);
+            return new self($vars, $this->facts);
         })($this->vars);
     }
 
@@ -84,5 +85,10 @@ final class Context
         }
 
         return $this->facts[$factClass];
+    }
+
+    public static function withFacts(PhpFact ...$phpFacts): self
+    {
+        return self::create([], $phpFacts);
     }
 }

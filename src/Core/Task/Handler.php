@@ -9,7 +9,7 @@ interface Handler
     public function taskFqn(): string;
 
     /**
-     * @return Promise<?Context>
+     * @return Promise<Context>
      */
     public function run(Task $task, Context $context): Promise;
 }

@@ -51,7 +51,7 @@ class JsonMergeHandler implements Handler
             ),
         );
 
-        return new Success();
+        return new Success($context);
     }
 
     private function mergeData(object $existingData, array $data): object

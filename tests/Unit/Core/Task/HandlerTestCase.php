@@ -16,8 +16,15 @@ abstract class HandlerTestCase extends IntegrationTestCase
 
     protected function runTask(Task $task, ?Context $context = null): Context
     {
+        $context = $context ?: $this->defaultContext();
+
         return wait((new HandlerFactory([
             $this->createHandler()
-        ]))->handlerFor($task)->run($task, $context ?: Context::create())) ?: Context::create();
+        ]))->handlerFor($task)->run($task, $context)) ?: Context::create();
+    }
+
+    protected function defaultContext(): Context
+    {
+        return Context::create();
     }
 }

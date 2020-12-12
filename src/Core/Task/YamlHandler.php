@@ -46,6 +46,6 @@ class YamlHandler implements Handler
             Yaml::dump($data)
         );
 
-        return new Success();
+        return new Success($context);
     }
 }

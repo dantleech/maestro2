@@ -22,7 +22,7 @@ class GitRepositoryHandler implements Handler
 
     public function run(Task $task, Context $context): Promise
     {
-        return call(function () use ($task) {
+        return call(function () use ($task, $context) {
             assert($task instanceof GitRepositoryTask);
 
             $path = $this->resolver->resolve($task->path());
@@ -33,6 +33,8 @@ class GitRepositoryHandler implements Handler
                 $task->url(),
                 $path
             ]);
+
+            return $context;
         });
     }
 }

@@ -45,6 +45,6 @@ class ReplaceLineHandler implements Handler
             $this->publisher->publish($task->group(), Report::ok(sprintf('Replaced line(s) in "%s"', $task->path())));
         }
 
-        return new Success();
+        return new Success($context);
     }
 }

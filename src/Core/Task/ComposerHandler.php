@@ -48,6 +48,8 @@ class ComposerHandler implements Handler
                     '--working-dir=' . $task->path()
                 ]);
             }
+
+            return $context;
         }, $task->dev() ? 'require-dev' : 'require');
     }
 

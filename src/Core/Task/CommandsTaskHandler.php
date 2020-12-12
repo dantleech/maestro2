@@ -35,6 +35,8 @@ class CommandsTaskHandler implements Handler
                     break;
                 }
             }
+
+            return $context;
         });
     }
 }
