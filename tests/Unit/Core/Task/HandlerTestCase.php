@@ -18,6 +18,6 @@ abstract class HandlerTestCase extends IntegrationTestCase
     {
         return wait((new HandlerFactory([
             $this->createHandler()
-        ]))->handlerFor($task)->run($task, $context ?: new Context())) ?: new Context();
+        ]))->handlerFor($task)->run($task, $context ?: Context::create())) ?: Context::create();
     }
 }

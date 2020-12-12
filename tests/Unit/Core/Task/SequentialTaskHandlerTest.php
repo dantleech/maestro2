@@ -31,18 +31,18 @@ class SequentialTaskHandlerTest extends HandlerTestCase
     {
         self::assertEquals(3, $this->runTask(new SequentialTask([
             new ClosureTask(function (array $args, Context $context): Promise {
-                return new Success($context->set('count', 1));
+                return new Success($context->withVar('count', 1));
             }),
             new ClosureTask(function (array $args, Context $context): Promise {
                 return new Success(
-                    $context->set('count', $context->var('count') + 1)
+                    $context->withVar('count', $context->var('count') + 1)
                 );
             }),
             new ClosureTask(function (array $args, Context $context): Promise {
                 return new Success(
-                    $context->set('count', $context->var('count') + 1)
+                    $context->withVar('count', $context->var('count') + 1)
                 );
             }),
-        ], new Context([])))->var('count'));
+        ], Context::create()))->var('count'));
     }
 }

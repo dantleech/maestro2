@@ -27,12 +27,12 @@ final class TestEnqueuer implements Enqueuer, Dequeuer
         return $this->handlerFactory->handlerFor($task->task())->run($task->task(), $task->context());
     }
 
-    public function dequeue(): ?Task
+    public function dequeue(): ?TaskContext
     {
         return null;
     }
 
-    public function resolve(Task $task, $result): void
+    public function resolve(TaskContext $task, $result): void
     {
     }
 }
