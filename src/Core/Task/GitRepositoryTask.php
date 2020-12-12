@@ -1,8 +1,9 @@
 <?php
 
 namespace Maestro2\Core\Task;
+use Stringable;
 
-class GitRepositoryTask implements Task
+class GitRepositoryTask implements Task, Stringable
 {
     public function __construct(
         private string $url,
@@ -18,5 +19,10 @@ class GitRepositoryTask implements Task
     public function url(): string
     {
         return $this->url;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('Checking out git repository "%s"', $this->url());
     }
 }

@@ -5,6 +5,7 @@ namespace Maestro2\Core\Queue;
 use Amp\Deferred;
 use Amp\Promise;
 use Maestro2\Core\Task\TaskContext;
+use Throwable;
 
 class Queue implements Enqueuer, Dequeuer
 {
@@ -28,13 +29,17 @@ class Queue implements Enqueuer, Dequeuer
         return array_shift($this->tasks);
     }
 
-    /**
-     * @param mixed $result
-     */
-    public function resolve(TaskContext $task, $result): void
+    public function resolve(TaskContext $task, mixed $result, Throwable $error = null): void
     {
         $hash = spl_object_hash($task);
-        $this->promises[$hash]->resolve($result);
+        (function (Deferred $deferred) use ($result, $error) {
+            if ($error) {
+                $deferred->fail($error);
+                return;
+            }
+
+            $deferred->resolve($result);
+        })($this->promises[$hash]);
         unset($this->promises[$hash]);
     }
 }

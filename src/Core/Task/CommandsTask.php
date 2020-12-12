@@ -1,8 +1,9 @@
 <?php
 
 namespace Maestro2\Core\Task;
+use Stringable;
 
-class CommandsTask implements Task
+class CommandsTask implements Task, Stringable
 {
     public function __construct(
         private array $commands,
@@ -30,5 +31,10 @@ class CommandsTask implements Task
     public function failFast(): bool
     {
         return $this->failFast;
+    }
+
+    public function __toString(): string
+    {
+        return 'Running commnads';
     }
 }

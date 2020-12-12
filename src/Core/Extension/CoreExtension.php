@@ -81,7 +81,7 @@ class CoreExtension implements Extension
                 new ParallelTaskHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class), $container->get(WorkspacePathResolver::class)),
-                new ProcessTaskHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
+                new ProcessTaskHandler($container->get(ProcessRunner::class)),
                 new CommandsTaskHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
                 new TemplateHandler(

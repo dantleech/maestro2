@@ -3,13 +3,11 @@
 namespace Maestro2\Core\Queue;
 
 use Maestro2\Core\Task\TaskContext;
+use Throwable;
 
 interface Dequeuer
 {
     public function dequeue(): ?TaskContext;
 
-    /**
-     * @param mixed $result
-     */
-    public function resolve(TaskContext $task, $result): void;
+    public function resolve(TaskContext $task, mixed $result, ?Throwable $error = null): void;
 }

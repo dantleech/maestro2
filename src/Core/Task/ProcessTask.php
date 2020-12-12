@@ -1,8 +1,9 @@
 <?php
 
 namespace Maestro2\Core\Task;
+use Stringable;
 
-class ProcessTask implements Task
+class ProcessTask implements Task, Stringable
 {
     public function __construct(
         private array $args,
@@ -24,5 +25,10 @@ class ProcessTask implements Task
     public function group(): ?string
     {
         return $this->group;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('Running process: %s', implode(' ', array_map('escapeshellarg', $this->args)));
     }
 }

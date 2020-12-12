@@ -5,6 +5,7 @@ namespace Maestro2\Core\Queue;
 use Amp\Promise;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\TaskContext;
+use Throwable;
 
 final class TestEnqueuer implements Enqueuer, Dequeuer
 {
@@ -30,7 +31,7 @@ final class TestEnqueuer implements Enqueuer, Dequeuer
         return null;
     }
 
-    public function resolve(TaskContext $task, $result): void
+    public function resolve(TaskContext $task, mixed $result, ?Throwable $error = null): void
     {
     }
 }

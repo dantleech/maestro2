@@ -3,6 +3,7 @@
 namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\PhpFact;
+use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ComposerTask;
@@ -158,19 +159,13 @@ EOT
 
     public function testFailure(): void
     {
-        $this->expectException(TaskError::class);
+        $this->expectException(ProcessFailure::class);
+
         $this->testRunner->push(ProcessResult::new(127, 'No' ,'No'));
         $this->runTask(new ComposerTask(
             path: $this->workspace()->path(),
             update: true,
             composerBin: 'compoasser',
         ));
-
-        $this->assertEquals([
-            PHP_BINARY,
-            'composer',
-            'update',
-            '--working-dir=' . $this->workspace()->path()
-        ], $this->testRunner->pop()->args());
     }
 }

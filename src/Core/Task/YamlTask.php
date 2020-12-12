@@ -3,8 +3,9 @@
 namespace Maestro2\Core\Task;
 
 use Closure;
+use Stringable;
 
-class YamlTask implements Task
+class YamlTask implements Task, Stringable
 {
     public function __construct(private string $path, private array $data = [], private ?Closure $filter = null)
     {
@@ -23,5 +24,10 @@ class YamlTask implements Task
     public function filter(): ?Closure
     {
         return $this->filter;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('Treated YAML file at "%s"', $this->path);
     }
 }

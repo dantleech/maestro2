@@ -6,6 +6,7 @@ use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Task\HandlerFactory;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use function Amp\asyncCall;
 use function Amp\call;
 use function Amp\delay;
@@ -56,8 +57,12 @@ class Worker
                 $id++;
                 asyncCall(function () use ($task, &$promises, $id) {
                     $this->running[$id] = $task;
-                    $result = yield $this->handlerFactory->handlerFor($task->task())->run($task->task(), $task->context());
-                    $this->dequeuer->resolve($task, $result);
+                    try {
+                        $result = yield $this->handlerFactory->handlerFor($task->task())->run($task->task(), $task->context());
+                        $this->dequeuer->resolve($task, $result);
+                    } catch (Throwable $error) {
+                        $this->dequeuer->resolve($task, null, $error);
+                    }
                     unset($this->running[$id]);
                 });
             }

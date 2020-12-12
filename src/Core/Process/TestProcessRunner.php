@@ -4,7 +4,9 @@ namespace Maestro2\Core\Process;
 
 use Amp\Promise;
 use Amp\Success;
+use Maestro2\Core\Process\Exception\ProcessFailure;
 use RuntimeException;
+use function Amp\call;
 
 class TestProcessRunner implements ProcessRunner
 {
@@ -30,7 +32,18 @@ class TestProcessRunner implements ProcessRunner
 
     public function mustRun(array $args, ?string $cwd = null): Promise
     {
-        return $this->run($args, $cwd);
+        return call(function () use ($args, $cwd) {
+            $result = yield $this->run($args, $cwd);
+            if (0 !== $result->exitCode()) {
+                throw new ProcessFailure(sprintf(
+                    '`%s` exited with code "%s": %s %s',
+                    implode(' ', $args),
+                    $result->exitCode(),
+                    $result->stdOut(),
+                    $result->stdErr()
+                ));
+            }
+        });
     }
 
     public function push(ProcessResult $processResult): void

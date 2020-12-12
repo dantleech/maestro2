@@ -82,11 +82,6 @@ class GitCommitHandler implements Handler
                 'git', 'commit', '-m', $task->message()
             ], $cwd);
 
-            $this->publisher->publish(
-                $task->group() ?: $context->fact(GroupFact::class)->group(),
-                Report::ok('Git commit successful')
-            );
-
             return $context;
         }, $task->cwd() ?: $context->fact(CwdFact::class)->cwd());
     }

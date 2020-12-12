@@ -1,8 +1,9 @@
 <?php
 
 namespace Maestro2\Core\Task;
+use Stringable;
 
-final class TemplateTask implements Task
+final class TemplateTask implements Task, Stringable
 {
     public function __construct(
         private string $template,
@@ -42,5 +43,14 @@ final class TemplateTask implements Task
     public function group(): string
     {
         return $this->group;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf(
+            'Applied "%s" to "%s"',
+            $this->template,
+            $this->target
+        );
     }
 }

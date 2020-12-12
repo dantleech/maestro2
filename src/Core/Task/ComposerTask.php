@@ -1,8 +1,9 @@
 <?php
 
 namespace Maestro2\Core\Task;
+use Stringable;
 
-class ComposerTask implements Task
+class ComposerTask implements Task, Stringable
 {
     public function __construct(
         private ?string $path = null,
@@ -54,5 +55,10 @@ class ComposerTask implements Task
     public function composerBin(): ?string
     {
         return $this->composerBin;
+    }
+
+    public function __toString(): string
+    {
+        return 'Composer';
     }
 }

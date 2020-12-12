@@ -3,8 +3,9 @@
 namespace Maestro2\Core\Task;
 
 use Closure;
+use Stringable;
 
-class JsonMergeTask implements Task
+class JsonMergeTask implements Task, Stringable
 {
     public function __construct(private string $path, private array $data = [], private ?Closure $filter = null)
     {
@@ -23,5 +24,10 @@ class JsonMergeTask implements Task
     public function filter(): ?Closure
     {
         return $this->filter;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('treating JSON file "%s"', $this->path);
     }
 }

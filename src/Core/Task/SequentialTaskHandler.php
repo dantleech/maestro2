@@ -10,6 +10,7 @@ use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
+use Stringable;
 use Throwable;
 use function Amp\call;
 
@@ -31,10 +32,19 @@ class SequentialTaskHandler implements Handler
             foreach ($task->tasks() as $task) {
                 try {
                     $context = yield $this->runTask($context, $task);
+                    if ($task instanceof Stringable) {
+                        $this->reportPublisher->publish(
+                            ($context->factOrNull(GroupFact::class)?->group() ?: 'sequential'),
+                            Report::ok($task->__toString())
+                        );
+                    }
                 } catch (Throwable $taskError) {
                     $this->reportPublisher->publish(
                         ($context->factOrNull(GroupFact::class)?->group() ?: 'sequential'),
-                        Report::fail($taskError->getMessage())
+                        Report::fail(
+                            $task instanceof Stringable ? $task->__toString() : $task::class,
+                            $taskError->getMessage()
+                        )
                     );
                     break;
                 }

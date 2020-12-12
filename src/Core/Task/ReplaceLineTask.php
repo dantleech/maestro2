@@ -1,8 +1,9 @@
 <?php
 
 namespace Maestro2\Core\Task;
+use Stringable;
 
-class ReplaceLineTask implements Task
+class ReplaceLineTask implements Task, Stringable
 {
     public function __construct(
         private string $path,
@@ -30,5 +31,10 @@ class ReplaceLineTask implements Task
     public function group(): ?string
     {
         return $this->group;
+    }
+
+    public function __toString(): string
+    {
+        return 'Replacing line in file';
     }
 }

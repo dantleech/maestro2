@@ -10,7 +10,6 @@ use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\Report;
-use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
 use Symfony\Component\Process\ExecutableFinder;
 use Webmozart\PathUtil\Path;
@@ -50,16 +49,12 @@ class ComposerHandler implements Handler
 
                 if ($task->update() === true) {
                     $finder = new ExecutableFinder();
-                    $result = yield $this->runner->run([
+                    yield $this->runner->mustRun([
                         $context->fact(PhpFact::class)->phpBin(),
                         $task->composerBin() ?: $finder->find('composer'),
                         'update',
                         '--working-dir=' . $cwd
                     ]);
-
-                    if (false === $result->isOk()) {
-                        throw new TaskError($result->stdErr());
-                    }
                 }
 
                 return $context;
