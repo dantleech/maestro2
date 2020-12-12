@@ -3,7 +3,6 @@
 namespace Maestro2\Core\Task;
 
 use Maestro2\Core\Fact\Fact;
-use Maestro2\Core\Fact\PhpFact;
 use Maestro2\Core\Task\Exception\FactNotFound;
 
 final class Context

@@ -9,8 +9,7 @@ class ReplaceLineTask implements Task
         private string $regexp,
         private string $line,
         private ?string $group = null
-    )
-    {
+    ) {
     }
 
     public function path(): string

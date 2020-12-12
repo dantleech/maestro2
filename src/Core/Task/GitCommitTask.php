@@ -9,8 +9,7 @@ class GitCommitTask implements Task
         private string $message,
         private string $cwd,
         private ?string $group = null
-    )
-    {
+    ) {
     }
 
     public function message(): string
