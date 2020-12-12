@@ -9,6 +9,7 @@ use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Task\Context;
+use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
 
@@ -145,6 +146,24 @@ EOT
             path: $this->workspace()->path(),
             update: true,
             composerBin: 'composer',
+        ));
+
+        $this->assertEquals([
+            PHP_BINARY,
+            'composer',
+            'update',
+            '--working-dir=' . $this->workspace()->path()
+        ], $this->testRunner->pop()->args());
+    }
+
+    public function testFailure(): void
+    {
+        $this->expectException(TaskError::class);
+        $this->testRunner->push(ProcessResult::new(127, 'No' ,'No'));
+        $this->runTask(new ComposerTask(
+            path: $this->workspace()->path(),
+            update: true,
+            composerBin: 'compoasser',
         ));
 
         $this->assertEquals([

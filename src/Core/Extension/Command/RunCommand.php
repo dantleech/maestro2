@@ -46,10 +46,6 @@ class RunCommand extends Command
 
             return $pipeline;
         })($input->getArgument(self::ARG_PIPELINE));
-        Loop::setErrorHandler(function (Throwable $error) use ($output) {
-            $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
-            throw $error;
-        });
         Loop::run(function () use ($input, $pipeline) {
             yield $this->maestro->run(
                 pipeline: $pipeline,

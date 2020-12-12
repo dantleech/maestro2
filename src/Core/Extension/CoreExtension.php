@@ -95,8 +95,7 @@ class CoreExtension implements Extension
                 new ReplaceLineHandler($container->get(ReportManager::class)),
                 new ComposerHandler(
                     $container->get(Queue::class),
-                    $container->get(ProcessRunner::class),
-                    $container->get(ReportManager::class)
+                    $container->get(ProcessRunner::class)
                 ),
                 new GitCommitHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new FactHandler(),

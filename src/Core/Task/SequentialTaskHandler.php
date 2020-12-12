@@ -30,10 +30,10 @@ class SequentialTaskHandler implements Handler
         return call(function () use ($task, $context) {
             foreach ($task->tasks() as $task) {
                 try {
-                    $context = yield from $this->runTask($context, $task);
+                    $context = yield $this->runTask($context, $task);
                 } catch (Throwable $taskError) {
                     $this->reportPublisher->publish(
-                        $context->fact(GroupFact::class)->group(),
+                        ($context->factOrNull(GroupFact::class)?->group() ?: 'sequential'),
                         Report::fail($taskError->getMessage())
                     );
                     break;
@@ -44,27 +44,32 @@ class SequentialTaskHandler implements Handler
         });
     }
 
-    private function runTask(Context $context, $task): Generator
+    /**
+     * @return Promise<Context>
+     */
+    private function runTask(Context $context, Task $task): Promise
     {
-        return $context->merge((static function (?object $context) use ($task) {
-            if (null === $context) {
-                return null;
-            }
-        
-            if (!$context instanceof Context) {
-                throw new RuntimeException(sprintf(
-                    'Task handler for "%s" did not return a Context, it returned a "%s"',
-                    $task::class,
-                    $context::class
-                ));
-            }
-        
-            return $context;
-        })(yield $this->taskEnqueuer->enqueue(
-            TaskContext::create(
-                $task,
-                $context
-            )
-        )));
+        return call(function () use ($context, $task) {
+            return $context->merge((static function (?object $context) use ($task) {
+                if (null === $context) {
+                    return null;
+                }
+
+                if (!$context instanceof Context) {
+                    throw new RuntimeException(sprintf(
+                        'Task handler for "%s" did not return a Context, it returned a "%s"',
+                        $task::class,
+                        $context::class
+                    ));
+                }
+
+                return $context;
+            })(yield $this->taskEnqueuer->enqueue(
+                TaskContext::create(
+                    $task,
+                    $context
+                )
+            )));
+        });
     }
 }

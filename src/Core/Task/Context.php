@@ -76,15 +76,28 @@ final class Context
      */
     public function fact(string $factClass): Fact
     {
+        return $this->factOrNull($factClass) ?: throw new FactNotFound(sprintf(
+            'Fact "%s" has not been set',
+            $factClass
+        ));
+    }
+
+    /**
+     * @template F of Fact
+     *
+     * @psalm-param class-string<F> $factClass
+     *
+     * @return ?F
+     */
+    public function factOrNull(string $factClass): ?Fact
+    {
         if (!isset($this->facts[$factClass])) {
-            throw new FactNotFound(sprintf(
-                'Fact "%s" has not been set',
-                $factClass
-            ));
+            return null;
         }
 
         return $this->facts[$factClass];
     }
+
 
     public static function withFacts(Fact ...$phpFacts): self
     {
