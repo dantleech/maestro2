@@ -3,6 +3,7 @@
     "description": "Maestro the Second",
     "license": "MIT",
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Daniel Leech",
@@ -42,15 +43,15 @@
     "require-dev": {
         "vimeo/psalm": "^4.2",
         "phpunit/phpunit": "^9.4",
-        "symfony/process": "9999999-dev",
-        "symfony/debug": "9999999-dev",
-        "symfony/error-handler": "9999999-dev"
+        "friendsofphp/php-cs-fixer": "^2.17",
+        "symfony/error-handler": "^5.2",
+        "symfony/process": "^5.2"
     },
     "scripts": {
         "integrate": [
             "./vendor/bin/phpunit",
             "./vendor/bin/psalm --show-info=true",
-            "./vendor/bin/php-cs-fixer fix"
+            "PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix"
         ]
     }
 }

@@ -32,5 +32,5 @@ class ConsoleLogger extends AbstractLogger
             substr($level, 0, 4),
             $message
         ));
-}
+    }
 }
