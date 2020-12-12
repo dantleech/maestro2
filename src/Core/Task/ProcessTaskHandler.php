@@ -45,7 +45,7 @@ class ProcessTaskHandler implements Handler
                 title: sprintf(
                     '%s in "%s" exited with code %s',
                     $this->formatArgs($task),
-                    $task->cwd(),
+                    $task->cwd() ?? '<none>',
                     $result->exitCode()
                 ),
                 body: sprintf("OUT: \n%s\nERR: %s", $result->stdOut(), $result->stdErr())

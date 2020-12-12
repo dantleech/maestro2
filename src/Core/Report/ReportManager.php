@@ -6,6 +6,9 @@ use RuntimeException;
 
 class ReportManager implements ReportPublisher, ReportProvider
 {
+    /**
+     * @var array<string, array<Report>>
+     */
     private $reports = [];
 
     public function publish(string $group, Report $report): void

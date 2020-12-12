@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Extension\Command;
 
 use Amp\Loop;
+use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportProvider;
 use Maestro2\Maestro;
@@ -37,13 +38,22 @@ class RunCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $pipeline = (static function (mixed $pipeline): string {
+            if (!is_string($pipeline)) {
+                throw new RuntimeException(
+                    'Invalid pipeline type'
+                );
+            }
+
+            return $pipeline;
+        })($input->getArgument(self::ARG_PIPELINE));
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
             throw $error;
         });
-        Loop::run(function () use ($input) {
+        Loop::run(function () use ($input, $pipeline) {
             yield $this->maestro->run(
-                pipeline: $input->getArgument(self::ARG_PIPELINE),
+                pipeline: $pipeline,
             );
         });
 

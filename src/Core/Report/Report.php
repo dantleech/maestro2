@@ -8,6 +8,9 @@ final class Report
     const LEVEL_WARN = 'warn';
     const LEVEL_FAIL = 'fail';
 
+    /**
+     * @param self::LEVEL_OK | self::LEVEL_WARN | self::LEVEL_FAIL $level
+     */
     private function __construct(private string $level, private string $title, private ?string $body = null)
     {
     }

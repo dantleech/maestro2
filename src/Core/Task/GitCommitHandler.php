@@ -14,12 +14,12 @@ use function Amp\call;
 class GitCommitHandler implements Handler
 {
     private ProcessRunner $runner;
-    private ?ReportPublisher $publisher;
+    private ReportPublisher $publisher;
 
-    public function __construct(ProcessRunner $runner, ?ReportPublisher $publisher = null)
+    public function __construct(ProcessRunner $runner, ReportPublisher $publisher)
     {
         $this->runner = $runner;
-        $this->publisher = $publisher ?: new NullPublisher();
+        $this->publisher = $publisher;
     }
 
     public function taskFqn(): string

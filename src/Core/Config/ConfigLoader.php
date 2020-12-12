@@ -22,7 +22,7 @@ class ConfigLoader
         return $this->readConfig();
     }
 
-    private function loadFile($filename): MainNode
+    private function loadFile(string $filename): MainNode
     {
         if (false === $contents = file_get_contents($filename)) {
             throw CouldNotLoadConfig::couldNotReadFile($filename);

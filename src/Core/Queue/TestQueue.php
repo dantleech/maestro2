@@ -5,6 +5,7 @@ namespace Maestro2\Core\Queue;
 use Amp\Promise;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\Task;
+use Maestro2\Core\Task\TaskContext;
 use Psr\Container\ContainerInterface;
 
 class TestQueue implements Enqueuer, Dequeuer
@@ -19,19 +20,20 @@ class TestQueue implements Enqueuer, Dequeuer
     /**
      * {@inheritDoc}
      */
-    public function enqueue(Task $task): Promise
+    public function enqueue(TaskContext $task): Promise
     {
         return $this->enqueuer()->enqueue($task);
     }
 
-    public function dequeue(): ?Task
+    public function dequeue(): ?TaskContext
     {
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function resolve(Task $task, $result): void
+    public function resolve(TaskContext $task, $result): void
     {
     }
 

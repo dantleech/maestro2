@@ -21,13 +21,15 @@ class CommandsTaskHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof CommandsTask);
-        return call(function () use ($task) {
+        return call(function () use ($task, $context) {
             foreach ($task->commands() as $command) {
-                $result = yield $this->enqueuer->enqueue(new ProcessTask(
-                    group: $task->group(),
-                    args: $command,
-                    cwd: $task->cwd()
-                ));
+                $result = yield $this->enqueuer->enqueue(
+                    TaskContext::create(new ProcessTask(
+                        group: $task->group(),
+                        args: $command,
+                        cwd: $task->cwd()
+                    ), $context)
+                );
 
                 if ($task->failFast() && false === $result->isOk()) {
                     break;

@@ -6,7 +6,7 @@ use Closure;
 
 class YamlTask implements Task
 {
-    public function __construct(private $path, private array $data = [], private ?Closure $filter = null)
+    public function __construct(private string $path, private array $data = [], private ?Closure $filter = null)
     {
     }
 
@@ -15,7 +15,7 @@ class YamlTask implements Task
         return $this->data;
     }
 
-    public function path()
+    public function path(): string
     {
         return $this->path;
     }

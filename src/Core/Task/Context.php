@@ -41,8 +41,12 @@ final class Context
         return $this->vars;
     }
 
-    public function merge(Context $context): self
+    public function merge(?Context $context = null): self
     {
+        if (null === $context) {
+            return $this;
+        }
+
         return new self(array_merge($this->vars, $context->vars));
     }
 
@@ -67,11 +71,9 @@ final class Context
      *
      * @psalm-param class-string<F> $factClass
      *
-     * @return Fact
-     *
      * @psalm-return T
      */
-    public function fact(string $factClass)
+    public function fact(string $factClass): Fact
     {
         if (!isset($this->facts[$factClass])) {
             throw new FactNotFound(sprintf(
