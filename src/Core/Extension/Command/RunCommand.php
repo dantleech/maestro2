@@ -44,7 +44,6 @@ class RunCommand extends Command
         Loop::run(function () use ($input) {
             yield $this->maestro->run(
                 pipeline: $input->getArgument(self::ARG_PIPELINE),
-                repos: $input->getOption(self::OPT_REPO)
             );
         });
 

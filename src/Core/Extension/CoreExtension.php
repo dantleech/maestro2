@@ -23,6 +23,7 @@ use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\NullTaskHandler;
+use Maestro2\Core\Task\ParallelTaskHandler;
 use Maestro2\Core\Task\ProcessTaskHandler;
 use Maestro2\Core\Task\ReplaceLineHandler;
 use Maestro2\Core\Task\SequentialTaskHandler;
@@ -62,6 +63,7 @@ class CoreExtension implements Extension
 
         $container->register(Maestro::class, function (Container $container) {
             return new Maestro(
+                $container->get(MainNode::class),
                 $container->get(Worker::class),
                 $container->get(Queue::class)
             );
@@ -91,6 +93,7 @@ class CoreExtension implements Extension
         $container->register(HandlerFactory::class, function (Container $container) {
             return new HandlerFactory([
                 new SequentialTaskHandler($container->get(Queue::class)),
+                new ParallelTaskHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class), $container->get(WorkspacePathResolver::class)),
                 new ProcessTaskHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
@@ -107,8 +110,6 @@ class CoreExtension implements Extension
                 new ReplaceLineHandler($container->get(ReportManager::class)),
                 new ComposerHandler($container->get(Queue::class), $container->get(ProcessRunner::class)),
                 new GitCommitHandler($container->get(ProcessRunner::class)),
-                new RectorComposerUpgradeHandler($container->get(Queue::class)),
-                new PhpStanHandler($container->get(Queue::class)),
             ]);
         });
 

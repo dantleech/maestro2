@@ -14,6 +14,6 @@ class NullTaskHandler implements Handler
 
     public function run(Task $task, Context $context): Promise
     {
-        return new Success();
+        return new Success($context);
     }
 }

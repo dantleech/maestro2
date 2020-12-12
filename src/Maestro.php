@@ -14,11 +14,13 @@ use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Stage\Stage\NullRepositoryStage;
 use Maestro2\Core\Task\Context;
+use Maestro2\Core\Task\TaskContext;
 use function Amp\call;
 
 class Maestro
 {
     public function __construct(
+        private MainNode $config,
         private Worker $worker,
         private Enqueuer $enqueuer
     )
@@ -29,7 +31,12 @@ class Maestro
         string $pipeline
     ): Promise {
         return call(function () use ($pipeline) {
-            $promise = $this->enqueuer->enqueue($this->resolvePipeline($pipeline), Context::create());
+            $promise = $this->enqueuer->enqueue(
+                TaskContext::create(
+                    $this->resolvePipeline($pipeline)->build($this->config),
+                    Context::create()
+                )
+            );
 
             yield $this->worker->start();
             yield $promise;

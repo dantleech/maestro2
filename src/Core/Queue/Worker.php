@@ -60,7 +60,7 @@ class Worker
                 $id++;
                 asyncCall(function () use ($task, &$promises, $id) {
                     $this->running[$id] = $task;
-                    $result = yield $this->handlerFactory->handlerFor($task)->run($task);
+                    $result = yield $this->handlerFactory->handlerFor($task->task())->run($task->task(), $task->context());
                     $this->dequeuer->resolve($task, $result);
                     unset($this->running[$id]);
                 });

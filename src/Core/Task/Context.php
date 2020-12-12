@@ -26,8 +26,12 @@ final class Context
         return $this->vars;
     }
 
-    public function merge(Context $context): self
+    public function merge(?Context $context): self
     {
+        if (null === $context) {
+            return $this;
+        }
+
         return new self(array_merge($this->vars, $context->vars));
     }
 

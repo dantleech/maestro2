@@ -25,7 +25,7 @@ class FileHandler implements Handler
 
     public function run(Task $task, Context $context): Promise
     {
-        return call(function () use ($task) {
+        return call(function () use ($task, $context) {
             assert($task instanceof FileTask);
             return match ($task->type()) {
                 'directory' => $this->handleDirectory($task),
@@ -35,6 +35,9 @@ class FileHandler implements Handler
                 $task->type()
             ))
             };
+
+            return $context;
+            
         });
     }
 
