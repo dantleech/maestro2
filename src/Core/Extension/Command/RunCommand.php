@@ -8,7 +8,6 @@ use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportProvider;
 use Maestro2\Maestro;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

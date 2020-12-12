@@ -3,17 +3,12 @@
 namespace Maestro2;
 
 use Amp\Promise;
-use Amp\Success;
-use Maestro2\Core\Build\BuildFactory;
-use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Exception\RuntimeException;
-use Maestro2\Core\Fact\PhpFact;
 use Maestro2\Core\Pipeline\NullPipeline;
 use Maestro2\Core\Pipeline\Pipeline;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Queue\Worker;
-use Maestro2\Core\Stage\Stage\NullRepositoryStage;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\TaskContext;
 use function Amp\call;
@@ -24,8 +19,7 @@ class Maestro
         private MainNode $config,
         private Worker $worker,
         private Enqueuer $enqueuer
-    )
-    {
+    ) {
     }
 
     public function run(

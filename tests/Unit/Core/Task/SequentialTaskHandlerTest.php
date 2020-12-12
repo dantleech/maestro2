@@ -12,9 +12,6 @@ use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\SequentialTaskHandler;
-use Maestro2\Core\Task\Task;
-use PHPUnit\Framework\TestCase;
-use function Amp\Promise\wait;
 
 class SequentialTaskHandlerTest extends HandlerTestCase
 {

@@ -5,12 +5,10 @@ namespace Maestro2\Tests\Unit\Core\Task;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Report\ReportManager;
-use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\GitCommitHandler;
 use Maestro2\Core\Task\GitCommitTask;
 use Maestro2\Core\Task\Handler;
-use PHPUnit\Framework\TestCase;
 
 class GitCommitHandlerTest extends HandlerTestCase
 {

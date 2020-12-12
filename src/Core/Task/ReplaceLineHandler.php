@@ -32,7 +32,7 @@ class ReplaceLineHandler implements Handler
         }
 
         $before = file_get_contents($task->path());
-        $after = implode('', array_map(function (string $lineOrDelim) use ($task): string  {
+        $after = implode('', array_map(function (string $lineOrDelim) use ($task): string {
             if (preg_match($task->regexp(), $lineOrDelim)) {
                 return $task->line();
             }

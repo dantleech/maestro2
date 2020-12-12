@@ -3,7 +3,6 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
-use Closure;
 
 class ClosureHandler implements Handler
 {

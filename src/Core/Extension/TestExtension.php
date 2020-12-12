@@ -3,9 +3,7 @@
 namespace Maestro2\Core\Extension;
 
 use Maestro2\Core\Queue\Queue;
-use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Queue\TestQueue;
-use Maestro2\Core\Task\HandlerFactory;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;

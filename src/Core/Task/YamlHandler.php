@@ -5,9 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Amp\Success;
 use Exception;
-use JsonException;
 use Maestro2\Core\Task\Exception\TaskError;
-use Symfony\Component\DependencyInjection\Dumper\YamlDumper;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlHandler implements Handler
@@ -24,7 +22,6 @@ class YamlHandler implements Handler
         $existingData = [];
 
         if (file_exists($task->path())) {
-
             try {
                 $existingData = Yaml::parse(file_get_contents($task->path()));
             } catch (Exception $e) {

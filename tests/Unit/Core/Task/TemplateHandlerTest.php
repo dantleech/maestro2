@@ -5,11 +5,7 @@ namespace Maestro2\Tests\Unit\Core\Task;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\TemplateTask;
 use Maestro2\Core\Task\TemplateHandler;
-use Maestro2\Tests\IntegrationTestCase;
 use SplFileInfo;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use function Amp\Promise\wait;
 
 class TemplateHandlerTest extends HandlerTestCase
 {

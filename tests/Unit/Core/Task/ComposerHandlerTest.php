@@ -7,13 +7,10 @@ use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Process\TestProcessRunner;
-use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
-use Maestro2\Tests\Unit\Core\Task\HandlerTestCase;
-use PHPUnit\Framework\TestCase;
 
 class ComposerHandlerTest extends HandlerTestCase
 {
@@ -61,7 +58,9 @@ EOT
 
     public function testUpdatesComposer(): void
     {
-        $this->workspace()->put('composer.json', <<<'EOT'
+        $this->workspace()->put(
+            'composer.json',
+            <<<'EOT'
 {
     "require": {
         "foobar/barfoo": "^1.0"
@@ -90,7 +89,9 @@ EOT
 
     public function testRemoves(): void
     {
-        $this->workspace()->put('composer.json', <<<'EOT'
+        $this->workspace()->put(
+            'composer.json',
+            <<<'EOT'
 {
     "require": {
         "foobar/barfoo": "^1.0",

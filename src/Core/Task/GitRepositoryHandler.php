@@ -2,11 +2,9 @@
 
 namespace Maestro2\Core\Task;
 
-use Amp\Process\Process;
 use Amp\Promise;
 use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Process\ProcessRunner;
-use function Amp\ByteStream\buffer;
 use function Amp\call;
 
 class GitRepositoryHandler implements Handler

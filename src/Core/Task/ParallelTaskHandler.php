@@ -3,7 +3,6 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
-use Amp\Success;
 use Maestro2\Core\Queue\Enqueuer;
 use function Amp\Promise\all;
 use function Amp\call;

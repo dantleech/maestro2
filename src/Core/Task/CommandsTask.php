@@ -9,8 +9,7 @@ class CommandsTask implements Task
         private string $group = 'commands',
         private bool $failFast = false,
         private ?string $cwd = null,
-    )
-    {
+    ) {
     }
 
     public function commands(): array

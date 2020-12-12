@@ -11,7 +11,6 @@ use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Util\PermissionUtil;
 use Twig\Environment;
-use Twig\Extension\StringLoaderExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;

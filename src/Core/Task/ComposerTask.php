@@ -2,8 +2,6 @@
 
 namespace Maestro2\Core\Task;
 
-use Maestro2\Core\Task\Task;
-
 class ComposerTask implements Task
 {
     public function __construct(

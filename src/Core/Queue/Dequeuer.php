@@ -2,7 +2,6 @@
 
 namespace Maestro2\Core\Queue;
 
-use Maestro2\Core\Task\Task;
 use Maestro2\Core\Task\TaskContext;
 
 interface Dequeuer

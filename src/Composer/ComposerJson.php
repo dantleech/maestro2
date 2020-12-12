@@ -41,7 +41,7 @@ final class ComposerJson
                     }
 
                     return (object)$composer;
-                })(json_decode($contents, false,  512, JSON_THROW_ON_ERROR));
+                })(json_decode($contents, false, 512, JSON_THROW_ON_ERROR));
             })(file_get_contents($composerPath));
         })($projectRoot . '/composer.json'));
     }

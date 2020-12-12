@@ -5,7 +5,6 @@ namespace Maestro2\Core\Config;
 use DTL\Invoke\Invoke;
 use Exception;
 use Maestro2\Core\Config\Exception\CouldNotLoadConfig;
-use RuntimeException;
 use function json_decode;
 
 class ConfigLoader

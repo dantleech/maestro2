@@ -2,12 +2,9 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\JsonMergeTask;
-use Maestro2\Tests\IntegrationTestCase;
-use PHPUnit\Framework\TestCase;
 use stdClass;
 
 class JsonMergeHandlerTest extends HandlerTestCase

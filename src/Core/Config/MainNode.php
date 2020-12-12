@@ -3,7 +3,6 @@
 namespace Maestro2\Core\Config;
 
 use DTL\Invoke\Invoke;
-use Maestro2\Core\Config\Exception\ConfigError;
 use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Fact\PhpFact;
 
@@ -57,7 +56,8 @@ final class MainNode
             if (!isset($this->repositories[$name])) {
                 throw new RuntimeException(sprintf(
                     'Repository "%s" not known, known repositories "%s"',
-                    $name, implode('", "', array_keys($this->repositories))
+                    $name,
+                    implode('", "', array_keys($this->repositories))
                 ));
             }
 

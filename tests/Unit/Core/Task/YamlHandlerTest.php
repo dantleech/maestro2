@@ -2,14 +2,10 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\YamlHandler;
 use Maestro2\Core\Task\YamlTask;
-use Maestro2\Tests\IntegrationTestCase;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
-use stdClass;
 
 class YamlHandlerTest extends HandlerTestCase
 {

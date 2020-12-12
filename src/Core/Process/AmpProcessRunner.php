@@ -2,7 +2,6 @@
 
 namespace Maestro2\Core\Process;
 
-use Amp\ByteStream\InputStream;
 use Amp\ByteStream\LineReader;
 use Amp\Deferred;
 use Amp\Process\Process;
@@ -13,7 +12,6 @@ use Psr\Log\LoggerInterface;
 use function Amp\ByteStream\buffer;
 use function Amp\asyncCall;
 use function Amp\call;
-use function Amp\delay;
 
 class AmpProcessRunner implements ProcessRunner
 {

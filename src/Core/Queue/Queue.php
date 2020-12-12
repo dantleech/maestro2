@@ -4,7 +4,6 @@ namespace Maestro2\Core\Queue;
 
 use Amp\Deferred;
 use Amp\Promise;
-use Maestro2\Core\Task\Task;
 use Maestro2\Core\Task\TaskContext;
 
 class Queue implements Enqueuer, Dequeuer
