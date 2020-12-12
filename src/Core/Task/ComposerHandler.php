@@ -4,9 +4,14 @@ namespace Maestro2\Core\Task;
 
 use Amp\Promise;
 use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Fact\PhpFact;
+use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Enqueuer;
+use Maestro2\Core\Report\Report;
+use Maestro2\Core\Report\ReportPublisher;
+use Maestro2\Core\Task\Exception\TaskError;
 use Symfony\Component\Process\ExecutableFinder;
 use Webmozart\PathUtil\Path;
 use stdClass;
@@ -14,7 +19,10 @@ use function Amp\call;
 
 class ComposerHandler implements Handler
 {
-    public function __construct(private Enqueuer $enqueuer, private ProcessRunner $runner)
+    public function __construct(
+        private Enqueuer $enqueuer,
+        private ProcessRunner $runner,
+    )
     {
     }
 
@@ -48,6 +56,10 @@ class ComposerHandler implements Handler
                         'update',
                         '--working-dir=' . $cwd
                     ]);
+
+                    if (false === $result->isOk()) {
+                        throw new TaskError($result->stdErr());
+                    }
                 }
 
                 return $context;

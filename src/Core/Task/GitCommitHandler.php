@@ -62,12 +62,11 @@ class GitCommitHandler implements Handler
                 'ls-files',
                 '-m',
             ], $task->paths()), $cwd);
-            assert($result instanceof ProcessResult);
 
             if ($result->stdOut() === '') {
                 $this->publisher->publish(
                     $task->group() ?: $context->fact(GroupFact::class)->group(),
-                    Report::warn('Git commit: no files modified')
+                    Report::warn('Git commit: no files modiied')
                 );
                 return $context;
             }

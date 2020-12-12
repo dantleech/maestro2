@@ -12,6 +12,7 @@ use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
+use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\FactHandler;
@@ -76,7 +77,7 @@ class CoreExtension implements Extension
 
         $container->register(HandlerFactory::class, function (Container $container) {
             return new HandlerFactory([
-                new SequentialTaskHandler($container->get(Queue::class)),
+                new SequentialTaskHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new ParallelTaskHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class), $container->get(WorkspacePathResolver::class)),
@@ -92,7 +93,11 @@ class CoreExtension implements Extension
                 new JsonMergeHandler(),
                 new YamlHandler(),
                 new ReplaceLineHandler($container->get(ReportManager::class)),
-                new ComposerHandler($container->get(Queue::class), $container->get(ProcessRunner::class)),
+                new ComposerHandler(
+                    $container->get(Queue::class),
+                    $container->get(ProcessRunner::class),
+                    $container->get(ReportManager::class)
+                ),
                 new GitCommitHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new FactHandler(),
             ]);
