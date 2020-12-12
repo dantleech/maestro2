@@ -64,9 +64,12 @@ final class Context
 
     /**
      * @template F of Fact
+     *
      * @psalm-param class-string<F> $factClass
      *
-     * @return F
+     * @return Fact
+     *
+     * @psalm-return T
      */
     public function fact(string $factClass)
     {
