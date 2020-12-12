@@ -28,12 +28,15 @@ class Maestro
     }
 
     public function run(
-        string $pipeline
+        string $pipeline,
+        ?array $repos = []
     ): Promise {
-        return call(function () use ($pipeline) {
+        return call(function () use ($pipeline, $repos) {
             $promise = $this->enqueuer->enqueue(
                 TaskContext::create(
-                    $this->resolvePipeline($pipeline)->build($this->config),
+                    $this->resolvePipeline($pipeline)->build(
+                        $repos ? $this->config->withSelectedRepos($repos) : $this->config
+                    ),
                     Context::create()
                 )
             );
