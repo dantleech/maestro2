@@ -1,6 +1,7 @@
 <?php
 
 namespace Maestro2\Core\Task;
+
 use Stringable;
 
 class ProcessTask implements Task, Stringable

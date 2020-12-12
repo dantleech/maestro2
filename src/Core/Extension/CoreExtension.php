@@ -12,7 +12,6 @@ use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
-use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\FactHandler;

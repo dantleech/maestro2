@@ -4,11 +4,7 @@ namespace Maestro2\Core\Task;
 
 use Amp\Promise;
 use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Report\Report;
-use Maestro2\Core\Report\ReportPublisher;
 use function Amp\call;
 
 class ProcessTaskHandler implements Handler

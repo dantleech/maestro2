@@ -10,7 +10,6 @@ use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
 
@@ -161,7 +160,7 @@ EOT
     {
         $this->expectException(ProcessFailure::class);
 
-        $this->testRunner->push(ProcessResult::new(127, 'No' ,'No'));
+        $this->testRunner->push(ProcessResult::new(127, 'No', 'No'));
         $this->runTask(new ComposerTask(
             path: $this->workspace()->path(),
             update: true,

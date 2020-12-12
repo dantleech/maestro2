@@ -1,7 +1,6 @@
 <?php
 
 namespace Maestro2\Core\Task;
-use Stringable;
 
 class ParallelTask implements Task
 {

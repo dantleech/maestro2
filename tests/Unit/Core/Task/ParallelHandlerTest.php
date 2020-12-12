@@ -8,7 +8,6 @@ use Amp\Success;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Report\ReportManager;
-use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\ClosureHandler;
 use Maestro2\Core\Task\ClosureTask;
 use Maestro2\Core\Task\Context;
@@ -90,6 +89,6 @@ class ParallelHandlerTest extends HandlerTestCase
             'one' => 1,
             'three' => 3,
         ])), $context);
-        self::assertCount(1, $this->reportManager->group(self::GROUP)->reports()->fails(),  'Published failure report');
+        self::assertCount(1, $this->reportManager->group(self::GROUP)->reports()->fails(), 'Published failure report');
     }
 }

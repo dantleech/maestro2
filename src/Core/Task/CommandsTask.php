@@ -1,6 +1,7 @@
 <?php
 
 namespace Maestro2\Core\Task;
+
 use Stringable;
 
 class CommandsTask implements Task, Stringable

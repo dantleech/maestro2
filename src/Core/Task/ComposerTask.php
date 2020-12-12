@@ -1,6 +1,7 @@
 <?php
 
 namespace Maestro2\Core\Task;
+
 use Stringable;
 
 class ComposerTask implements Task, Stringable
@@ -66,6 +67,5 @@ class ComposerTask implements Task, Stringable
             implode(', ', array_keys($this->remove)),
             $this->update ? 'yes' : 'no'
         );
-
     }
 }
