@@ -43,6 +43,8 @@ class TestProcessRunner implements ProcessRunner
                     $result->stdErr()
                 ));
             }
+
+            return $result;
         });
     }
 

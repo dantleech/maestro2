@@ -57,7 +57,7 @@ class GitCommitHandler implements Handler
                 ));
             })(trim($result->stdOut()));
 
-            $result = yield $this->runner->run(array_merge([
+            $result = yield $this->runner->mustRun(array_merge([
                 'git',
                 'ls-files',
                 '-m',

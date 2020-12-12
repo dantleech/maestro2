@@ -2,9 +2,14 @@
 
 namespace Maestro2\Core\Report;
 
+use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Task\Context;
+use Maestro2\Core\Task\Task;
 use RuntimeException;
+use Stringable;
+use Throwable;
 
-class ReportManager implements ReportPublisher, ReportProvider
+class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublisher
 {
     /**
      * @var array<string, array<Report>>
@@ -41,5 +46,26 @@ class ReportManager implements ReportPublisher, ReportProvider
         return array_map(function (string $name, array $reports) {
             return new ReportGroup($name, $reports);
         }, array_keys($this->reports), $this->reports);
+    }
+
+    public function taskOk(Task $task, Context $context): void
+    {
+        // ignore boring non-stringable tasks
+        if (!$task instanceof Stringable) {
+            return;
+        }
+
+        $this->publish(
+            ($context->factOrNull(GroupFact::class)?->group()) ?: 'ungrouped',
+            Report::ok($task instanceof Stringable ? $task->__toString() : $task::class)
+        );
+    }
+
+    public function taskFail(Task $task, Context $context, Throwable $error): void
+    {
+        $this->publish(
+            ($context->factOrNull(GroupFact::class)?->group()) ?: 'ungrouped',
+            Report::fail($task instanceof Stringable ? $task->__toString() : $task::class, $error->getMessage()),
+        );
     }
 }

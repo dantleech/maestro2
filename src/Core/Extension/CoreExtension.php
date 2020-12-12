@@ -22,10 +22,10 @@ use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\NullTaskHandler;
-use Maestro2\Core\Task\ParallelTaskHandler;
+use Maestro2\Core\Task\ParallelHandler;
 use Maestro2\Core\Task\ProcessTaskHandler;
 use Maestro2\Core\Task\ReplaceLineHandler;
-use Maestro2\Core\Task\SequentialTaskHandler;
+use Maestro2\Core\Task\SequentialHandler;
 use Maestro2\Core\Task\TemplateHandler;
 use Maestro2\Core\Task\YamlHandler;
 use Maestro2\Maestro;
@@ -77,8 +77,8 @@ class CoreExtension implements Extension
 
         $container->register(HandlerFactory::class, function (Container $container) {
             return new HandlerFactory([
-                new SequentialTaskHandler($container->get(Queue::class), $container->get(ReportManager::class)),
-                new ParallelTaskHandler($container->get(Queue::class)),
+                new SequentialHandler($container->get(Queue::class), $container->get(ReportManager::class)),
+                new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class), $container->get(WorkspacePathResolver::class)),
                 new ProcessTaskHandler($container->get(ProcessRunner::class)),

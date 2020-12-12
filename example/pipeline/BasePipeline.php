@@ -20,6 +20,7 @@ abstract class BasePipeline implements Pipeline
     public function build(MainNode $mainNode): Task
     {
         return new SequentialTask([
+            new FactTask(new GroupFact('workspace')),
             new FileTask(
                 type: 'directory',
                 path: $mainNode->workspacePath(),
@@ -32,12 +33,12 @@ abstract class BasePipeline implements Pipeline
             ),
             new ParallelTask(array_map(function (RepositoryNode $repositoryNode) {
                 return new SequentialTask([
+                    new FactTask(new GroupFact($repositoryNode->name())),
                     new GitRepositoryTask(
                         path: $repositoryNode->path(),
                         url: $repositoryNode->url(),
                     ),
                     new FactTask(new CwdFact($repositoryNode->path())),
-                    new FactTask(new GroupFact($repositoryNode->name())),
                     $this->buildRepository($repositoryNode)
                 ]);
             }, $mainNode->selectedRepositories()))

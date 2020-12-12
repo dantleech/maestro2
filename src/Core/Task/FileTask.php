@@ -42,11 +42,10 @@ class FileTask implements Task, Stringable
     public function __toString(): string
     {
         return sprintf(
-            'Ensuring %s %s %s with mode %s',
+            'Ensuring %s "%s" %s',
             $this->type,
             $this->path,
             $this->exists ? 'exists' : 'doesn\'t exist',
-            $this->mode
         );
     }
 }

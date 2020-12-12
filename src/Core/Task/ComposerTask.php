@@ -59,6 +59,13 @@ class ComposerTask implements Task, Stringable
 
     public function __toString(): string
     {
-        return 'Composer';
+        return sprintf(
+            'Updating composer: dev %s, require %s, remove: %s, update %s',
+            $this->dev ? 'yes' : 'no',
+            implode(', ', array_keys($this->require)),
+            implode(', ', array_keys($this->remove)),
+            $this->update ? 'yes' : 'no'
+        );
+
     }
 }

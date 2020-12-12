@@ -12,4 +12,11 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <RedundantConditionGivenDocblockType>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </RedundantConditionGivenDocblockType>
+    </issueHandlers>
 </psalm>

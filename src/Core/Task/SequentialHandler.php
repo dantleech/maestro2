@@ -9,14 +9,15 @@ use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
+use Maestro2\Core\Report\TaskReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
 use Stringable;
 use Throwable;
 use function Amp\call;
 
-class SequentialTaskHandler implements Handler
+class SequentialHandler implements Handler
 {
-    public function __construct(private Enqueuer $taskEnqueuer, private ReportPublisher $reportPublisher)
+    public function __construct(private Enqueuer $taskEnqueuer, private TaskReportPublisher $reportPublisher)
     {
     }
 
@@ -29,23 +30,12 @@ class SequentialTaskHandler implements Handler
     {
         assert($task instanceof SequentialTask);
         return call(function () use ($task, $context) {
-            foreach ($task->tasks() as $task) {
+            foreach ($task->tasks() as $sequentialTask) {
                 try {
-                    $context = yield $this->runTask($context, $task);
-                    if ($task instanceof Stringable) {
-                        $this->reportPublisher->publish(
-                            ($context->factOrNull(GroupFact::class)?->group() ?: 'sequential'),
-                            Report::ok($task->__toString())
-                        );
-                    }
-                } catch (Throwable $taskError) {
-                    $this->reportPublisher->publish(
-                        ($context->factOrNull(GroupFact::class)?->group() ?: 'sequential'),
-                        Report::fail(
-                            $task instanceof Stringable ? $task->__toString() : $task::class,
-                            $taskError->getMessage()
-                        )
-                    );
+                    $context = yield $this->runTask($context, $sequentialTask);
+                    $this->reportPublisher->taskOk($sequentialTask, $context);
+                } catch (Throwable $error) {
+                    $this->reportPublisher->taskFail($sequentialTask, $context, $error);
                     break;
                 }
             }
