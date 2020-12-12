@@ -6,6 +6,7 @@ use Amp\Promise;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\Task;
+use Maestro2\Core\Task\TaskContext;
 
 final class TestEnqueuer implements Enqueuer, Dequeuer
 {
@@ -21,9 +22,9 @@ final class TestEnqueuer implements Enqueuer, Dequeuer
     /**
      * {@inheritDoc}
      */
-    public function enqueue(Task $task, Context $context): Promise
+    public function enqueue(TaskContext $task): Promise
     {
-        return $this->handlerFactory->handlerFor($task)->run($task, $context);
+        return $this->handlerFactory->handlerFor($task->task())->run($task->task(), $task->context());
     }
 
     public function dequeue(): ?Task

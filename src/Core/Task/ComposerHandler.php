@@ -31,8 +31,10 @@ class ComposerHandler implements Handler
         assert($task instanceof ComposerTask);
         return call(function (string $requireType) use ($task, $context) {
             yield $this->enqueuer->enqueue(
-                $this->createJsonTask($task, $requireType),
-                $context
+                TaskContext::create(
+                    $this->createJsonTask($task, $requireType),
+                    $context
+                )
             );
 
 

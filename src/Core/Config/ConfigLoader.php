@@ -40,7 +40,7 @@ class ConfigLoader
         return $mainNode;
     }
 
-    private function readConfig()
+    private function readConfig(): MainNode
     {
         foreach ($this->filenames as $filename) {
             if (is_readable($filename)) {

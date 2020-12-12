@@ -13,7 +13,7 @@ class FileTask implements Task
     ) {
     }
 
-    public function mode(): string
+    public function mode(): int
     {
         return $this->mode;
     }

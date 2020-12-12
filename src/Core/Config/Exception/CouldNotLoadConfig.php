@@ -20,7 +20,7 @@ class CouldNotLoadConfig extends RuntimeException
         return new self($exception->getMessage(), 0, $exception);
     }
 
-    public static function noConfigFileFound(array $tried)
+    public static function noConfigFileFound(array $tried): self
     {
         return new self(sprintf(
             'No config file detected, tried filenames "%s"',

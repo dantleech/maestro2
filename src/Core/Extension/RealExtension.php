@@ -14,6 +14,8 @@ class RealExtension implements Extension
 {
     /**
      * {@inheritDoc}
+     *
+     * @return void
      */
     public function load(ContainerBuilder $container)
     {
@@ -28,6 +30,8 @@ class RealExtension implements Extension
 
     /**
      * {@inheritDoc}
+     *
+     * @return void
      */
     public function configure(Resolver $schema)
     {

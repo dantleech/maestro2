@@ -23,7 +23,12 @@ class SequentialTaskHandler implements Handler
         assert($task instanceof SequentialTask);
         return call(function () use ($task, $context) {
             foreach ($task->tasks() as $task) {
-                $context = $context->merge(yield $this->taskEnqueuer->enqueue($task, $context));
+                $context = $context->merge(yield $this->taskEnqueuer->enqueue(
+                    TaskContext::create(
+                        $task,
+                        $context
+                    )
+                ));
             }
 
             return $context;

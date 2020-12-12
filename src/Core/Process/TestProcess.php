@@ -13,7 +13,7 @@ class TestProcess
         return $this->args;
     }
 
-    public function cwd(): string
+    public function cwd(): ?string
     {
         return $this->cwd;
     }

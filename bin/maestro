@@ -11,6 +11,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\ErrorHandler\ErrorHandler;
 
 if (is_file(__DIR__ . '/../vendor/autoload.php')) {
     $autoloader = require __DIR__ . '/../vendor/autoload.php';
@@ -23,6 +24,7 @@ if (is_file(__DIR__ . '/../vendor/autoload.php')) {
 }
 
 
+ErrorHandler::register();
 $application = new Application('Maestro 2');
 $container = PhpactorContainer::fromExtensions([
     CoreExtension::class,

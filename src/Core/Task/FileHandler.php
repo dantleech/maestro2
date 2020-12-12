@@ -63,7 +63,7 @@ class FileHandler implements Handler
         mkdir($task->path(), $task->mode(), true);
     }
 
-    private function removeDirectory(string $path)
+    private function removeDirectory(string $path): void
     {
         if (0 !== strpos($path, getcwd())) {
             throw new RuntimeException(sprintf(

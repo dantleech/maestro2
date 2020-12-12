@@ -42,10 +42,15 @@
     "require-dev": {
         "vimeo/psalm": "^4.2",
         "phpunit/phpunit": "^9.4",
-        "squizlabs/php_codesniffer": "3.*",
-        "doctrine/coding-standard": "9999999-dev",
         "symfony/process": "9999999-dev",
         "symfony/debug": "9999999-dev",
         "symfony/error-handler": "9999999-dev"
+    },
+    "scripts": {
+        "integrate": [
+            "./vendor/bin/phpunit",
+            "./vendor/bin/psalm --show-info=true",
+            "./vendor/bin/php-cs-fixer fix"
+        ]
     }
 }

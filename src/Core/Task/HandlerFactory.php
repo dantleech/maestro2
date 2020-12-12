@@ -10,7 +10,7 @@ class HandlerFactory
     {
     }
 
-    public function handlerFor($task): Handler
+    public function handlerFor(Task $task): Handler
     {
         foreach ($this->handlers as $handler) {
             if ($handler->taskFqn() === $task::class) {

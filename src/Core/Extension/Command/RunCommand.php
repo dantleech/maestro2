@@ -54,13 +54,15 @@ class RunCommand extends Command
         foreach ($this->reportProvider->groups() as $group) {
             $style->section($group->name());
             foreach ($group->reports() as $report) {
+                assert($report instanceof Report);
                 $output->writeln(sprintf(
                     "  %s %s",
                     match ($report->level()) {
                         Report::LEVEL_OK => '<fg=green>✔</>',
+                        Report::LEVEL_WARN => '<fg=yellow>⚠</>',
                         Report::LEVEL_FAIL => '<fg=red>✘</>',
                     },
-                        $report->title()
+                    $report->title()
                 ));
                 if ($report->body()) {
                     $style->block(

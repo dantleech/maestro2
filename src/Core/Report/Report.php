@@ -32,6 +32,9 @@ final class Report
         return $this->body;
     }
 
+    /**
+     * @return self::LEVEL_OK | self::LEVEL_WARN | self::LEVEL_FAIL
+     */
     public function level(): string
     {
         return $this->level;

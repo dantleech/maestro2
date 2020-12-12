@@ -8,7 +8,7 @@ class SequentialTask implements Task
     {
     }
 
-    public function tasks()
+    public function tasks(): array
     {
         return $this->tasks;
     }

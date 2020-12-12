@@ -17,6 +17,8 @@ class TestExtension implements Extension
 {
     /**
      * {@inheritDoc}
+     *
+     * @return void
      */
     public function load(ContainerBuilder $container)
     {
@@ -31,6 +33,8 @@ class TestExtension implements Extension
 
     /**
      * {@inheritDoc}
+     *
+     * @return void
      */
     public function configure(Resolver $schema)
     {

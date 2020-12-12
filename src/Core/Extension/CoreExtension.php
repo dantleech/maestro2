@@ -2,7 +2,6 @@
 
 namespace Maestro2\Core\Extension;
 
-use Maestro2\Core\Build\BuildFactory;
 use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Extension\Command\ReplCommand;
@@ -63,7 +62,8 @@ class CoreExtension implements Extension
 
         $container->register(Maestro::class, function (Container $container) {
             return new Maestro(
-                $container->get(BuildFactory::class)
+                $container->get(Worker::class),
+                $container->get(Queue::class)
             );
         });
 

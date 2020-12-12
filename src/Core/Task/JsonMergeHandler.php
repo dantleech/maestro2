@@ -54,7 +54,7 @@ class JsonMergeHandler implements Handler
         return new Success();
     }
 
-    private function mergeData(object $existingData, $data): object
+    private function mergeData(object $existingData, array $data): object
     {
         foreach ($data as $key => $value) {
             if (!property_exists($existingData, $key)) {
