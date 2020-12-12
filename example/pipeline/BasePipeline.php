@@ -12,7 +12,7 @@ use Maestro2\Core\Task\ParallelTask;
 use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\Task;
 
-class BasePipeline implements Pipeline
+abstract class BasePipeline implements Pipeline
 {
     public function build(MainNode $mainNode): Task
     {
@@ -35,7 +35,7 @@ class BasePipeline implements Pipeline
                     ),
                     $this->buildRepository($repositoryNode)
                 ]);
-            }, $mainNode->repositories()))
+            }, $mainNode->selectedRepositories()))
         ]);
     }
 
