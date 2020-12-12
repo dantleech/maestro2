@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
+use Maestro2\Core\Fact\PhpFact;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Task\Handler;
@@ -40,7 +41,12 @@ class ComposerHandler implements Handler
 
             if ($task->update() === true) {
                 $finder = new ExecutableFinder();
-                yield $this->runner->mustRun([$task->phpBin(), $task->composerBin() ?: $finder->find('composer'), 'update', '--working-dir=' . $task->path()]);
+                yield $this->runner->mustRun([
+                    $context->fact(PhpFact::class)->phpBin(),
+                    $task->composerBin() ?: $finder->find('composer'),
+                    'update',
+                    '--working-dir=' . $task->path()
+                ]);
             }
         }, $task->dev() ? 'require-dev' : 'require');
     }

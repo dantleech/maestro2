@@ -5,12 +5,10 @@ namespace Maestro2\Core\Task;
 use Maestro2\Core\Fact\Fact;
 use Maestro2\Core\Task\Exception\FactNotFound;
 
-/**
- * @template T of Fact
- */
 final class Context
 {
     /**
+     * @template T of Fact
      * @param array<string,mixed> $vars
      * @psalm-param array<class-string<T>,T> $facts
      */
@@ -20,7 +18,7 @@ final class Context
 
     /**
      * @param array<string,mixed> $vars
-     * @psalm-param array<class-string<Fact>,Fact> $facts
+     * @psalm-param array<int,Fact> $facts
      */
     public static function create(array $vars = [], array $facts = []): self
     {
@@ -47,7 +45,10 @@ final class Context
             return $this;
         }
 
-        return new self(array_merge($this->vars, $context->vars));
+        return new self(
+            array_merge($this->vars, $context->vars),
+            array_merge($this->facts, $context->facts),
+        );
     }
 
     public function withVar(string $key, mixed $value): self
@@ -60,7 +61,7 @@ final class Context
 
     public function withFact(Fact $fact): self
     {
-        return (static function (array $facts) use ($fact): self {
+        return (function (array $facts) use ($fact): self {
             $facts[$fact::class] = $fact;
             return new self($this->vars, $facts);
         })($this->facts);
@@ -71,7 +72,7 @@ final class Context
      *
      * @psalm-param class-string<F> $factClass
      *
-     * @psalm-return T
+     * @return F
      */
     public function fact(string $factClass): Fact
     {

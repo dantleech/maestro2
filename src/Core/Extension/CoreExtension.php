@@ -16,6 +16,7 @@ use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\ComposerHandler;
+use Maestro2\Core\Task\FactHandler;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitCommitHandler;
 use Maestro2\Core\Task\GitCommitTask;
@@ -102,6 +103,7 @@ class CoreExtension implements Extension
                 new ReplaceLineHandler($container->get(ReportManager::class)),
                 new ComposerHandler($container->get(Queue::class), $container->get(ProcessRunner::class)),
                 new GitCommitHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
+                new FactHandler(),
             ]);
         });
 

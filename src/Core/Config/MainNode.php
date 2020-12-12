@@ -5,6 +5,7 @@ namespace Maestro2\Core\Config;
 use DTL\Invoke\Invoke;
 use Maestro2\Core\Config\Exception\ConfigError;
 use Maestro2\Core\Exception\RuntimeException;
+use Maestro2\Core\Fact\PhpFact;
 
 final class MainNode
 {
@@ -13,12 +14,13 @@ final class MainNode
      */
     private array $repositories;
     private string $workspacePath;
+    private PhpFact $php;
 
     /**
      * @param array<array<string, mixed>> $repositories
      * @param array<string> $selectedRepositories
      */
-    public function __construct(string $workspacePath, array $repositories, private array $vars = [], private ?array $selectedRepositories = null)
+    public function __construct(string $workspacePath, array $repositories, private array $vars = [], private ?array $selectedRepositories = null, array $php = [])
     {
         $this->repositories = (function (array $repositories) {
             return array_combine(array_map(
@@ -31,6 +33,7 @@ final class MainNode
             ], $repository)),
             $repositories
         ));
+        $this->php = Invoke::new(PhpFact::class, $php);
         $this->workspacePath = $workspacePath;
     }
 
@@ -86,5 +89,10 @@ final class MainNode
         $new->selectedRepositories = $repos;
 
         return $new;
+    }
+
+    public function php(): PhpFact
+    {
+        return $this->php;
     }
 }

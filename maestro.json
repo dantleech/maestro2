@@ -1,4 +1,7 @@
 {
+    "php": {
+        "phpBin": "php7.3"
+    },
     "workspacePath": "/home/daniel/www/dantleech/maestro-two/var",
     "vars": {
         "composer.require": {

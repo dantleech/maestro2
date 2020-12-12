@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Report\Report;
@@ -25,11 +26,15 @@ class ProcessTaskHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof ProcessTask);
-        return call(function () use ($task) {
-            $result = yield $this->processRunner->run($task->args(), $task->cwd());
+        return call(function () use ($task, $context) {
+            $result = yield $this->processRunner->run(
+                $task->args(),
+                $task->cwd() ?: $context->fact(CwdFact::class)->cwd()
+            );
 
             $this->publishReport($task, $result);
-            return $result;
+
+            return null;
         });
     }
 
