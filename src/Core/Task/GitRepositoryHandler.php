@@ -28,6 +28,7 @@ class GitRepositoryHandler implements Handler
             yield $this->runner->mustRun([
                 'git',
                 'clone',
+                '--depth=1',
                 $task->url(),
                 $path
             ]);
