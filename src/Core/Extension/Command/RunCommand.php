@@ -17,9 +17,9 @@ use Throwable;
 
 class RunCommand extends Command
 {
-    const NAME = 'run';
-    const ARG_PIPELINE = 'pipeline';
-    const OPT_REPO = 'repo';
+    private const NAME = 'run';
+    private const ARG_PIPELINE = 'pipeline';
+    private const OPT_REPO = 'repo';
 
     public function __construct(
         private Maestro $maestro,
@@ -49,12 +49,14 @@ class RunCommand extends Command
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
         });
+        $start = microtime(true);
         Loop::run(function () use ($input, $pipeline) {
             yield $this->maestro->run(
                 pipeline: $pipeline,
                 repos: (array)$input->getOption(self::OPT_REPO)
             );
         });
+        $duration = microtime(true) - $start;
 
         $style = new SymfonyStyle($input, $output);
 
@@ -83,6 +85,8 @@ class RunCommand extends Command
             }
             $output->writeln('');
         }
+
+        $output->writeln(sprintf('<bg=green;fg=black;options=bold>Done in %ss</>', number_format($duration, 2)));
 
         return 0;
     }
