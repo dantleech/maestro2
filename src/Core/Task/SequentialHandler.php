@@ -6,6 +6,8 @@ use Amp\Promise;
 use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\TaskReportPublisher;
+use Maestro2\Core\Task\Exception\SequentialTaskError;
+use Maestro2\Core\Task\Exception\TaskError;
 use Throwable;
 use function Amp\call;
 
@@ -29,8 +31,11 @@ class SequentialHandler implements Handler
                     $context = yield $this->runTask($context, $sequentialTask);
                     $this->reportPublisher->taskOk($sequentialTask, $context);
                 } catch (Throwable $error) {
-                    $this->reportPublisher->taskFail($sequentialTask, $context, $error);
-                    break;
+                    if (!$error instanceof SequentialTaskError) {
+                        $this->reportPublisher->taskFail($sequentialTask, $context, $error);
+                    }
+
+                    throw new SequentialTaskError(sprintf('Task sequence failed: %s', $error->getMessage(), 0, $error));
                 }
             }
 

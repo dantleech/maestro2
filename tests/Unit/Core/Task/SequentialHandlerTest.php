@@ -10,6 +10,8 @@ use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\ClosureHandler;
 use Maestro2\Core\Task\ClosureTask;
 use Maestro2\Core\Task\Context;
+use Maestro2\Core\Task\Exception\SequentialTaskError;
+use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\SequentialTask;
@@ -63,19 +65,40 @@ class SequentialHandlerTest extends HandlerTestCase
 
     public function testFailsEarlyAndPublishesAReport(): void
     {
-        $context = $this->runTask(new SequentialTask([
-            new ClosureTask(function (array $args, Context $context): Promise {
-                return new Success($context->withVar('count', 1));
-            }),
-            new ClosureTask(function (array $args, Context $context): Promise {
-                throw new RuntimeException('Oh dear!!');
-            }),
-            new ClosureTask(function (array $args, Context $context): Promise {
-                return new Success($context->withVar('count', $context->var('count') + 1));
-            }),
-        ]));
+        try {
+            $context = $this->runTask(new SequentialTask([
+                new ClosureTask(function (array $args, Context $context): Promise {
+                    return new Success($context->withVar('count', 1));
+                }),
+                new ClosureTask(function (array $args, Context $context): Promise {
+                    throw new RuntimeException('Oh dear!!');
+                }),
+                new ClosureTask(function (array $args, Context $context): Promise {
+                    return new Success($context->withVar('count', $context->var('count') + 1));
+                }),
+            ]));
+        } catch (TaskError $error) {
+        }
 
-        self::assertEquals(1, $context->var('count'), 'Did not execute 3rd task');
+        self::assertNotNull($error, 'Exception was thrown');
+        self::assertInstanceOf(SequentialTaskError::class, $error, 'Correct error type thrown');
+
         self::assertCount(1, $this->reportManager->group(self::GROUP)->reports()->fails(), 'Published failure report');
+    }
+
+    public function testDoesNotPublishReportForSequentialTaskErrors(): void
+    {
+        try {
+            $context = $this->runTask(new SequentialTask([
+                new ClosureTask(function (array $args, Context $context): Promise {
+                    throw new SequentialTaskError('Oh dear!!');
+                }),
+            ]));
+        } catch (TaskError $error) {
+        }
+
+        self::assertInstanceOf(SequentialTaskError::class, $error, 'Correct error type thrown');
+
+        self::assertCount(0, $this->reportManager->groups()->reports()->fails(), 'Did not publish failure report');
     }
 }
