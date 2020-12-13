@@ -18,6 +18,7 @@ use Maestro2\Core\Task\FactHandler;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitCommitHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
+use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\NullTaskHandler;
@@ -41,6 +42,8 @@ use Twig\Loader\FilesystemLoader;
 
 class CoreExtension implements Extension
 {
+    const TAG_TASK_HANDLER = 'maestro.task_handler';
+
     /**
      * {@inheritDoc}
      */
@@ -75,7 +78,7 @@ class CoreExtension implements Extension
         });
 
         $container->register(HandlerFactory::class, function (Container $container) {
-            return new HandlerFactory([
+            return new HandlerFactory(array_merge([
                 new SequentialHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
@@ -98,7 +101,11 @@ class CoreExtension implements Extension
                 ),
                 new GitCommitHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new FactHandler(),
-            ]);
+            ], (static function (array $taggedServices) use ($container) {
+                return array_map(static function (string $serviceId) use ($container): Handler {
+                    return $container->get($serviceId);
+                }, array_keys($taggedServices));
+            })($container->getServiceIdsForTag(self::TAG_TASK_HANDLER))));
         });
 
         $container->register(ProcessRunner::class, function (Container $container) {
