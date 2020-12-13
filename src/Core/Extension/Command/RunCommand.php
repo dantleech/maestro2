@@ -48,6 +48,7 @@ class RunCommand extends Command
         })($input->getArgument(self::ARG_PIPELINE));
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
+            $output->writeln($error->getTraceAsString());
         });
         $start = microtime(true);
         Loop::run(function () use ($input, $pipeline) {
