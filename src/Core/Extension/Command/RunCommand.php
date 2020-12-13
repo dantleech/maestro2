@@ -49,6 +49,12 @@ class RunCommand extends Command
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
             $output->writeln($error->getTraceAsString());
+
+            while ($previous = $error->getPrevious()) {
+                $output->writeln(sprintf('Previous <error>%s</>', $previous->getMessage()));
+                $output->writeln($previous->getTraceAsString());
+                $error = $previous;
+            }
         });
         $start = microtime(true);
         Loop::run(function () use ($input, $pipeline) {
@@ -73,6 +79,7 @@ class RunCommand extends Command
                         Report::LEVEL_OK => '<fg=green>✔</>',
                         Report::LEVEL_WARN => '<fg=yellow>⚠</>',
                         Report::LEVEL_FAIL => '<fg=red>✘</>',
+                        Report::LEVEL_INFO => '<fg=blue>i</>',
                     },
                     $report->title()
                 ));
@@ -88,17 +95,19 @@ class RunCommand extends Command
             $output->writeln('');
         }
 
-        (function (int $total, int $warns, int $fails) use ($output, $duration) {
+        (function (int $total, int $infos, int $warns, int $fails) use ($output, $duration) {
             $output->writeln(sprintf(
-                '<%s;options=bold>%s reports, %s warnings, %s failed in %ss</>',
+                '<%s;options=bold>%s reports, %s informations, %s warnings, %s failed in %ss</>',
                 $fails > 0 ? 'bg=red;fg=white' : ($warns > 0 ? 'bg=yellow;fg=black' : 'bg=green;fg=black'),
                 $total,
+                $infos,
                 $warns,
                 $fails,
                 number_format($duration, 2),
             ));
         })(
             $reports->reports()->count(),
+            $reports->reports()->infos()->count(),
             $reports->reports()->warns()->count(),
             $reports->reports()->fails()->count(),
         );

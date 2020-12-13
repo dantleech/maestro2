@@ -32,6 +32,14 @@ class Reports implements IteratorAggregate, Countable
         ));
     }
 
+    public function infos(): self
+    {
+        return new self(...array_filter(
+            $this->reports,
+            fn (Report $report) => $report->level() === Report::LEVEL_INFO
+        ));
+    }
+
     public function oks(): self
     {
         return new self(...array_filter(
