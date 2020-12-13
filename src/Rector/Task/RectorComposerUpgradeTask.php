@@ -8,23 +8,17 @@ use Maestro2\Core\Task\Task;
 class RectorComposerUpgradeTask implements Task
 {
     public function __construct(
-        private string $repoPath,
-        private string $phpBin = PHP_BINARY,
-        private string $rectorVersion = '0.8.52'
+        private ?string $path = null,
+        private ?string $rectorVersion = '0.8.52'
     ) {
     }
 
-    public function repoPath(): string
+    public function path(): ?string
     {
-        return $this->repoPath;
+        return $this->path;
     }
 
-    public function phpBin(): string
-    {
-        return $this->phpBin;
-    }
-
-    public function rectorVersion(): string
+    public function rectorVersion(): ?string
     {
         return $this->rectorVersion;
     }

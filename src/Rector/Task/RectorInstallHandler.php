@@ -46,7 +46,7 @@ class RectorInstallHandler implements Handler
                     new ComposerTask(
                         path: $cwd,
                         require: [
-                            'rector/rector' => $task->version(),
+                            'rector/rector-prefixed' => $task->version(),
                         ],
                         update: true
                     ),
