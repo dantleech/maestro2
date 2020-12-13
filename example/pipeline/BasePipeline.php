@@ -2,11 +2,13 @@
 
 namespace Maestro2\Examples\Pipeline;
 
+use Maestro2\Composer\Task\ComposerJsonFactTask;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Config\RepositoryNode;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Pipeline\Pipeline;
+use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Task\FactTask;
 use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\GitRepositoryTask;
@@ -14,6 +16,7 @@ use Maestro2\Core\Task\NullTask;
 use Maestro2\Core\Task\ParallelTask;
 use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\Task;
+use Maestro2\Rector\Task\RectorInstallTask;
 
 class BasePipeline implements Pipeline
 {
@@ -23,22 +26,24 @@ class BasePipeline implements Pipeline
             new FactTask(new GroupFact('workspace')),
             new FileTask(
                 type: 'directory',
-                path: $mainNode->workspacePath(),
+                path: $mainNode->workspacePath() . '/build',
                 exists: false
             ),
             new FileTask(
                 type: 'directory',
-                path: $mainNode->workspacePath(),
+                path: $mainNode->workspacePath() . '/build',
                 exists: true
             ),
             new ParallelTask(array_map(function (RepositoryNode $repositoryNode) {
+                $cwd = $repositoryNode->main()->workspacePath() . '/build/' . $repositoryNode->name();
                 return new SequentialTask([
                     new FactTask(new GroupFact($repositoryNode->name())),
                     new GitRepositoryTask(
-                        path: $repositoryNode->path(),
+                        path: $cwd,
                         url: $repositoryNode->url(),
                     ),
-                    new FactTask(new CwdFact($repositoryNode->path())),
+                    new FactTask(new CwdFact($cwd)),
+                    new ComposerJsonFactTask(),
                     $this->buildRepository($repositoryNode)
                 ]);
             }, $mainNode->selectedRepositories()))
