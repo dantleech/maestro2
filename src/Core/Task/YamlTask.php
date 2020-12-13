@@ -7,7 +7,12 @@ use Stringable;
 
 class YamlTask implements Task, Stringable
 {
-    public function __construct(private string $path, private array $data = [], private ?Closure $filter = null)
+    public function __construct(
+        private string $path,
+        private array $data = [],
+        private int $inline = 2,
+        private ?Closure $filter = null
+    )
     {
     }
 
@@ -28,6 +33,11 @@ class YamlTask implements Task, Stringable
 
     public function __toString(): string
     {
-        return sprintf('Treated YAML file at "%s"', $this->path);
+        return sprintf('Treated YAML file at "%s" (inline: %s)', $this->path, $this->inline);
+    }
+
+    public function inline(): int
+    {
+        return $this->inline;
     }
 }

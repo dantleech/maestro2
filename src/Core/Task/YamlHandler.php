@@ -42,7 +42,7 @@ class YamlHandler implements Handler
 
         file_put_contents(
             $path,
-            Yaml::dump($data)
+            Yaml::dump($data, $task->inline())
         );
 
         return new Success($context);
