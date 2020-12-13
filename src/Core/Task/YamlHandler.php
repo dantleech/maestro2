@@ -19,12 +19,13 @@ class YamlHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof YamlTask);
+        $path = $context->fact(CwdFact::class)->makeAbsolute($task->path());
 
         $existingData = [];
 
-        if (file_exists($task->path())) {
+        if (file_exists($path)) {
             try {
-                $existingData = Yaml::parse(file_get_contents($task->path()));
+                $existingData = Yaml::parse(file_get_contents($path));
             } catch (Exception $e) {
                 throw new TaskError(sprintf(
                     'Could not parse YAML: "%s"',
@@ -40,7 +41,7 @@ class YamlHandler implements Handler
         }
 
         file_put_contents(
-            $context->fact(CwdFact::class)->makeAbsolute($task->path()),
+            $path,
             Yaml::dump($data)
         );
 

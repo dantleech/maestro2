@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
+use Closure;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
@@ -38,7 +39,26 @@ class ProcessTaskHandler implements Handler
                 })(ProcessFailure::fromResult($result, $task->args()));
             }
 
-            return $context;
+            return (static function (?Closure $after, ProcessResult $result, Context $context): Context  {
+                if (null === $after) {
+                    return $context;
+                }
+
+                $context = $after($result, $context);
+
+                /**
+                 * @psalm-suppress RedundantCondition 
+                 * @psalm-suppress TypeDoesNotContainType
+                 */
+                if (!$context instanceof Context) {
+                    throw new TaskError(sprintf(
+                        'Process after-closure must return the Context (which is passed as the 2nd argument to the closure, got "%s"',
+                        is_object($context) ? $context::class : gettype($context)
+                    ));
+                }
+
+                return $context;
+            })($task->after(), $result, $context);
         }, $task->cwd() ?: $context->fact(CwdFact::class)->cwd());
     }
 

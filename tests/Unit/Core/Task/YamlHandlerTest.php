@@ -2,6 +2,8 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\YamlHandler;
 use Maestro2\Core\Task\YamlTask;
@@ -9,6 +11,13 @@ use Symfony\Component\Yaml\Yaml;
 
 class YamlHandlerTest extends HandlerTestCase
 {
+    protected function defaultContext(): Context
+    {
+        return Context::create([], [
+            new CwdFact($this->workspace()->path())
+        ]);
+    }
+
     protected function createHandler(): Handler
     {
         return new YamlHandler();

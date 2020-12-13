@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Task;
 
 use Closure;
+use Maestro2\Core\Process\ProcessResult;
 use Stringable;
 
 class ProcessTask implements Task, Stringable
@@ -36,6 +37,9 @@ class ProcessTask implements Task, Stringable
         return sprintf('Running process: %s', implode(' ', array_map('escapeshellarg', $this->args)));
     }
 
+    /*
+     * @return Closure(ProcessResult, Context)
+     */
     public function after(): ?Closure
     {
         return $this->after;

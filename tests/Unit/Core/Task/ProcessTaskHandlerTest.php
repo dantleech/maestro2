@@ -7,6 +7,7 @@ use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcess;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Task\Context;
+use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\ProcessTask;
 use Maestro2\Core\Task\ProcessTaskHandler;
@@ -62,5 +63,36 @@ class ProcessTaskHandlerTest extends HandlerTestCase
             allowFailure: true
         ));
         self::assertInstanceOf(Context::class, $context);
+    }
+
+    public function testAllowsModificationOfContextAfterProcessRuns(): void
+    {
+        $this->testRunner->push(ProcessResult::ok());
+        $context = $this->runTask(new ProcessTask(
+            cwd: '/foobar',
+            args: ['foobar'],
+            after: function (ProcessResult $result, Context $context) {
+                return $context->withVar('foo', 'bar');
+            }
+
+
+        ));
+        self::assertInstanceOf(Context::class, $context);
+        self::assertEquals('bar', $context->var('foo'));
+    }
+
+    public function testThrowsExceptionIfClosureDoesNotReturnContext(): void
+    {
+        $this->expectException(TaskError::class);
+        $this->testRunner->push(ProcessResult::ok());
+        $context = $this->runTask(new ProcessTask(
+            cwd: '/foobar',
+            args: ['foobar'],
+            after: function (ProcessResult $result, Context $context) {
+                return 'foobar';
+            }
+
+
+        ));
     }
 }
