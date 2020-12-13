@@ -61,7 +61,8 @@ class RunCommand extends Command
         $style = new SymfonyStyle($input, $output);
 
         $output->writeln('');
-        foreach ($this->reportProvider->groups() as $group) {
+        $reports = $this->reportProvider->groups();
+        foreach ($reports as $group) {
             $style->section($group->name());
             foreach ($group->reports() as $report) {
                 assert($report instanceof Report);
@@ -86,7 +87,20 @@ class RunCommand extends Command
             $output->writeln('');
         }
 
-        $output->writeln(sprintf('<bg=green;fg=black;options=bold>Done in %ss</>', number_format($duration, 2)));
+        (function (int $total, int $warns, int $fails) use ($output, $duration) {
+            $output->writeln(sprintf(
+                '<%s;options=bold>%s reports, %s warnings, %s failed in %ss</>',
+                $fails > 0 ? 'bg=red;fg=white' : ($warns > 0 ? 'bg=yellow;fg=black' : 'bg=green;fg=black'),
+                $total,
+                $warns,
+                $fails,
+                number_format($duration, 2),
+            ));
+        })(
+            $reports->reports()->count(),
+            $reports->reports()->warns()->count(),
+            $reports->reports()->fails()->count(),
+        );
 
         return 0;
     }

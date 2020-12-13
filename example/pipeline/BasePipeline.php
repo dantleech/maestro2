@@ -15,7 +15,7 @@ use Maestro2\Core\Task\ParallelTask;
 use Maestro2\Core\Task\SequentialTask;
 use Maestro2\Core\Task\Task;
 
-abstract class BasePipeline implements Pipeline
+class BasePipeline implements Pipeline
 {
     public function build(MainNode $mainNode): Task
     {

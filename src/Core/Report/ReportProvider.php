@@ -5,7 +5,7 @@ namespace Maestro2\Core\Report;
 interface ReportProvider
 {
     /**
-     * @return array<ReportGroup>
+     * @return ReportGroups
      */
-    public function groups(): array;
+    public function groups(): ReportGroups;
 }

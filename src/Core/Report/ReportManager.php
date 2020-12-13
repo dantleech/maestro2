@@ -41,11 +41,11 @@ class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublis
     /**
      * {@inheritDoc}
      */
-    public function groups(): array
+    public function groups(): ReportGroups
     {
-        return array_map(function (string $name, array $reports) {
+        return new ReportGroups(array_map(function (string $name, array $reports) {
             return new ReportGroup($name, $reports);
-        }, array_keys($this->reports), $this->reports);
+        }, array_keys($this->reports), $this->reports));
     }
 
     public function taskOk(Task $task, Context $context): void
