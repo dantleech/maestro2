@@ -1,7 +1,7 @@
 /vendor
 /tests/Workspace
 /composer.lock
-/.phpcs.cache
+/.php_cs.cache
 /.phpunit.result.cache
 /.maestro
 /var

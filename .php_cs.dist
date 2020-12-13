@@ -1,0 +1,19 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->in('src')
+    ->in('tests')
+    ->exclude([
+        'tests/Workspace'
+    ])
+;
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PSR2' => true,
+        'no_unused_imports' => true,
+        'array_syntax' => ['syntax' => 'short'],
+    ])
+    ->setFinder($finder)
+;
+
