@@ -5,6 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Amp\Success;
 use Exception;
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Task\Exception\TaskError;
 use Symfony\Component\Yaml\Yaml;
 
@@ -39,7 +40,7 @@ class YamlHandler implements Handler
         }
 
         file_put_contents(
-            $task->path(),
+            $context->fact(CwdFact::class)->makeAbsolute($task->path()),
             Yaml::dump($data)
         );
 
