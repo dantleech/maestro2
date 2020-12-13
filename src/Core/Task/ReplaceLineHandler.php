@@ -39,7 +39,12 @@ class ReplaceLineHandler implements Handler
             }
 
             return $lineOrDelim;
-        }, array_filter((array)preg_split('{(' . self::NEWLINE_PATTERN . ')}', $before, -1, PREG_SPLIT_DELIM_CAPTURE))));
+        }, array_filter((array)preg_split(
+            '{(' . self::NEWLINE_PATTERN . ')}',
+            $before,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE
+        ))));
 
         if ($before !== $after) {
             file_put_contents($task->path(), $after);
