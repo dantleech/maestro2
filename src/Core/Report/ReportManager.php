@@ -57,7 +57,7 @@ class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublis
 
         $this->publish(
             ($context->factOrNull(GroupFact::class)?->group()) ?: 'ungrouped',
-            Report::ok($task instanceof Stringable ? $task->__toString() : $task::class)
+            Report::ok($task->__toString())
         );
     }
 

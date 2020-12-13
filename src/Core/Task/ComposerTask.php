@@ -64,7 +64,7 @@ class ComposerTask implements Task, Stringable
             'Updating composer: dev %s, require [%s], remove: [%s], update %s',
             $this->dev ? 'yes' : 'no',
             implode(', ', array_map(
-                fn(string $name, string $version) => sprintf('%s:%s', $name, $version),
+                fn (string $name, string $version) => sprintf('%s:%s', $name, $version),
                 array_keys($this->require),
                 array_values($this->require)
             )),
