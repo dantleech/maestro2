@@ -68,6 +68,31 @@ class ParallelHandlerTest extends HandlerTestCase
         ]), $this->defaultContext()));
     }
 
+    public function testRunsTasksInParallelWhenTasksAreAssociative(): void
+    {
+        self::assertEquals($this->defaultContext()->merge(Context::create([
+            'one' => 1,
+            'two' => 2,
+            'three' => 3,
+        ])), $this->runTask(new ParallelTask([
+            'foobar' => new ClosureTask(function (array $args, Context $context): Promise {
+                return new Success(
+                    $context->withVar('one', 1)
+                );
+            }),
+            'barfoo' => new ClosureTask(function (array $args, Context $context): Promise {
+                return new Success(
+                    $context->withVar('two', 2)
+                );
+            }),
+            'bazbar' => new ClosureTask(function (array $args, Context $context): Promise {
+                return new Success(
+                    $context->withVar('three', 3)
+                );
+            }),
+        ]), $this->defaultContext()));
+    }
+
     public function testReportFailedTasks(): void
     {
         $context = $this->runTask(new ParallelTask([
