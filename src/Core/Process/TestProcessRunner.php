@@ -35,13 +35,7 @@ class TestProcessRunner implements ProcessRunner
         return call(function () use ($args, $cwd) {
             $result = yield $this->run($args, $cwd);
             if (0 !== $result->exitCode()) {
-                throw new ProcessFailure(sprintf(
-                    '`%s` exited with code "%s": %s %s',
-                    implode(' ', $args),
-                    $result->exitCode(),
-                    $result->stdOut(),
-                    $result->stdErr()
-                ));
+                throw ProcessFailure::fromResult($result, $args);
             }
 
             return $result;

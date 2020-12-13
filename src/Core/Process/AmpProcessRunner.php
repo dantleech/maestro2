@@ -28,13 +28,7 @@ class AmpProcessRunner implements ProcessRunner
             $result = yield $this->run($args, $cwd);
 
             if (0 !== $result->exitCode()) {
-                throw new ProcessFailure(sprintf(
-                    '`%s` exited with code "%s": %s %s',
-                    implode(' ', $args),
-                    $result->exitCode(),
-                    $result->stdOut(),
-                    $result->stdErr()
-                ));
+                throw ProcessFailure::fromResult($result, $args);
             }
 
             return $result;

@@ -2,6 +2,9 @@
 
 namespace Maestro2\Core\Process;
 
+use Maestro2\Core\Process\Exception\ProcessFailure;
+use Maestro2\Core\Task\ProcessTask;
+
 class ProcessResult
 {
     public function __construct(private int $exitCode, private string $stdOut, private string $stdErr)
