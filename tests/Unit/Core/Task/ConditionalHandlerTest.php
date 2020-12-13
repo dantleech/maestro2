@@ -4,6 +4,7 @@ namespace Maestro2\Tests\Unit\Core\Task;
 
 use Amp\Success;
 use Maestro2\Core\Queue\TestEnqueuer;
+use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\ClosureHandler;
 use Maestro2\Core\Task\ClosureTask;
 use Maestro2\Core\Task\ConditionalHandler;
@@ -14,11 +15,19 @@ use PHPUnit\Framework\TestCase;
 
 class ConditionalHandlerTest extends HandlerTestCase
 {
+    private ReportManager $publisher;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->publisher = new ReportManager();
+    }
+
     protected function createHandler(): Handler
     {
         return new ConditionalHandler(TestEnqueuer::fromHandlers([
             new ClosureHandler()
-        ]));
+        ]), $this->publisher);
     }
 
     public function testExecutesTaskOnTruePredicate(): void
@@ -43,5 +52,6 @@ class ConditionalHandlerTest extends HandlerTestCase
         ));
 
         self::assertNull($context->var('foo'));
+        self::assertEquals(1, $this->publisher->groups()->reports()->warns()->count(), 'Warning publshed');
     }
 }

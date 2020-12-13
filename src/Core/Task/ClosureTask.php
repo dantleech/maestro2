@@ -7,10 +7,16 @@ use Stringable;
 
 class ClosureTask implements Task, Stringable
 {
+    /**
+     * @param Closure(array<mixed>,Context) $closure
+     */
     public function __construct(private Closure $closure, private array $args = [])
     {
     }
 
+    /**
+     * @return Closure(array<mixed>,Context)
+     */
     public function closure(): Closure
     {
         return $this->closure;
