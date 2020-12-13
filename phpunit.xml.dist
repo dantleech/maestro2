@@ -12,6 +12,7 @@
   <testsuites>
     <testsuite name="Maestro2">
         <directory>./tests/Unit/Core</directory>
+        <directory>./tests/Unit/Composer</directory>
     </testsuite>
   </testsuites>
 </phpunit>
