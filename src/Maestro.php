@@ -13,7 +13,6 @@ use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\TaskContext;
 use Maestro2\Util\ClassNameFromFile;
 use Throwable;
-use Webmozart\PathUtil\Path;
 use function Amp\call;
 
 class Maestro

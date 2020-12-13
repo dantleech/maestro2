@@ -11,7 +11,6 @@ use Maestro2\Core\Task\ConditionalHandler;
 use Maestro2\Core\Task\ConditionalTask;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
-use PHPUnit\Framework\TestCase;
 
 class ConditionalHandlerTest extends HandlerTestCase
 {

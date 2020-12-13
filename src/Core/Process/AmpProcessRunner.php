@@ -9,7 +9,6 @@ use Amp\Process\ProcessInputStream;
 use Amp\Promise;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Psr\Log\LoggerInterface;
-use function Amp\ByteStream\buffer;
 use function Amp\asyncCall;
 use function Amp\call;
 

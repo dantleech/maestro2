@@ -2,7 +2,6 @@
 
 namespace Maestro2\Rector\Task;
 
-use Maestro2\Core\Config\RepositoryNode;
 use Maestro2\Core\Task\Task;
 
 class RectorComposerUpgradeTask implements Task

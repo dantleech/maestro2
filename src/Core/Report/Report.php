@@ -42,7 +42,7 @@ final class Report
     }
 
     /**
-     * @return self::LEVEL_OK | self::LEVEL_WARN | self::LEVEL_FAIL
+     * @return self::LEVEL_INFO | self::LEVEL_OK | self::LEVEL_WARN | self::LEVEL_FAIL
      */
     public function level(): string
     {

@@ -11,7 +11,6 @@ use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\GitDiffHandler;
 use Maestro2\Core\Task\GitDiffTask;
 use Maestro2\Core\Task\Handler;
-use PHPUnit\Framework\TestCase;
 
 class GitDiffHandlerTest extends HandlerTestCase
 {

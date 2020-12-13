@@ -12,8 +12,7 @@ class YamlTask implements Task, Stringable
         private array $data = [],
         private int $inline = 2,
         private ?Closure $filter = null
-    )
-    {
+    ) {
     }
 
     public function data(): array

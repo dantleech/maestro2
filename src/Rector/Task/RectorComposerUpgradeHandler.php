@@ -3,14 +3,12 @@
 namespace Maestro2\Rector\Task;
 
 use Amp\Promise;
-use Maestro2\Composer\ComposerJson;
 use Maestro2\Composer\Fact\ComposerJsonFact;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\PhpFact;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\GitCommitTask;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\ProcessTask;

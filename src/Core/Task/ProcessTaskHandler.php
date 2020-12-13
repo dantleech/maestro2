@@ -39,7 +39,7 @@ class ProcessTaskHandler implements Handler
                 })(ProcessFailure::fromResult($result, $task->args()));
             }
 
-            return (static function (?Closure $after, ProcessResult $result, Context $context): Context  {
+            return (static function (?Closure $after, ProcessResult $result, Context $context): Context {
                 if (null === $after) {
                     return $context;
                 }
@@ -47,7 +47,7 @@ class ProcessTaskHandler implements Handler
                 $context = $after($result, $context);
 
                 /**
-                 * @psalm-suppress RedundantCondition 
+                 * @psalm-suppress RedundantCondition
                  * @psalm-suppress TypeDoesNotContainType
                  */
                 if (!$context instanceof Context) {

@@ -11,8 +11,6 @@ use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\ProcessTask;
 use Maestro2\Core\Task\ProcessTaskHandler;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class ProcessTaskHandlerTest extends HandlerTestCase
 {
@@ -74,8 +72,6 @@ class ProcessTaskHandlerTest extends HandlerTestCase
             after: function (ProcessResult $result, Context $context) {
                 return $context->withVar('foo', 'bar');
             }
-
-
         ));
         self::assertInstanceOf(Context::class, $context);
         self::assertEquals('bar', $context->var('foo'));
@@ -91,8 +87,6 @@ class ProcessTaskHandlerTest extends HandlerTestCase
             after: function (ProcessResult $result, Context $context) {
                 return 'foobar';
             }
-
-
         ));
     }
 }

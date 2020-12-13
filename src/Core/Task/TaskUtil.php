@@ -13,6 +13,9 @@ final class TaskUtil
 
     public static function describeShortName(Task $task): string
     {
-        return ($task instanceof Stringable) ? $task->__toString() : substr($task::class, strrpos($task::class, '\\') + 1);
+        return ($task instanceof Stringable) ? $task->__toString() : substr(
+            $task::class,
+            (int)strrpos($task::class, '\\') + 1
+        );
     }
 }

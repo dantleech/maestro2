@@ -4,9 +4,6 @@ namespace Maestro2\Composer\Extension;
 
 use Maestro2\Composer\Task\ComposerJsonFactHandler;
 use Maestro2\Core\Extension\CoreExtension;
-use Maestro2\Core\Queue\Queue;
-use Maestro2\Rector\Task\RectorComposerUpgradeHandler;
-use Maestro2\Tests\Unit\Rector\Task\RectorComposerUpgradeHandlerTest;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;

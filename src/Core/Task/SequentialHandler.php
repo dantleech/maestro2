@@ -7,7 +7,6 @@ use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\TaskReportPublisher;
 use Maestro2\Core\Task\Exception\SequentialTaskError;
-use Maestro2\Core\Task\Exception\TaskError;
 use Throwable;
 use function Amp\call;
 
