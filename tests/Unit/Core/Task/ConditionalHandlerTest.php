@@ -40,6 +40,7 @@ class ConditionalHandlerTest extends HandlerTestCase
         ));
 
         self::assertEquals('bar', $context->var('foo'));
+        self::assertEquals(0, $this->publisher->groups()->reports()->infos()->count(), 'Warning publshed');
     }
 
     public function testDoesNotExecuteTaskOnFalsePredicate(): void
@@ -52,6 +53,6 @@ class ConditionalHandlerTest extends HandlerTestCase
         ));
 
         self::assertNull($context->var('foo'));
-        self::assertEquals(1, $this->publisher->groups()->reports()->warns()->count(), 'Warning publshed');
+        self::assertEquals(1, $this->publisher->groups()->reports()->infos()->count(), 'Warning publshed');
     }
 }

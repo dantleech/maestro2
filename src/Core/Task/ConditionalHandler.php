@@ -34,15 +34,15 @@ class ConditionalHandler implements Handler
                     $context = yield $this->enqueuer->enqueue(
                         TaskContext::create($task, $context)
                     );
+                } else {
+                    $this->publusher->publish(
+                        $context->factOrNull(GroupFact::class)?->group() ?: 'conditional',
+                        Report::info(sprintf(
+                            'Did not execute task "%s" due to predicate',
+                            ($task instanceof Stringable) ? $task->__toString() : $task::class
+                        ))
+                    );
                 }
-
-                $this->publusher->publish(
-                    $context->factOrNull(GroupFact::class)?->group() ?: 'conditional',
-                    Report::warn(sprintf(
-                        'Did not execute task "%s" due to predicate',
-                        ($task instanceof Stringable) ? $task->__toString() : $task::class
-                    ))
-                );
 
                 return $context;
             })($task->predicate(), $task->task());
