@@ -35,7 +35,11 @@ class SequentialHandler implements Handler
                         $this->reportPublisher->taskFail($sequentialTask, $context, $error);
                     }
 
-                    throw new SequentialTaskError(sprintf('Task sequence failed: %s', $error->getMessage(), 0, $error));
+                    throw new SequentialTaskError(sprintf(
+                        'Task sequence failed (last task: "%s"): %s',
+                        TaskUtil::describe($task),
+                        $error->getMessage()
+                    ), 0, $error);
                 }
             }
 

@@ -18,7 +18,7 @@ class AmpProcessRunner implements ProcessRunner
     private int $running = 0;
     private array $locks = [];
 
-    public function __construct(private LoggerInterface $logger, private int $concurrency = 4)
+    public function __construct(private LoggerInterface $logger, private int $concurrency = 4, private bool $verbose = true)
     {
     }
 
@@ -62,19 +62,26 @@ class AmpProcessRunner implements ProcessRunner
                 implode(' ', array_map('escapeshellarg', $args)),
             ));
 
-            //asyncCall(function (ProcessInputStream $stream, int $pid) {
-            //    $reader = new LineReader($stream);
-            //    while ($line = yield $reader->readLine()) {
-            //        $this->logger->info(sprintf('pid:%s ERR: %s', $pid, $line));
-            //    }
-            //}, $process->getStderr(), $pid);
+            $stdOut = $stdErr = '';
+            asyncCall(function (ProcessInputStream $stream, int $pid) use (&$stdErr) {
+                $reader = new LineReader($stream);
+                while (null !== $line = yield $reader->readLine()) {
+                    $stdErr .= $line . "\n";
+                    if ($this->verbose) {
+                        $this->logger->info(sprintf('pid:%s ERR: %s', $pid, $line));
+                    }
+                }
+            }, $process->getStderr(), $pid);
 
-            //asyncCall(function (ProcessInputStream $stream, int $pid) {
-            //    $reader = new LineReader($stream);
-            //    while ($line = yield $reader->readLine()) {
-            //        $this->logger->info(sprintf('pid:%s OUT: %s', $pid, $line));
-            //    }
-            //}, $process->getStdout(), $pid);
+            asyncCall(function (ProcessInputStream $stream, int $pid) use (&$stdOut) {
+                $reader = new LineReader($stream);
+                while (null !== $line = yield $reader->readLine()) {
+                    $stdOut .= $line . "\n";
+                    if ($this->verbose) {
+                        $this->logger->info(sprintf('pid:%s OUT: %s', $pid, $line));
+                    }
+                }
+            }, $process->getStdout(), $pid);
 
 
             $exitCode = yield $process->join();
@@ -100,8 +107,8 @@ class AmpProcessRunner implements ProcessRunner
 
             return new ProcessResult(
                 $exitCode,
-                yield buffer($process->getStdout()),
-                yield buffer($process->getStderr()),
+                $stdOut,
+                $stdErr
             );
         });
     }

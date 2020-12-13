@@ -5,6 +5,9 @@ namespace Maestro2\Core\Queue;
 use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Task\HandlerFactory;
+use Maestro2\Core\Task\Task;
+use Maestro2\Core\Task\TaskContext;
+use Maestro2\Core\Task\TaskUtil;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function Amp\asyncCall;
@@ -33,8 +36,11 @@ class Worker
             asyncCall(function () {
                 while ($this->isRunning) {
                     $this->logger->debug(sprintf(
-                        'Running %s tasks, memory %sb',
+                        'Running %s tasks: "%s", memory %sb',
                         count($this->running),
+                        implode('", "', array_map(function (TaskContext $task) {
+                            return TaskUtil::describeShortName($task->task());
+                        }, $this->running)),
                         number_format(memory_get_usage(true))
                     ));
                     yield delay(1000);

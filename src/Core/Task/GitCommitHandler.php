@@ -66,7 +66,7 @@ class GitCommitHandler implements Handler
             if ($result->stdOut() === '') {
                 $this->publisher->publish(
                     $task->group() ?: $context->fact(GroupFact::class)->group(),
-                    Report::warn('Git commit: no files modiied')
+                    Report::warn(sprintf('Git commit "%s": no files modiied', $task->message()))
                 );
                 return $context;
             }

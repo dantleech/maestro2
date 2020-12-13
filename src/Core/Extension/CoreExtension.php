@@ -14,9 +14,11 @@ use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CommandsTaskHandler;
 use Maestro2\Core\Task\ComposerHandler;
+use Maestro2\Core\Task\ConditionalHandler;
 use Maestro2\Core\Task\FactHandler;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\GitCommitHandler;
+use Maestro2\Core\Task\GitDiffHandler;
 use Maestro2\Core\Task\GitRepositoryHandler;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\HandlerFactory;
@@ -99,8 +101,10 @@ class CoreExtension implements Extension
                     $container->get(Queue::class),
                     $container->get(ProcessRunner::class)
                 ),
+                new GitDiffHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new GitCommitHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new FactHandler(),
+                new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
             ], (static function (array $taggedServices) use ($container) {
                 return array_map(static function (string $serviceId) use ($container): Handler {
                     return $container->get($serviceId);
