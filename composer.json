@@ -38,7 +38,8 @@
         "phpactor/test-utils": "^1.0",
         "symfony/yaml": "9999999-dev",
         "symfony/filesystem": "9999999-dev",
-        "composer/semver": "3.x-dev"
+        "composer/semver": "3.x-dev",
+        "league/flysystem": "^2.0"
     },
     "require-dev": {
         "vimeo/psalm": "^4.2",

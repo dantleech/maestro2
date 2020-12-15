@@ -2,10 +2,15 @@
 
 namespace Maestro2\Core\Extension;
 
+use League\Flysystem\Config;
+use League\Flysystem\Filesystem;
 use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
+use Maestro2\Core\Filesystem\Flysystem\LiteralVisibilityConverter;
+use Maestro2\Core\Filesystem\Flysystem\LocalFilesystemAdapter;
+use Maestro2\Core\Filesystem\WorkspaceFs;
 use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Process\AmpProcessRunner;
 use Maestro2\Core\Process\ProcessRunner;
@@ -147,6 +152,12 @@ class CoreExtension implements Extension
 
         $container->register(WorkspacePathResolver::class, function (Container $container) {
             return new WorkspacePathResolver($this->getConfig($container)->workspacePath());
+        });
+
+        $container->register(WorkspaceFs::class, function (Container $container) {
+            return WorkspaceFs::create(
+                $container->get(MainNode::class)->workspacePath()
+            );
         });
     }
 

@@ -2,6 +2,9 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use Maestro2\Core\Filesystem\Flysystem\LiteralVisibilityConverter;
+use Maestro2\Core\Filesystem\WorkspaceFs;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\FileTask;
@@ -11,10 +14,18 @@ use SplFileInfo;
 
 class FileHandlerTest extends HandlerTestCase
 {
+    protected function createHandler(): Handler
+    {
+        return new FileHandler(
+            WorkspaceFs::create($this->workspace()->path()),
+            new NullLogger()
+        );
+    }
+
     public function testCreatesDirectory(): void
     {
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('foobar/directory'),
+            path: 'foobar/directory',
             type: 'directory',
         ));
         self::assertFileExists($this->workspace()->path('foobar/directory'));
@@ -35,21 +46,21 @@ class FileHandlerTest extends HandlerTestCase
         $this->workspace()->mkdir('foobar/directory');
         self::assertFileExists($this->workspace()->path('foobar/directory'));
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('foobar/directory'),
+            path: 'foobar/directory',
             type: 'directory',
             exists: false
         ));
         self::assertFileDoesNotExist($this->workspace()->path('foobar/directory'));
     }
 
-    public function testExceptionWhenFirectoryIsAFile(): void
+    public function testExceptionWhenDirectoryIsAFile(): void
     {
         $this->expectException(TaskError::class);
         $this->expectExceptionMessage('to be a directory');
         $this->workspace()->put('foobar/directory', 'file!');
         self::assertFileExists($this->workspace()->path('foobar/directory'));
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('foobar/directory'),
+            path: 'foobar/directory',
             type: 'directory',
             exists: true
         ));
@@ -82,7 +93,7 @@ class FileHandlerTest extends HandlerTestCase
         $this->expectException(TaskError::class);
         $this->expectExceptionMessage('Content provided but file type is "directory"');
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('file'),
+            path: 'file',
             type: 'directory',
             content: 'Hello World',
         ));
@@ -91,7 +102,7 @@ class FileHandlerTest extends HandlerTestCase
     public function testCreatesFileParentDirectories(): void
     {
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('barfoo/foobar/file'),
+            path: 'barfoo/foobar/file',
             type: 'file',
         ));
 
@@ -101,16 +112,11 @@ class FileHandlerTest extends HandlerTestCase
     public function testCreatesFileWithPermission(): void
     {
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('README.md'),
+            path: 'README.md',
             type: 'file',
             mode: 0777
         ));
         $info = new SplFileInfo($this->workspace()->path('README.md'));
         self::assertEquals('0777', substr(sprintf('%o', fileperms($this->workspace()->path('README.md'))), -4));
-    }
-
-    protected function createHandler(): Handler
-    {
-        return new FileHandler(new NullLogger());
     }
 }
