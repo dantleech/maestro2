@@ -45,7 +45,7 @@ class FileHandler implements Handler
             };
 
             return $context;
-        }, $this->workspaceFs->cd($context->factOrNull(CwdFact::class)?->cwd() ?? '/'));
+        }, $this->workspaceFs->cd($context->factOrNull(CwdFact::class)?->cwd() ?: '/'));
     }
 
     private function handleDirectory(Filesystem $filesystem, FileTask $task): void
@@ -70,15 +70,14 @@ class FileHandler implements Handler
             return;
         }
 
-        $filesystem->createDirectory($task->path(), [
-            'visibility' => (string)$task->mode()
-        ]);
+        $filesystem->createDirectory($task->path());
+        $filesystem->setMode($task->path(), $task->mode());
     }
 
     private function handleFile(Filesystem $filesystem, FileTask $task): void
     {
         if ($task->exists() === false) {
-            $filesystem->delete($task->path());
+            $filesystem->remove($task->path());
             return;
         }
 
