@@ -2,6 +2,7 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\JsonMergeTask;
@@ -11,7 +12,7 @@ class JsonMergeHandlerTest extends HandlerTestCase
 {
     protected function createHandler(): Handler
     {
-        return new JsonMergeHandler();
+        return new JsonMergeHandler(new Filesystem($this->workspace()->path('/')));
     }
 
     public function testMergesArrayIntoJsonObject(): void
@@ -21,7 +22,7 @@ class JsonMergeHandlerTest extends HandlerTestCase
             'barfoo' => 'foobar',
         ]));
         $this->runTask(new JsonMergeTask(
-            path: $this->workspace()->path('json.json'),
+            path: 'json.json',
             data: [
                 'barbar' => 'booboo',
             ]
@@ -40,7 +41,7 @@ class JsonMergeHandlerTest extends HandlerTestCase
             'foobar' => 'barfoo',
         ]));
         $this->runTask(new JsonMergeTask(
-            path: $this->workspace()->path('json.json'),
+            path: 'json.json',
             data: [
                 'barbar' => 'booboo',
             ],
@@ -58,7 +59,7 @@ class JsonMergeHandlerTest extends HandlerTestCase
     public function testFilterReturnsNonObject(): void
     {
         $this->runTask(new JsonMergeTask(
-            path: $this->workspace()->path('json.json'),
+            path: 'json.json',
             filter: function (stdClass $object) {
                 return null;
             }
@@ -70,7 +71,7 @@ class JsonMergeHandlerTest extends HandlerTestCase
     public function testCreatesIfNotExists(): void
     {
         $this->runTask(new JsonMergeTask(
-            path: $this->workspace()->path('json.json'),
+            path: 'json.json',
             data: [],
         ));
 

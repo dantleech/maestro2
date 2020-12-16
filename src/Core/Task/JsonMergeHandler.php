@@ -5,11 +5,16 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Amp\Success;
 use JsonException;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Exception\TaskError;
 use stdClass;
 
 class JsonMergeHandler implements Handler
 {
+    public function __construct(private Filesystem $filesystem)
+    {
+    }
+
     public function taskFqn(): string
     {
         return JsonMergeTask::class;
@@ -21,8 +26,8 @@ class JsonMergeHandler implements Handler
 
         $existingData = new stdClass();
 
-        if (file_exists($task->path())) {
-            $jsonContents = file_get_contents($task->path());
+        if ($this->filesystem->exists($task->path())) {
+            $jsonContents = $this->filesystem->getContents($task->path());
 
             try {
                 $existingData = json_decode(
@@ -43,7 +48,7 @@ class JsonMergeHandler implements Handler
             $data = $filter($existingData);
         }
 
-        file_put_contents(
+        $this->filesystem->putContents(
             $task->path(),
             json_encode(
                 $data,

@@ -2,7 +2,9 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\PhpFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Task\ComposerHandler;
@@ -25,14 +27,19 @@ class ComposerHandlerTest extends HandlerTestCase
 
     protected function defaultContext(): Context
     {
-        return Context::withFacts(new PhpFact());
+        return Context::withFacts(
+            new PhpFact(),
+            new CwdFact('/')
+        );
     }
 
     protected function createHandler(): Handler
     {
+        $filesystem = new Filesystem($this->workspace()->path('/'));
         return new ComposerHandler(
+            $filesystem,
             TestEnqueuer::fromHandlers([
-                new JsonMergeHandler()
+                new JsonMergeHandler($filesystem)
             ]),
             $this->testRunner
         );
@@ -41,7 +48,6 @@ class ComposerHandlerTest extends HandlerTestCase
     public function testCreatesComposer(): void
     {
         $this->runTask(new ComposerTask(
-            path: $this->workspace()->path(),
             require: [
                 'foobar/barfoo' => '^1.0',
             ]
@@ -71,7 +77,6 @@ EOT
         );
 
         $this->runTask(new ComposerTask(
-            path: $this->workspace()->path(),
             require: [
                 'baz/boo' => '^1.0',
             ]
@@ -103,7 +108,6 @@ EOT
         );
 
         $this->runTask(new ComposerTask(
-            path: $this->workspace()->path(),
             remove: [
                 'foobar/barfoo'
             ]
@@ -123,7 +127,6 @@ EOT
     {
         $this->runTask(new ComposerTask(
             dev: true,
-            path: $this->workspace()->path(),
             require: [
                 'foobar/barfoo' => '^1.0',
             ]
@@ -143,7 +146,6 @@ EOT
     {
         $this->testRunner->push(ProcessResult::ok());
         $this->runTask(new ComposerTask(
-            path: $this->workspace()->path(),
             update: true,
             composerBin: 'composer',
         ));
@@ -162,7 +164,6 @@ EOT
 
         $this->testRunner->push(ProcessResult::new(127, 'No', 'No'));
         $this->runTask(new ComposerTask(
-            path: $this->workspace()->path(),
             update: true,
             composerBin: 'compoasser',
         ));

@@ -5,6 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\PhpFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Enqueuer;
 use Symfony\Component\Process\ExecutableFinder;
@@ -15,6 +16,7 @@ use function Amp\call;
 class ComposerHandler implements Handler
 {
     public function __construct(
+        private Filesystem $filesystem,
         private Enqueuer $enqueuer,
         private ProcessRunner $runner,
     ) {
@@ -29,12 +31,11 @@ class ComposerHandler implements Handler
     {
         assert($task instanceof ComposerTask);
         return call(
-            function (string $requireType, string $cwd) use ($task, $context) {
+            function (string $requireType, Filesystem $filesystem) use ($task, $context) {
                 yield $this->enqueuer->enqueue(
                     TaskContext::create(
                         $this->createJsonTask(
                             $task,
-                            $cwd,
                             $requireType
                         ),
                         $context
@@ -48,21 +49,21 @@ class ComposerHandler implements Handler
                         $context->fact(PhpFact::class)->phpBin(),
                         $task->composerBin() ?: $finder->find('composer'),
                         'update',
-                        '--working-dir=' . $cwd
+                        '--working-dir=' . $this->filesystem->localPath('.')
                     ]);
                 }
 
                 return $context;
             },
             $task->dev() ? 'require-dev' : 'require',
-            $task->path() ?: $context->fact(CwdFact::class)->cwd()
+            $this->filesystem->cd($context->factOrNull(CwdFact::class)?->cwd() ?: '/')
         );
     }
 
-    private function createJsonTask(ComposerTask $task, string $path, string $requireType): JsonMergeTask
+    private function createJsonTask(ComposerTask $task, string $requireType): JsonMergeTask
     {
         return new JsonMergeTask(
-            path: Path::join([$path, 'composer.json']),
+            path: 'composer.json',
             data: [
                 $requireType => $task->require()
             ],

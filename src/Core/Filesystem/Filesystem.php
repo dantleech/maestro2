@@ -14,6 +14,11 @@ class Filesystem
         $this->fs = new SymfonyFilesystem();
     }
 
+    public function localPath(string $cwd): string
+    {
+        return $this->resolvePath($cwd);
+    }
+
     public function exists(string $path): bool
     {
         return file_exists($this->resolvePath($path));
@@ -59,5 +64,10 @@ class Filesystem
             $this->rootDir,
             Path::makeAbsolute($path, $this->cwd)
         );
+    }
+
+    public function getContents(string $path): string
+    {
+        return file_get_contents($this->resolvePath($path));
     }
 }
