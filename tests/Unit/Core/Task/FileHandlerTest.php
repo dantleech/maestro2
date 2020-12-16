@@ -2,6 +2,9 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Filesystem\Filesystem;
+use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\FileTask;
@@ -11,20 +14,38 @@ use SplFileInfo;
 
 class FileHandlerTest extends HandlerTestCase
 {
+    protected function defaultContext(): Context
+    {
+        return Context::create([], [
+            new CwdFact('/')
+        ]);
+    }
+
     public function testCreatesDirectory(): void
     {
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('foobar/directory'),
+            path: 'foobar/directory',
             type: 'directory',
         ));
         self::assertFileExists($this->workspace()->path('foobar/directory'));
+    }
+
+    public function testCreatesDirectoryInCwd(): void
+    {
+        $this->runTask(new FileTask(
+            path: '../barfoo/directory',
+            type: 'directory',
+        ), Context::create([], [
+            new CwdFact('foobar')
+        ]));
+        self::assertFileExists($this->workspace()->path('barfoo/directory'));
     }
 
     public function testIgnoresExistingDirectory(): void
     {
         $this->workspace()->mkdir('foobar/directory');
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('foobar/directory'),
+            path: 'foobar/directory',
             type: 'directory',
         ));
         self::assertFileExists($this->workspace()->path('foobar/directory'));
@@ -35,7 +56,7 @@ class FileHandlerTest extends HandlerTestCase
         $this->workspace()->mkdir('foobar/directory');
         self::assertFileExists($this->workspace()->path('foobar/directory'));
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('foobar/directory'),
+            path: 'foobar/directory',
             type: 'directory',
             exists: false
         ));
@@ -49,7 +70,7 @@ class FileHandlerTest extends HandlerTestCase
         $this->workspace()->put('foobar/directory', 'file!');
         self::assertFileExists($this->workspace()->path('foobar/directory'));
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('foobar/directory'),
+            path: 'foobar/directory',
             type: 'directory',
             exists: true
         ));
@@ -58,7 +79,7 @@ class FileHandlerTest extends HandlerTestCase
     public function testCreatesFile(): void
     {
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('file'),
+            path: 'file',
             type: 'file',
         ));
 
@@ -68,7 +89,7 @@ class FileHandlerTest extends HandlerTestCase
     public function testCreatesFileWithContent(): void
     {
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('file'),
+            path: 'file',
             type: 'file',
             content: 'Hello World',
         ));
@@ -82,7 +103,7 @@ class FileHandlerTest extends HandlerTestCase
         $this->expectException(TaskError::class);
         $this->expectExceptionMessage('Content provided but file type is "directory"');
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('file'),
+            path: 'file',
             type: 'directory',
             content: 'Hello World',
         ));
@@ -91,7 +112,7 @@ class FileHandlerTest extends HandlerTestCase
     public function testCreatesFileParentDirectories(): void
     {
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('barfoo/foobar/file'),
+            path: 'barfoo/foobar/file',
             type: 'file',
         ));
 
@@ -101,7 +122,7 @@ class FileHandlerTest extends HandlerTestCase
     public function testCreatesFileWithPermission(): void
     {
         $this->runTask(new FileTask(
-            path: $this->workspace()->path('README.md'),
+            path: 'README.md',
             type: 'file',
             mode: 0777
         ));
@@ -111,6 +132,9 @@ class FileHandlerTest extends HandlerTestCase
 
     protected function createHandler(): Handler
     {
-        return new FileHandler(new NullLogger());
+        return new FileHandler(
+            new Filesystem($this->workspace()->path(), '/'),
+            new NullLogger()
+        );
     }
 }
