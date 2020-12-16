@@ -51,7 +51,6 @@ class GitCommitHandlerTest extends HandlerTestCase
         $this->runTask(new GitCommitTask(
             paths: ['foo', 'bar'],
             message: 'Foobar',
-            cwd: $this->workspace()->path()
         ));
 
         self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->pop()->argsAsString());
@@ -69,7 +68,6 @@ class GitCommitHandlerTest extends HandlerTestCase
         $this->runTask(new GitCommitTask(
             paths: ['foo', 'bar'],
             message: 'Foobar',
-            cwd: $this->workspace()->path()
         ));
     }
 
@@ -83,7 +81,6 @@ class GitCommitHandlerTest extends HandlerTestCase
         $this->runTask(new GitCommitTask(
             paths: ['foo', 'bar'],
             message: 'Foobar',
-            cwd: $this->workspace()->path()
         ));
     }
 
@@ -97,7 +94,6 @@ class GitCommitHandlerTest extends HandlerTestCase
         $this->runTask(new GitCommitTask(
             paths: ['foo', 'bar'],
             message: 'Foobar',
-            cwd: $this->workspace()->path()
         ));
 
         self::assertCount(1, $this->reportPublisher->group('git-commit')->reports()->warns());

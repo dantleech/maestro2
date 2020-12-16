@@ -11,7 +11,6 @@ class ProcessTask implements Task, Stringable
     public function __construct(
         private array $args,
         private ?string $group = null,
-        private ?string $cwd = null,
         private ?Closure $after = null,
         private bool $allowFailure = false
     ) {
@@ -20,11 +19,6 @@ class ProcessTask implements Task, Stringable
     public function args(): array
     {
         return $this->args;
-    }
-
-    public function cwd(): ?string
-    {
-        return $this->cwd;
     }
 
     public function group(): ?string

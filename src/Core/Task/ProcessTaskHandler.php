@@ -61,7 +61,7 @@ class ProcessTaskHandler implements Handler
 
                 return $context;
             })($task->after(), $result, $context);
-        }, $task->cwd() ?: $context->fact(CwdFact::class)->cwd());
+        }, $context->factOrNull(CwdFact::class)?->cwd() ?: '/');
     }
 
     private function formatArgs(ProcessTask $task): string
