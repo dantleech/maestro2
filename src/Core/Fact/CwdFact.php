@@ -10,11 +10,6 @@ class CwdFact implements Fact
     {
     }
 
-    public function makeAbsolute(string $relativePath): string
-    {
-        return Path::makeAbsolute($relativePath, $this->cwd);
-    }
-
     public function cwd(): string
     {
         return $this->cwd;

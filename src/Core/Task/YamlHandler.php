@@ -6,11 +6,16 @@ use Amp\Promise;
 use Amp\Success;
 use Exception;
 use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Exception\TaskError;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlHandler implements Handler
 {
+    public function __construct(private Filesystem $filesystem)
+    {
+    }
+
     public function taskFqn(): string
     {
         return YamlTask::class;
@@ -19,13 +24,20 @@ class YamlHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof YamlTask);
-        $path = $context->fact(CwdFact::class)->makeAbsolute($task->path());
+        $this->runYaml($this->filesystem->cd(
+            $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
+        ), $task);
 
+        return new Success($context);
+    }
+
+    private function runYaml(Filesystem $filesystem, YamlTask $task): void
+    {
         $existingData = [];
 
-        if (file_exists($path)) {
+        if ($filesystem->exists($task->path())) {
             try {
-                $existingData = Yaml::parse(file_get_contents($path));
+                $existingData = Yaml::parse($filesystem->getContents($task->path()));
             } catch (Exception $e) {
                 throw new TaskError(sprintf(
                     'Could not parse YAML: "%s"',
@@ -40,11 +52,9 @@ class YamlHandler implements Handler
             $data = $filter($data);
         }
 
-        file_put_contents(
-            $path,
+        $this->filesystem->putContents(
+            $task->path(),
             Yaml::dump($data, $task->inline())
         );
-
-        return new Success($context);
     }
 }

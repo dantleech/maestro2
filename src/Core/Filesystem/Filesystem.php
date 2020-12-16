@@ -44,9 +44,10 @@ class Filesystem
         return is_dir($this->resolvePath($path));
     }
 
-    public function createDirectory(string $path): void
+    public function createDirectory(string $path, int $mode = 0744): void
     {
         $this->fs->mkdir($this->resolvePath($path));
+        $this->setMode($path, $mode);
     }
 
     private function resolvePath(string $path): string

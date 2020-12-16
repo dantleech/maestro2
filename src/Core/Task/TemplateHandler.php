@@ -8,7 +8,6 @@ use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Report\Publisher\NullPublisher;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
@@ -25,7 +24,6 @@ class TemplateHandler implements Handler
 
     public function __construct(
         private Filesystem $filesystem,
-        private WorkspacePathResolver $pathResolver,
         private Environment $twig,
         private ArrayLoader $arrayLoader,
         ?ReportPublisher $publisher = null
@@ -38,7 +36,6 @@ class TemplateHandler implements Handler
         return (static function (string $basePath, ArrayLoader $arrayLoader) {
             return new self(
                 new Filesystem($basePath),
-                new WorkspacePathResolver($basePath),
                 new Environment(
                     new ChainLoader([
                         $arrayLoader,

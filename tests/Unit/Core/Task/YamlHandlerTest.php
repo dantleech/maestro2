@@ -3,6 +3,7 @@
 namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\YamlHandler;
@@ -14,13 +15,14 @@ class YamlHandlerTest extends HandlerTestCase
     protected function defaultContext(): Context
     {
         return Context::create([], [
-            new CwdFact($this->workspace()->path())
         ]);
     }
 
     protected function createHandler(): Handler
     {
-        return new YamlHandler();
+        return new YamlHandler(
+            new Filesystem($this->workspace()->path())
+        );
     }
 
     public function testMergesArrayIntoYaml(): void
@@ -30,7 +32,7 @@ class YamlHandlerTest extends HandlerTestCase
             'barfoo' => 'foobar',
         ]));
         $this->runTask(new YamlTask(
-            path: $this->workspace()->path('yaml.yml'),
+            path: 'yaml.yml',
             data: [
                 'barbar' => 'booboo',
             ]
@@ -49,7 +51,7 @@ class YamlHandlerTest extends HandlerTestCase
             'foobar' => 'barfoo',
         ]));
         $this->runTask(new YamlTask(
-            path: $this->workspace()->path('yaml.yml'),
+            path: 'yaml.yml',
             data: [
                 'barbar' => 'booboo',
             ],
@@ -67,7 +69,7 @@ class YamlHandlerTest extends HandlerTestCase
     public function testFilterReturnsNonObject(): void
     {
         $this->runTask(new YamlTask(
-            path: $this->workspace()->path('yaml.yml'),
+            path: 'yaml.yml',
             filter: function (array $array) {
                 return null;
             }
@@ -79,7 +81,7 @@ class YamlHandlerTest extends HandlerTestCase
     public function testCreatesIfNotExists(): void
     {
         $this->runTask(new YamlTask(
-            path: $this->workspace()->path('yaml.yml'),
+            path: 'yaml.yml',
             data: [],
         ));
 
