@@ -5,6 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
@@ -12,7 +13,7 @@ use function Amp\call;
 
 class GitDiffHandler implements Handler
 {
-    public function __construct(private ProcessRunner $runner, private ReportPublisher $publisher)
+    public function __construct(private Filesystem $filesystem, private ProcessRunner $runner, private ReportPublisher $publisher)
     {
     }
 
@@ -26,11 +27,11 @@ class GitDiffHandler implements Handler
      */
     public function run(Task $task, Context $context): Promise
     {
-        return call(function () use ($task, $context) {
+        return call(function (string $cwd) use ($task, $context) {
             $result = yield $this->runner->mustRun([
                 'git',
                 'diff',
-            ], $context->fact(CwdFact::class)->cwd());
+            ], $cwd);
 
             $this->publisher->publish(
                 $context->fact(GroupFact::class)->group(),
@@ -38,6 +39,8 @@ class GitDiffHandler implements Handler
             );
 
             return $context;
-        });
+        }, $this->filesystem->cd(
+            $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
+        )->localPath());
     }
 }

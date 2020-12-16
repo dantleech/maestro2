@@ -4,6 +4,7 @@ namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Report\ReportManager;
@@ -27,7 +28,6 @@ class GitDiffHandlerTest extends HandlerTestCase
     protected function defaultContext(): Context
     {
         return Context::withFacts(
-            new CwdFact($this->workspace()->path()),
             new GroupFact('group')
         );
     }
@@ -35,6 +35,7 @@ class GitDiffHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new GitDiffHandler(
+            new Filesystem($this->workspace()->path()),
             $this->testRunner,
             $this->reportPublisher
         );
