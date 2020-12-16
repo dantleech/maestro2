@@ -5,7 +5,9 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Exception\RuntimeException;
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Report\Publisher\NullPublisher;
 use Maestro2\Core\Report\Report;
@@ -22,6 +24,7 @@ class TemplateHandler implements Handler
     private ReportPublisher $publisher;
 
     public function __construct(
+        private Filesystem $filesystem,
         private WorkspacePathResolver $pathResolver,
         private Environment $twig,
         private ArrayLoader $arrayLoader,
@@ -34,6 +37,7 @@ class TemplateHandler implements Handler
     {
         return (static function (string $basePath, ArrayLoader $arrayLoader) {
             return new self(
+                new Filesystem($basePath),
                 new WorkspacePathResolver($basePath),
                 new Environment(
                     new ChainLoader([
@@ -55,47 +59,45 @@ class TemplateHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof TemplateTask);
-        (function (string $path) use ($task, $context) {
-            if (!$task->overwrite() && file_exists($path)) {
+        (function (Filesystem $filesystem) use ($task, $context) {
+            if (!$task->overwrite() && $filesystem->exists($task->target())) {
                 return;
             }
 
-            (static function (string $dir, int $mode): void {
-                if (file_exists($dir)) {
+            (function (string $dir, int $mode) use ($filesystem): void {
+                if ($filesystem->exists($dir)) {
                     return;
                 }
 
-                if (@mkdir($dir, 0744, true)) {
-                    return;
-                }
-
-                throw new RuntimeException(sprintf(
-                    'Could not create directory "%s"',
-                    $dir
-                ));
-            })(dirname($path), $task->mode());
+                $filesystem->createDirectory($dir, 0744);
+            })(dirname($task->target()), $task->mode());
 
             if (Path::isAbsolute($task->template())) {
                 $this->arrayLoader->setTemplate($task->template(), file_get_contents($task->template()));
             }
 
-            file_put_contents(
-                $path,
+            $filesystem->putContents(
+                $task->target(),
                 $this->twig->render(
                     $task->template(),
                     $task->vars()
                 )
             );
-            chmod($path, $task->mode());
-
-            // required?
-            clearstatcache(true);
-
+            $filesystem->setMode($task->target(), $task->mode());
             $this->publisher->publish(
                 $task->group() ?: $context->fact(GroupFact::class)->group(),
-                Report::ok(sprintf('Applied "%s" to "%s" (mode: %s)', $task->template(), $path, PermissionUtil::formatOctal($task->mode())))
+                Report::ok(sprintf(
+                    'Applied "%s" to "%s" (mode: %s)',
+                    $task->template(),
+                    $task->target(),
+                    PermissionUtil::formatOctal($task->mode())
+                ))
             );
-        })($this->pathResolver->resolve($task->target()));
+        })(
+            $this->filesystem->cd(
+                $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
+            ),
+        );
 
         return new Success($context);
     }
