@@ -5,6 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Report\Report;
@@ -14,13 +15,8 @@ use function Amp\call;
 
 class GitCommitHandler implements Handler
 {
-    private ProcessRunner $runner;
-    private ReportPublisher $publisher;
-
-    public function __construct(ProcessRunner $runner, ReportPublisher $publisher)
+    public function __construct(private Filesystem $filesystem, private ProcessRunner $runner, private ReportPublisher $publisher)
     {
-        $this->runner = $runner;
-        $this->publisher = $publisher;
     }
 
     public function taskFqn(): string
@@ -83,6 +79,8 @@ class GitCommitHandler implements Handler
             ], $cwd);
 
             return $context;
-        }, $task->cwd() ?: $context->fact(CwdFact::class)->cwd());
+        }, $this->filesystem->cd(
+            $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
+        )->localPath());
     }
 }

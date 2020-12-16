@@ -14,7 +14,7 @@ class Filesystem
         $this->fs = new SymfonyFilesystem();
     }
 
-    public function localPath(string $cwd): string
+    public function localPath(string $cwd = '.'): string
     {
         return $this->resolvePath($cwd);
     }

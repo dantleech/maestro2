@@ -3,6 +3,7 @@
 namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Report\ReportManager;
@@ -15,9 +16,7 @@ use Maestro2\Core\Task\Handler;
 class GitCommitHandlerTest extends HandlerTestCase
 {
     private TestProcessRunner $testRunner;
-
     private ReportManager $reportPublisher;
-
 
     protected function setUp(): void
     {
@@ -36,6 +35,7 @@ class GitCommitHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new GitCommitHandler(
+            new Filesystem($this->workspace()->path()),
             $this->testRunner,
             $this->reportPublisher,
         );
