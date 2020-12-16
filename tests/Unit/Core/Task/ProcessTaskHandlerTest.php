@@ -2,6 +2,7 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcess;
@@ -24,7 +25,10 @@ class ProcessTaskHandlerTest extends HandlerTestCase
 
     protected function createHandler(): Handler
     {
-        return new ProcessTaskHandler($this->testRunner);
+        return new ProcessTaskHandler(
+            new Filesystem($this->workspace()->path()),
+            $this->testRunner
+        );
     }
 
     public function testRunsProcess(): void
@@ -38,7 +42,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
 
         self::assertInstanceOf(TestProcess::class, $process);
         self::assertEquals(['foobar'], $process->args());
-        self::assertEquals('/foobar', $process->cwd());
+        self::assertEquals($this->workspace()->path('/foobar'), $process->cwd());
         self::assertInstanceOf(Context::class, $context);
     }
 

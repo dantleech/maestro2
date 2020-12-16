@@ -5,6 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Closure;
 use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
@@ -14,6 +15,7 @@ use function Amp\call;
 class ProcessTaskHandler implements Handler
 {
     public function __construct(
+        private Filesystem $filesystem,
         private ProcessRunner $processRunner
     ) {
     }
@@ -29,7 +31,7 @@ class ProcessTaskHandler implements Handler
         return call(function (string $cwd) use ($task, $context) {
             $result = yield $this->processRunner->run(
                 $task->args(),
-                $cwd
+                $this->filesystem->localPath($cwd)
             );
             assert($result instanceof ProcessResult);
 
