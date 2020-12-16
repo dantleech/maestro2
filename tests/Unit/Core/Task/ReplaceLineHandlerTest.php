@@ -3,6 +3,7 @@
 namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Report\Publisher\NullPublisher;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
@@ -13,7 +14,10 @@ class ReplaceLineHandlerTest extends HandlerTestCase
 {
     protected function createHandler(): Handler
     {
-        return new ReplaceLineHandler(new NullPublisher());
+        return new ReplaceLineHandler(
+            new Filesystem($this->workspace()->path()),
+            new NullPublisher()
+        );
     }
 
     protected function defaultContext(): Context
@@ -35,7 +39,7 @@ EOT
         );
 
         $this->runTask(new ReplaceLineTask(
-            path: $this->workspace()->path('text'),
+            path: 'text',
             regexp: "{two}",
             line: "Line four",
         ));
@@ -60,7 +64,7 @@ EOT
         );
 
         $this->runTask(new ReplaceLineTask(
-            path: $this->workspace()->path('text'),
+            path: 'text',
             regexp: "{sity}",
             line: "Line four",
         ));
