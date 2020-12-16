@@ -6,8 +6,9 @@ use Amp\Promise;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Queue\Enqueuer;
 use function Amp\call;
+use Maestro2\Core\Task\ProcessesTask;
 
-class CommandsTaskHandler implements Handler
+class ProcessesHandler implements Handler
 {
     public function __construct(private Enqueuer $enqueuer)
     {
@@ -15,19 +16,18 @@ class CommandsTaskHandler implements Handler
 
     public function taskFqn(): string
     {
-        return CommandsTask::class;
+        return ProcessesTask::class;
     }
 
     public function run(Task $task, Context $context): Promise
     {
-        assert($task instanceof CommandsTask);
+        assert($task instanceof ProcessesTask);
         return call(function () use ($task, $context) {
             foreach ($task->commands() as $command) {
                 $result = yield $this->enqueuer->enqueue(
                     TaskContext::create(new ProcessTask(
-                        group: $task->group() ?: $context->fact(GroupFact::class)->group(),
-                        args: $command,
-                        cwd: $task->cwd()
+                        group: $context->fact(GroupFact::class)->group(),
+                        args: $command
                     ), $context)
                 );
 

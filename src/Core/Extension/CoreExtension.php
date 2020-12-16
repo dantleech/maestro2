@@ -6,13 +6,14 @@ use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Process\AmpProcessRunner;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
-use Maestro2\Core\Task\CommandsTaskHandler;
+use Maestro2\Core\Task\ProcessesHandler;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ConditionalHandler;
 use Maestro2\Core\Task\FactHandler;
@@ -83,10 +84,10 @@ class CoreExtension implements Extension
             return new HandlerFactory(array_merge([
                 new SequentialHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
-                new FileHandler($container->get(LoggerInterface::class)),
+                new FileHandler($container->get(Filesystem::class), $container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(ProcessRunner::class), $container->get(WorkspacePathResolver::class)),
                 new ProcessTaskHandler($container->get(ProcessRunner::class)),
-                new CommandsTaskHandler($container->get(Queue::class)),
+                new ProcessesHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
                 new TemplateHandler(
                     $container->get(WorkspacePathResolver::class),
@@ -147,6 +148,10 @@ class CoreExtension implements Extension
 
         $container->register(WorkspacePathResolver::class, function (Container $container) {
             return new WorkspacePathResolver($this->getConfig($container)->workspacePath());
+        });
+
+        $container->register(Filesystem::class, function (Container $container) {
+            return new Filesystem($container->get(MainNode::class)->workspacePath());
         });
     }
 

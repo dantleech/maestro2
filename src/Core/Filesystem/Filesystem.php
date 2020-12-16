@@ -9,7 +9,7 @@ class Filesystem
 {
     private SymfonyFilesystem $fs;
 
-    public function __construct(private string $rootDir, private string $cwd)
+    public function __construct(private string $rootDir, private string $cwd = '/')
     {
         $this->fs = new SymfonyFilesystem();
     }

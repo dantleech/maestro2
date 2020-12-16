@@ -45,7 +45,7 @@ class FileHandler implements Handler
             };
 
             return $context;
-        }, $this->workspaceFs->cd($context->fact(CwdFact::class)->cwd()));
+        }, $this->workspaceFs->cd($context->factOrNull(CwdFact::class)?->cwd() ?? '/'));
     }
 
     private function handleDirectory(Filesystem $filesystem, FileTask $task): void
