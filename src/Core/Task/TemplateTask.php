@@ -11,8 +11,7 @@ final class TemplateTask implements Task, Stringable
         private string $target,
         private array $vars = [],
         private int $mode = 0644,
-        private bool $overwrite = false,
-        private string $group = 'template',
+        private bool $overwrite = false
     ) {
     }
 
@@ -41,10 +40,6 @@ final class TemplateTask implements Task, Stringable
         return $this->overwrite;
     }
 
-    public function group(): string
-    {
-        return $this->group;
-    }
 
     public function __toString(): string
     {

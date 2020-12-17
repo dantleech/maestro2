@@ -82,7 +82,7 @@ class TemplateHandler implements Handler
             );
             $filesystem->setMode($task->target(), $task->mode());
             $this->publisher->publish(
-                $task->group() ?: $context->fact(GroupFact::class)->group(),
+                $context->factOrNull(GroupFact::class)?->group() ?: 'template',
                 Report::ok(sprintf(
                     'Applied "%s" to "%s" (mode: %s)',
                     $task->template(),

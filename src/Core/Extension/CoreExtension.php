@@ -12,6 +12,7 @@ use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
+use Maestro2\Core\Task\CatHandler;
 use Maestro2\Core\Task\PhpProcessHandler;
 use Maestro2\Core\Task\ProcessesHandler;
 use Maestro2\Core\Task\ComposerHandler;
@@ -107,6 +108,7 @@ class CoreExtension implements Extension
                 new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FactHandler(),
                 new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
+                new CatHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
             ], (static function (array $taggedServices) use ($container) {
                 return array_map(static function (string $serviceId) use ($container): Handler {
                     return $container->get($serviceId);
@@ -137,9 +139,13 @@ class CoreExtension implements Extension
         $container->register(Environment::class, function (Container $container) {
             return new Environment(
                 new ChainLoader([
-                    $container->get(ArrayLoader::class),
-                    new FilesystemLoader([ $container->getParameter('core.path.config') ])
-                ])
+                    new FilesystemLoader(
+                        $container->get(MainNode::class)->templatePaths()
+                    )
+                ]),
+                [
+                    'strict_variables' => true
+                ]
             );
         });
 

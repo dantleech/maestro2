@@ -12,15 +12,22 @@ final class MainNode
      * @var array<RepositoryNode>
      */
     private array $repositories;
-    private string $workspacePath;
     private PhpFact $php;
 
     /**
      * @param array<array<string, mixed>> $repositories
      * @param array<string> $selectedRepositories
      */
-    public function __construct(string $workspacePath, array $repositories, private array $vars = [], private ?array $selectedRepositories = null, array $php = [])
+    public function __construct(
+        private string $workspacePath,
+        array $repositories,
+        private array $templatePaths = [],
+        private array $vars = [],
+        private ?array $selectedRepositories = null,
+        array $php = []
+    )
     {
+        $this->php = Invoke::new(PhpFact::class, $php);
         $this->repositories = (function (array $repositories) {
             return array_combine(array_map(
                 fn (RepositoryNode $r) => $r->name(),
@@ -32,8 +39,6 @@ final class MainNode
             ], $repository)),
             $repositories
         ));
-        $this->php = Invoke::new(PhpFact::class, $php);
-        $this->workspacePath = $workspacePath;
     }
 
     /**
@@ -94,5 +99,10 @@ final class MainNode
     public function php(): PhpFact
     {
         return $this->php;
+    }
+
+    public function templatePaths(): array
+    {
+        return $this->templatePaths;
     }
 }
