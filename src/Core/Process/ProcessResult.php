@@ -10,13 +10,12 @@ class ProcessResult
         private string $stdErr,
         private array $args,
         private string $cwd
-    )
-    {
+    ) {
     }
 
     public static function ok(array $args, string $cwd, string $stdOut = '', string $stdErr = ''): self
     {
-        return new self(0 , $stdOut, $stdErr, $args, $cwd);
+        return new self(0, $stdOut, $stdErr, $args, $cwd);
     }
 
     public static function new(array $args, string $cwd, int $exitCode, string $stdOut = '', string $stdErr = ''): self

@@ -7,10 +7,8 @@ use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
 use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Process\AmpProcessRunner;
 use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
@@ -93,7 +91,7 @@ class CoreExtension implements Extension
                 new ProcessesHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
                 new TemplateHandler(
-                    $container->get(Filesystem::class), 
+                    $container->get(Filesystem::class),
                     $container->get(Environment::class),
                     $container->get(ArrayLoader::class),
                     $container->get(ReportManager::class)

@@ -2,7 +2,6 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;

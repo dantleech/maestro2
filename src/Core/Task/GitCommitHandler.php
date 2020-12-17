@@ -3,11 +3,8 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
-use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
-use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
@@ -19,8 +16,7 @@ class GitCommitHandler implements Handler
     public function __construct(
         private Enqueuer $enqueuer,
         private ReportPublisher $publisher
-    )
-    {
+    ) {
     }
 
     public function taskFqn(): string
@@ -36,7 +32,8 @@ class GitCommitHandler implements Handler
                 TaskContext::create(new ProcessTask(
                     args: ['git', 'rev-parse', '--show-toplevel'],
                     allowFailure: true
-                ), $context)))->result();
+                ), $context)
+            ))->result();
             assert($result instanceof ProcessResult);
 
             if (!$result->isOk()) {
@@ -64,7 +61,8 @@ class GitCommitHandler implements Handler
                         'ls-files',
                         '-m',
                     ], $task->paths()),
-                ), $context)))->result();
+                ), $context)
+            ))->result();
 
             if ($result->stdOut() === '') {
                 $this->publisher->publish(
