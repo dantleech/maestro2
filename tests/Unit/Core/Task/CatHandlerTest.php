@@ -4,13 +4,11 @@ namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CatHandler;
 use Maestro2\Core\Task\CatTask;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
-use PHPUnit\Framework\TestCase;
 
 class CatHandlerTest extends HandlerTestCase
 {

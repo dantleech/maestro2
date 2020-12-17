@@ -25,8 +25,7 @@ final class MainNode
         private array $vars = [],
         private ?array $selectedRepositories = null,
         array $php = []
-    )
-    {
+    ) {
         $this->php = Invoke::new(PhpFact::class, $php);
         $this->repositories = (function (array $repositories) {
             return array_combine(array_map(
