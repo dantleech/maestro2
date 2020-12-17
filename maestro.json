@@ -2,7 +2,12 @@
     "php": {
         "phpBin": "php7.3"
     },
+
+    "templatePaths": [
+        "example/templates"
+    ],
     "workspacePath": "/home/daniel/www/dantleech/maestro-two/var",
+
     "vars": {
         "composer.require": {
             "php": "^7.3"
@@ -18,14 +23,10 @@
                 "config/set/phpunit90.php"
             ]
         },
-        "phpVersions": [
-            "7.3",
-            "7.4"
-        ],
         "jobs": [
             "php-cs-fixer",
             "phpstan",
-            "tests"
+            "phpunit"
         ],
         "requireDev": [],
         "phpstanArgs": null,
@@ -34,27 +35,11 @@
     "repositories": [
         {
             "name": "worse-reflection",
-            "url": "git@github.com:phpactor/worse-reflection",
-            "vars": {
-                "jobs": [
-                    "phpbench",
-                    "php-cs-fixer",
-                    "phpstan",
-                    "tests"
-                ]
-            }
+            "url": "git@github.com:phpactor/worse-reflection"
         },
         {
             "name": "phpactor",
-            "url": "git@github.com:phpactor/phpactor",
-            "vars": {
-                "jobs": [
-                    "phpstan",
-                    "phpactor-main"
-                ],
-                "phpstanArgs": "--level=1 lib",
-                "dependencies": "locked"
-            }
+            "url": "git@github.com:phpactor/phpactor"
         },
         {
             "name": "text-document",

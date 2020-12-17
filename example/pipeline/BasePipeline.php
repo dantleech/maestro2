@@ -26,23 +26,23 @@ class BasePipeline implements Pipeline
             new FactTask(new GroupFact('workspace')),
             new FileTask(
                 type: 'directory',
-                path: $mainNode->workspacePath() . '/build',
+                path: 'build',
                 exists: false
             ),
             new FileTask(
                 type: 'directory',
-                path: $mainNode->workspacePath() . '/build',
+                path: 'build',
                 exists: true
             ),
             new ParallelTask(array_map(function (RepositoryNode $repositoryNode) {
-                $cwd = $repositoryNode->main()->workspacePath() . '/build/' . $repositoryNode->name();
                 return new SequentialTask([
                     new FactTask(new GroupFact($repositoryNode->name())),
+                    new FactTask(new CwdFact('build')),
                     new GitRepositoryTask(
-                        path: $cwd,
                         url: $repositoryNode->url(),
+                        path: $repositoryNode->name()
                     ),
-                    new FactTask(new CwdFact($cwd)),
+                    new FactTask(new CwdFact('build/' . $repositoryNode->name())),
                     new ComposerJsonFactTask(),
                     $this->buildRepository($repositoryNode)
                 ]);

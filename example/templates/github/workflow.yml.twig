@@ -1,0 +1,19 @@
+name: "{{ name }}"
+
+on:
+    pull_request:
+    push:
+        branches:
+            - 'master'
+
+env:
+    fail-fast: true
+    TZ: "Europe/Paris"
+
+jobs:
+{% for job in jobs %}
+{% include [ 
+    'github/steps/%s-%s.yml.twig'|format(job, repo.name),
+    'github/steps/%s.yml.twig'|format(job)
+] %}
+{% endfor %}

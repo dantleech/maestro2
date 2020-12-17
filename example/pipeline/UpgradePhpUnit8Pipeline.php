@@ -7,7 +7,7 @@ use Maestro2\Composer\Task\ComposerJsonFactTask;
 use Maestro2\Core\Config\MainNode;
 use Maestro2\Core\Config\RepositoryNode;
 use Maestro2\Core\Pipeline\Pipeline;
-use Maestro2\Core\Task\CommandsTask;
+use Maestro2\Core\Task\ProcessesTask;
 use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Task\FileTask;
 use Maestro2\Core\Task\GitCommitTask;
