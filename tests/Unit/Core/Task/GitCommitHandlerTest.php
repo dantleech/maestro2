@@ -47,7 +47,6 @@ class GitCommitHandlerTest extends HandlerTestCase
     public function testExecutedGitCommit(): void
     {
         $this->testRunner->push(ProcessResult::ok([], $this->workspace()->path(), $this->workspace()->path()));
-        $this->testRunner->push(ProcessResult::ok([], '/', 'somefile.php'));
         $this->testRunner->push(ProcessResult::ok([], '/'));
         $this->testRunner->push(ProcessResult::ok([], '/'));
 
@@ -57,7 +56,6 @@ class GitCommitHandlerTest extends HandlerTestCase
         ));
 
         self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->pop()->argsAsString());
-        self::assertEquals('git ls-files -m foo bar', $this->testRunner->pop()->argsAsString());
         self::assertEquals('git add foo bar', $this->testRunner->pop()->argsAsString());
         self::assertEquals('git commit -m Foobar', $this->testRunner->pop()->argsAsString());
     }
@@ -85,20 +83,5 @@ class GitCommitHandlerTest extends HandlerTestCase
             paths: ['foo', 'bar'],
             message: 'Foobar',
         ));
-    }
-
-    public function testTaskWarningIfNoCommitsYet(): void
-    {
-        $this->testRunner->push(ProcessResult::ok([], $this->workspace()->path(), $this->workspace()->path()));
-        $this->testRunner->push(ProcessResult::ok([], '/'));
-        $this->testRunner->push(ProcessResult::ok([], '/'));
-        $this->testRunner->push(ProcessResult::ok([], '/'));
-
-        $this->runTask(new GitCommitTask(
-            paths: ['foo', 'bar'],
-            message: 'Foobar',
-        ));
-
-        self::assertCount(1, $this->reportPublisher->group('git-commit')->reports()->warns());
     }
 }

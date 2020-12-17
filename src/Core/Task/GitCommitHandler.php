@@ -54,24 +54,6 @@ class GitCommitHandler implements Handler
                 ));
             })(trim($result->stdOut()), $result->cwd());
 
-            $result = (yield $this->enqueuer->enqueue(
-                TaskContext::create(new ProcessTask(
-                    args: array_merge([
-                        'git',
-                        'ls-files',
-                        '-m',
-                    ], $task->paths()),
-                ), $context)
-            ))->result();
-
-            if ($result->stdOut() === '') {
-                $this->publisher->publish(
-                    $task->group() ?: $context->fact(GroupFact::class)->group(),
-                    Report::warn(sprintf('Git commit "%s": no files modiied', $task->message()))
-                );
-                return $context;
-            }
-
             yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
                     args: array_merge([
