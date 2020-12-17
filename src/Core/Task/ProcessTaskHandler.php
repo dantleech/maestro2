@@ -58,10 +58,8 @@ class ProcessTaskHandler implements Handler
                     ));
                 }
 
-                $context = $context->withResult($result);
-
                 return $context;
-            })($task->after(), $result, $context);
+            })($task->after(), $result, $context)->withResult($result);
         }, $context->factOrNull(CwdFact::class)?->cwd() ?: '/');
     }
 

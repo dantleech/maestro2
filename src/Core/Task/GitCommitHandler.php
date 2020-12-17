@@ -17,7 +17,6 @@ use function Amp\call;
 class GitCommitHandler implements Handler
 {
     public function __construct(
-        private Filesystem $filesystem,
         private Enqueuer $enqueuer,
         private ReportPublisher $publisher
     )
@@ -32,22 +31,22 @@ class GitCommitHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof GitCommitTask);
-        return call(function (string $cwd) use ($task, $context) {
+        return call(function () use ($task, $context) {
             $result = (yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
-                    args: ['git', 'rev-parse', '--show-toplevel']
-                ), $context))->result();
-            ));
+                    args: ['git', 'rev-parse', '--show-toplevel'],
+                    allowFailure: true
+                ), $context)))->result();
             assert($result instanceof ProcessResult);
 
             if (!$result->isOk()) {
                 throw new TaskError(sprintf(
                     'Path "%s" is not a git repository',
-                    $cwd
+                    $result->cwd()
                 ));
             }
 
-            (function (string $topLevelPath) use ($task, $cwd) {
+            (function (string $topLevelPath, ?string $cwd) use ($task) {
                 if ($topLevelPath === $cwd) {
                     return;
                 }
@@ -56,13 +55,16 @@ class GitCommitHandler implements Handler
                     $cwd,
                     $topLevelPath
                 ));
-            })(trim($result->stdOut()));
+            })(trim($result->stdOut()), $result->cwd());
 
-            $result = yield $this->runner->mustRun(array_merge([
-                'git',
-                'ls-files',
-                '-m',
-            ], $task->paths()), $cwd);
+            $result = (yield $this->enqueuer->enqueue(
+                TaskContext::create(new ProcessTask(
+                    args: array_merge([
+                        'git',
+                        'ls-files',
+                        '-m',
+                    ], $task->paths()),
+                ), $context)))->result();
 
             if ($result->stdOut() === '') {
                 $this->publisher->publish(
@@ -72,20 +74,26 @@ class GitCommitHandler implements Handler
                 return $context;
             }
 
-            yield $this->runner->mustRun(
-                array_merge([
-                    'git', 'add'
-                ], $task->paths()),
-                $cwd,
+            yield $this->enqueuer->enqueue(
+                TaskContext::create(new ProcessTask(
+                    args: array_merge([
+                        'git', 'add'
+                    ], $task->paths()),
+                ), $context)
             );
 
-            yield $this->runner->mustRun([
-                'git', 'commit', '-m', $task->message()
-            ], $cwd);
+            yield $this->enqueuer->enqueue(
+                TaskContext::create(new ProcessTask(
+                    args: [
+                        'git',
+                        'commit',
+                        '-m',
+                        $task->message()
+                    ]
+                ), $context)
+            );
 
             return $context;
-        }, $this->filesystem->cd(
-            $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
-        )->localPath());
+        });
     }
 }

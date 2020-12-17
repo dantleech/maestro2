@@ -6,12 +6,14 @@ use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcessRunner;
+use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\GitCommitHandler;
 use Maestro2\Core\Task\GitCommitTask;
 use Maestro2\Core\Task\Handler;
+use Maestro2\Core\Task\ProcessTaskHandler;
 
 class GitCommitHandlerTest extends HandlerTestCase
 {
@@ -35,18 +37,19 @@ class GitCommitHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new GitCommitHandler(
-            new Filesystem($this->workspace()->path()),
-            $this->testRunner,
+            TestEnqueuer::fromHandlers([
+                new ProcessTaskHandler(new Filesystem($this->workspace()->path()), $this->testRunner)
+            ]),
             $this->reportPublisher,
         );
     }
 
     public function testExecutedGitCommit(): void
     {
-        $this->testRunner->push(ProcessResult::ok($this->workspace()->path()));
-        $this->testRunner->push(ProcessResult::ok('somefile.php'));
-        $this->testRunner->push(ProcessResult::ok());
-        $this->testRunner->push(ProcessResult::ok());
+        $this->testRunner->push(ProcessResult::ok([], $this->workspace()->path(), $this->workspace()->path()));
+        $this->testRunner->push(ProcessResult::ok([], '/', 'somefile.php'));
+        $this->testRunner->push(ProcessResult::ok([], '/'));
+        $this->testRunner->push(ProcessResult::ok([], '/'));
 
         $this->runTask(new GitCommitTask(
             paths: ['foo', 'bar'],
@@ -63,7 +66,7 @@ class GitCommitHandlerTest extends HandlerTestCase
     {
         $this->expectException(TaskError::class);
         $this->expectExceptionMessage('is not a git');
-        $this->testRunner->push(ProcessResult::new(128));
+        $this->testRunner->push(ProcessResult::new([], '/', 128));
 
         $this->runTask(new GitCommitTask(
             paths: ['foo', 'bar'],
@@ -76,7 +79,7 @@ class GitCommitHandlerTest extends HandlerTestCase
         $this->expectException(TaskError::class);
         $this->expectExceptionMessage('is not the root');
 
-        $this->testRunner->push(ProcessResult::ok('path/to/foo'));
+        $this->testRunner->push(ProcessResult::ok([], '/', 'path/to/foo'));
 
         $this->runTask(new GitCommitTask(
             paths: ['foo', 'bar'],
@@ -86,10 +89,10 @@ class GitCommitHandlerTest extends HandlerTestCase
 
     public function testTaskWarningIfNoCommitsYet(): void
     {
-        $this->testRunner->push(ProcessResult::ok($this->workspace()->path()));
-        $this->testRunner->push(ProcessResult::ok(''));
-        $this->testRunner->push(ProcessResult::ok());
-        $this->testRunner->push(ProcessResult::ok());
+        $this->testRunner->push(ProcessResult::ok([], $this->workspace()->path(), $this->workspace()->path()));
+        $this->testRunner->push(ProcessResult::ok([], '/'));
+        $this->testRunner->push(ProcessResult::ok([], '/'));
+        $this->testRunner->push(ProcessResult::ok([], '/'));
 
         $this->runTask(new GitCommitTask(
             paths: ['foo', 'bar'],
