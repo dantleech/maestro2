@@ -19,7 +19,7 @@ class ComposerJsonFactHandlerTest extends HandlerTestCase
 
     protected function defaultContext(): Context
     {
-        return Context::withFacts(
+        return Context::fromFacts(
             new CwdFact($this->workspace()->path())
         );
     }

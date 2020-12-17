@@ -22,7 +22,7 @@ class ReplaceLineHandlerTest extends HandlerTestCase
 
     protected function defaultContext(): Context
     {
-        return Context::withFacts(
+        return Context::fromFacts(
             new GroupFact('replace-line')
         );
     }

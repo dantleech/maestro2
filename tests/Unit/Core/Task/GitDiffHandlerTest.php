@@ -27,7 +27,7 @@ class GitDiffHandlerTest extends HandlerTestCase
 
     protected function defaultContext(): Context
     {
-        return Context::withFacts(
+        return Context::fromFacts(
             new GroupFact('group')
         );
     }

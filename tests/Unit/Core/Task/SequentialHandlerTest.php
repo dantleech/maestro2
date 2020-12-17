@@ -32,7 +32,7 @@ class SequentialHandlerTest extends HandlerTestCase
 
     protected function defaultContext(): Context
     {
-        return Context::withFacts(new GroupFact(self::GROUP));
+        return Context::fromFacts(new GroupFact(self::GROUP));
     }
 
     protected function createHandler(): Handler

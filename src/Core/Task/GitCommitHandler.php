@@ -8,6 +8,7 @@ use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
+use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
@@ -15,7 +16,11 @@ use function Amp\call;
 
 class GitCommitHandler implements Handler
 {
-    public function __construct(private Filesystem $filesystem, private ProcessRunner $runner, private ReportPublisher $publisher)
+    public function __construct(
+        private Filesystem $filesystem,
+        private Enqueuer $enqueuer,
+        private ReportPublisher $publisher
+    )
     {
     }
 
@@ -28,11 +33,11 @@ class GitCommitHandler implements Handler
     {
         assert($task instanceof GitCommitTask);
         return call(function (string $cwd) use ($task, $context) {
-            $result = yield $this->runner->run([
-                'git',
-                'rev-parse',
-                '--show-toplevel',
-            ], $cwd);
+            $result = (yield $this->enqueuer->enqueue(
+                TaskContext::create(new ProcessTask(
+                    args: ['git', 'rev-parse', '--show-toplevel']
+                ), $context))->result();
+            ));
             assert($result instanceof ProcessResult);
 
             if (!$result->isOk()) {

@@ -27,7 +27,7 @@ class GitCommitHandlerTest extends HandlerTestCase
 
     protected function defaultContext(): Context
     {
-        return Context::withFacts(
+        return Context::fromFacts(
             new GroupFact('git-commit')
         );
     }
