@@ -52,7 +52,7 @@ class YamlHandler implements Handler
             $data = $filter($data);
         }
 
-        $this->filesystem->putContents(
+        $filesystem->putContents(
             $task->path(),
             Yaml::dump($data, $task->inline())
         );

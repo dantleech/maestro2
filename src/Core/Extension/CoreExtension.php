@@ -10,9 +10,11 @@ use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Process\AmpProcessRunner;
 use Maestro2\Core\Process\ProcessRunner;
+use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
+use Maestro2\Core\Task\PhpProcessHandler;
 use Maestro2\Core\Task\ProcessesHandler;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ConditionalHandler;
@@ -85,25 +87,26 @@ class CoreExtension implements Extension
                 new SequentialHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FileHandler($container->get(Filesystem::class), $container->get(LoggerInterface::class)),
-                new GitRepositoryHandler($container->get(ProcessRunner::class), $container->get(WorkspacePathResolver::class)),
-                new ProcessTaskHandler($container->get(ProcessRunner::class)),
+                new GitRepositoryHandler($container->get(Queue::class)),
+                new ProcessTaskHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class)),
+                new PhpProcessHandler($container->get(Queue::class)),
                 new ProcessesHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
                 new TemplateHandler(
-                    $container->get(WorkspacePathResolver::class),
+                    $container->get(Filesystem::class), 
                     $container->get(Environment::class),
                     $container->get(ArrayLoader::class),
                     $container->get(ReportManager::class)
                 ),
-                new JsonMergeHandler(),
-                new YamlHandler(),
-                new ReplaceLineHandler($container->get(ReportManager::class)),
+                new JsonMergeHandler($container->get(Filesystem::class), ),
+                new YamlHandler($container->get(Filesystem::class), ),
+                new ReplaceLineHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
                 new ComposerHandler(
-                    $container->get(Queue::class),
-                    $container->get(ProcessRunner::class)
+                    $container->get(Filesystem::class),
+                    $container->get(Queue::class)
                 ),
-                new GitDiffHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
-                new GitCommitHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
+                new GitDiffHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class), $container->get(ReportManager::class)),
+                new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FactHandler(),
                 new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
             ], (static function (array $taggedServices) use ($container) {
@@ -144,10 +147,6 @@ class CoreExtension implements Extension
 
         $container->register(ArrayLoader::class, function (Container $container) {
             return new ArrayLoader();
-        });
-
-        $container->register(WorkspacePathResolver::class, function (Container $container) {
-            return new WorkspacePathResolver($this->getConfig($container)->workspacePath());
         });
 
         $container->register(Filesystem::class, function (Container $container) {

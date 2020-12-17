@@ -7,11 +7,12 @@ use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Path\WorkspacePathResolver;
 use Maestro2\Core\Process\ProcessRunner;
+use Maestro2\Core\Queue\Enqueuer;
 use function Amp\call;
 
 class GitRepositoryHandler implements Handler
 {
-    public function __construct(private Filesystem $filesystem, private ProcessRunner $runner, private WorkspacePathResolver $resolver)
+    public function __construct(private Enqueuer $enqueuer)
     {
     }
 
@@ -25,17 +26,15 @@ class GitRepositoryHandler implements Handler
         return call(function () use ($task, $context) {
             assert($task instanceof GitRepositoryTask);
 
-            $path = $this->resolver->resolve($task->path());
-
-            yield $this->runner->mustRun([
-                'git',
-                'clone',
-                '--depth=1',
-                $task->url(),
-                $this->filesystem->localPath(
-                    $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
-                )
-            ]);
+            yield $this->enqueuer->enqueue(TaskContext::create(new ProcessTask(
+                args: [
+                    'git',
+                    'clone',
+                    '--depth=1',
+                    $task->url(),
+                    $task->path()
+                ]
+            ), $context));
 
             return $context;
         });

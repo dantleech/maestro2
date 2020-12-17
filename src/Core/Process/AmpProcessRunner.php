@@ -107,7 +107,9 @@ class AmpProcessRunner implements ProcessRunner
             return new ProcessResult(
                 $exitCode,
                 $stdOut,
-                $stdErr
+                $stdErr,
+                $args,
+                $cwd,
             );
         });
     }
