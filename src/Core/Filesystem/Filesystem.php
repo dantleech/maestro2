@@ -26,7 +26,10 @@ class Filesystem
 
     public function putContents(string $path, ?string $contents = null): void
     {
-        file_put_contents($this->resolvePath($path), $contents ?? '');
+        (function (string $path) use ($contents): void {
+            $this->ensureDirectoryExists(dirname($path));
+            file_put_contents($path, $contents ?? '');
+        })($this->resolvePath($path));
     }
 
     public function setMode(string $path, int $mode): void
@@ -70,5 +73,14 @@ class Filesystem
     public function getContents(string $path): string
     {
         return file_get_contents($this->resolvePath($path));
+    }
+
+    private function ensureDirectoryExists(string $path): void
+    {
+        if ($this->exists($path)) {
+            return;
+        }
+
+        $this->fs->mkdir($path);
     }
 }
