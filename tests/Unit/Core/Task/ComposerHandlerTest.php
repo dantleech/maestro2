@@ -7,6 +7,7 @@ use Maestro2\Core\Fact\PhpFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
+use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Process\TestProcessRunner;
@@ -14,6 +15,9 @@ use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
+use Maestro2\Core\Task\PhpProcessHandler;
+use Maestro2\Core\Task\ProcessTaskHandler;
+use Maestro2\Core\Task\ProcessesHandler;
 
 class ComposerHandlerTest extends HandlerTestCase
 {
@@ -39,9 +43,11 @@ class ComposerHandlerTest extends HandlerTestCase
         return new ComposerHandler(
             $filesystem,
             TestEnqueuer::fromHandlers([
-                new JsonMergeHandler($filesystem)
+                new JsonMergeHandler($filesystem),
+                new PhpProcessHandler(TestEnqueuer::fromHandlers([
+                    new ProcessTaskHandler($filesystem, $this->testRunner),
+                ]))
             ]),
-            $this->testRunner
         );
     }
 
@@ -154,7 +160,6 @@ EOT
             PHP_BINARY,
             'composer',
             'update',
-            '--working-dir=' . $this->workspace()->path()
         ], $this->testRunner->pop()->args());
     }
 

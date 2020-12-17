@@ -31,7 +31,7 @@ class ProcessTask implements Task, Stringable
         return sprintf('Running process: %s', implode(' ', array_map('escapeshellarg', $this->args)));
     }
 
-    /*
+    /**
      * @return Closure(ProcessResult, Context)
      */
     public function after(): ?Closure

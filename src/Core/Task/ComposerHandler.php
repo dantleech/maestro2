@@ -18,7 +18,6 @@ class ComposerHandler implements Handler
     public function __construct(
         private Filesystem $filesystem,
         private Enqueuer $enqueuer,
-        private ProcessRunner $runner,
     ) {
     }
 
@@ -45,12 +44,12 @@ class ComposerHandler implements Handler
 
                 if ($task->update() === true) {
                     $finder = new ExecutableFinder();
-                    yield $this->runner->mustRun([
-                        $context->fact(PhpFact::class)->phpBin(),
-                        $task->composerBin() ?: $finder->find('composer'),
-                        'update',
-                        '--working-dir=' . $this->filesystem->localPath('.')
-                    ]);
+                    yield $this->enqueuer->enqueue(TaskContext::create(new PhpProcessTask(
+                        args: [
+                            $task->composerBin() ?: $finder->find('composer'),
+                            'update',
+                        ]
+                    ), $context));
                 }
 
                 return $context;
