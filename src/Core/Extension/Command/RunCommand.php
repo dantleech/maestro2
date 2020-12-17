@@ -31,6 +31,7 @@ class RunCommand extends Command
     protected function configure(): void
     {
         $this->setName(self::NAME);
+        $this->setDescription('Run a pipeline');
         $this->addArgument(self::ARG_PIPELINE, InputArgument::REQUIRED, 'Pipeline name');
         $this->addOption(self::OPT_REPO, null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Include this repository');
     }
