@@ -9,7 +9,7 @@ class ProcessResult
         private string $stdOut,
         private string $stdErr,
         private array $args,
-        private ?string $cwd
+        private string $cwd
     )
     {
     }

@@ -36,7 +36,6 @@ class RectorInstallHandler implements Handler
             yield $this->enqueuer->enqueue(
                 TaskContext::create(
                     new ComposerTask(
-                        path: $cwd,
                         require: [
                             'rector/rector-prefixed' => $task->rectorVersion(),
                         ],

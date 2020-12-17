@@ -109,7 +109,7 @@ class AmpProcessRunner implements ProcessRunner
                 $stdOut,
                 $stdErr,
                 $args,
-                $cwd,
+                $cwd ?: getcwd(),
             );
         });
     }

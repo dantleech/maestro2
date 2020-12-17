@@ -3,6 +3,7 @@
 namespace Maestro2\Core\Task;
 
 use Closure;
+use Maestro2\Core\Process\ProcessResult;
 
 class PhpProcessTask implements Task
 {

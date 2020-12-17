@@ -46,7 +46,7 @@ class GitCommitHandler implements Handler
                 ));
             }
 
-            (function (string $topLevelPath, ?string $cwd) use ($task) {
+            (function (string $topLevelPath, string $cwd) use ($task) {
                 if ($topLevelPath === $cwd) {
                     return;
                 }
