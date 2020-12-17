@@ -43,7 +43,7 @@ class GitDiffHandlerTest extends HandlerTestCase
 
     public function testPublishesGitDiff(): void
     {
-        $this->testRunner->push(ProcessResult::ok('diff'));
+        $this->testRunner->push(ProcessResult::ok([], '/', 'diff'));
         $this->runTask(new GitDiffTask(), $this->defaultContext());
 
         self::assertCount(1, $this->reportPublisher->groups()->reports()->infos());

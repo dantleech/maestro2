@@ -150,7 +150,7 @@ EOT
 
     public function testUpdate(): void
     {
-        $this->testRunner->push(ProcessResult::ok());
+        $this->testRunner->push(ProcessResult::ok([], '/'));
         $this->runTask(new ComposerTask(
             update: true,
             composerBin: 'composer',
@@ -167,7 +167,7 @@ EOT
     {
         $this->expectException(ProcessFailure::class);
 
-        $this->testRunner->push(ProcessResult::new(127, 'No', 'No'));
+        $this->testRunner->push(ProcessResult::new([], '/', 127, 'No', 'No'));
         $this->runTask(new ComposerTask(
             update: true,
             composerBin: 'compoasser',

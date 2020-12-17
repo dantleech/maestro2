@@ -41,7 +41,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
 
     public function testRunsProcess(): void
     {
-        $this->testRunner->push(ProcessResult::ok());
+        $this->testRunner->push(ProcessResult::ok([], '/'));
         $context = $this->runTask(new ProcessTask(
             args: ['foobar']
         ), Context::create([], [
@@ -58,7 +58,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
     public function testFailsWhenProcssFails(): void
     {
         $this->expectException(ProcessFailure::class);
-        $this->testRunner->push(ProcessResult::new(127));
+        $this->testRunner->push(ProcessResult::new([], '/', 127));
         $context = $this->runTask(new ProcessTask(
             args: ['foobar']
         ));
@@ -66,7 +66,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
 
     public function testToleratesFailure(): void
     {
-        $this->testRunner->push(ProcessResult::new(127));
+        $this->testRunner->push(ProcessResult::new([], '/', 127));
         $context = $this->runTask(new ProcessTask(
             args: ['foobar'],
             allowFailure: true
@@ -76,7 +76,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
 
     public function testAllowsModificationOfContextAfterProcessRuns(): void
     {
-        $this->testRunner->push(ProcessResult::ok());
+        $this->testRunner->push(ProcessResult::ok([], '/'));
         $context = $this->runTask(new ProcessTask(
             args: ['foobar'],
             after: function (ProcessResult $result, Context $context) {
@@ -89,7 +89,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
 
     public function testReturnsResult(): void
     {
-        $expectedResult = ProcessResult::ok('hello');
+        $expectedResult = ProcessResult::ok([], '/', 'hello');
         $this->testRunner->push($expectedResult);
 
         $context = $this->runTask(new ProcessTask(
@@ -104,7 +104,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
     public function testThrowsExceptionIfClosureDoesNotReturnContext(): void
     {
         $this->expectException(TaskError::class);
-        $this->testRunner->push(ProcessResult::ok());
+        $this->testRunner->push(ProcessResult::ok([], '/'));
         $context = $this->runTask(new ProcessTask(
             args: ['foobar'],
             after: function (ProcessResult $result, Context $context) {
