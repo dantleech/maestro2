@@ -4,15 +4,20 @@ namespace Maestro2\Core\Task;
 
 use Maestro2\Core\Fact\Fact;
 use Maestro2\Core\Task\Exception\FactNotFound;
+use Maestro2\Core\Task\Exception\ResultNotSet;
 
+/**
+ * @template R
+ */
 final class Context
 {
     /**
      * @template T of Fact
      * @param array<string,mixed> $vars
      * @psalm-param array<class-string<T>,T> $facts
+     * @param R $result
      */
-    private function __construct(private array $vars, private array $facts)
+    private function __construct(private array $vars, private array $facts, private mixed $result = null)
     {
     }
 
@@ -23,6 +28,28 @@ final class Context
     public static function create(array $vars = [], array $facts = []): self
     {
         return new self($vars, array_combine(array_map('get_class', $facts), $facts));
+    }
+
+    /**
+     * @return R
+     */
+    public function result(): mixed
+    {
+        if (null === $this->result) {
+            throw new ResultNotSet(
+                'No result has been set in context'
+            );
+        }
+
+        return $this->result;
+    }
+
+    /**
+     * @return R|null
+     */
+    public function resultOrNull(): mixed
+    {
+        return $this->result;
     }
 
     public function var(string $name, mixed $default = null): mixed
@@ -68,6 +95,14 @@ final class Context
     }
 
     /**
+     * @param R $result
+     */
+    public function withResult(mixed $result): self
+    {
+        return new self($this->vars, $this->facts, $result);
+    }
+
+    /**
      * @template F of Fact
      *
      * @psalm-param class-string<F> $factClass
@@ -99,7 +134,7 @@ final class Context
     }
 
 
-    public static function withFacts(Fact ...$phpFacts): self
+    public static function fromFacts(Fact ...$phpFacts): self
     {
         return self::create([], $phpFacts);
     }

@@ -87,6 +87,20 @@ class ProcessTaskHandlerTest extends HandlerTestCase
         self::assertEquals('bar', $context->var('foo'));
     }
 
+    public function testReturnsResult(): void
+    {
+        $expectedResult = ProcessResult::ok('hello');
+        $this->testRunner->push($expectedResult);
+
+        $context = $this->runTask(new ProcessTask(
+            args: ['foobar'],
+            after: function (ProcessResult $result, Context $context) {
+                return $context->withVar('foo', 'bar');
+            }
+        ));
+        self::assertSame($expectedResult, $context->result());
+    }
+
     public function testThrowsExceptionIfClosureDoesNotReturnContext(): void
     {
         $this->expectException(TaskError::class);

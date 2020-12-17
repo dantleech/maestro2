@@ -47,7 +47,6 @@ class ProcessTaskHandler implements Handler
                 }
 
                 $context = $after($result, $context);
-
                 /**
                  * @psalm-suppress RedundantCondition
                  * @psalm-suppress TypeDoesNotContainType
@@ -58,6 +57,8 @@ class ProcessTaskHandler implements Handler
                         is_object($context) ? $context::class : gettype($context)
                     ));
                 }
+
+                $context = $context->withResult($result);
 
                 return $context;
             })($task->after(), $result, $context);
