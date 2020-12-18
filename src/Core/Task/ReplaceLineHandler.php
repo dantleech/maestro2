@@ -41,10 +41,11 @@ class ReplaceLineHandler implements Handler
     private function runReplaceLine(ReplaceLineTask $task, Filesystem $filesystem, string $group): void
     {
         if (!$filesystem->exists($task->path())) {
-            throw new TaskError(sprintf(
-                'File "%s" does not exist',
-                $task->path()
-            ));
+            $this->publisher->publish($group, Report::warn(sprintf(
+                '%s - file does not exist',
+                $task->__toString()
+            )));
+            return;
         }
         
         $before = $filesystem->getContents($task->path());
