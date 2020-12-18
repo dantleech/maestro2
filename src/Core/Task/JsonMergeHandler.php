@@ -5,6 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Amp\Success;
 use JsonException;
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Exception\TaskError;
 use Webmozart\Assert\Assert;
@@ -26,9 +27,10 @@ class JsonMergeHandler implements Handler
         assert($task instanceof JsonMergeTask);
 
         $existingData = new stdClass();
+        $filesystem = $this->filesystem->cd($context->fact(CwdFact::class)->cwd());
 
-        if ($this->filesystem->exists($task->path())) {
-            $jsonContents = $this->filesystem->getContents($task->path());
+        if ($filesystem->exists($task->path())) {
+            $jsonContents = $filesystem->getContents($task->path());
 
             try {
                 /** @var mixed $existingData */
@@ -53,7 +55,7 @@ class JsonMergeHandler implements Handler
             $data = $filter($existingData);
         }
 
-        $this->filesystem->putContents(
+        $filesystem->putContents(
             $task->path(),
             json_encode(
                 $data,
