@@ -2,7 +2,9 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Filesystem\Filesystem;
+use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\JsonMergeTask;
@@ -13,6 +15,13 @@ class JsonMergeHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new JsonMergeHandler(new Filesystem($this->workspace()->path('/')));
+    }
+
+    protected function defaultContext(): Context
+    {
+        return Context::create([], [
+            new CwdFact('/'),
+        ]);
     }
 
     public function testMergesArrayIntoJsonObject(): void

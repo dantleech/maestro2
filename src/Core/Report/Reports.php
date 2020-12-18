@@ -6,6 +6,7 @@ use ArrayIterator;
 use Iterator;
 use IteratorAggregate;
 use Countable;
+use Maestro2\Core\Exception\RuntimeException;
 
 /**
  * @implements IteratorAggregate<Report>
@@ -13,13 +14,28 @@ use Countable;
 class Reports implements IteratorAggregate, Countable
 {
     /**
-     * @var array<array-key,Report>
+     * @var list<Report> $reports
      */
-    private array $reports;
-
-    public function __construct(array $reports)
+    public function __construct(private array $reports)
     {
-        $this->reports = $reports;
+    }
+
+    public function forLevel(string $level): self
+    {
+        return new self(array_filter(
+            $this->reports,
+            fn (Report $report) => match ($level) {
+                Report::LEVEL_OK => true,
+                Report::LEVEL_INFO => in_array($report->level(), [ Report::LEVEL_INFO, Report::LEVEL_WARN, Report::LEVEL_FAIL ]),
+                Report::LEVEL_WARN => in_array($report->level(), [ Report::LEVEL_WARN, Report::LEVEL_FAIL ]),
+                Report::LEVEL_FAIL => $report->level() === Report::LEVEL_FAIL,
+                default => throw new RuntimeException(sprintf(
+                    'Report level "%s" invalid, must be one of: "%s"',
+                    $level,
+                    implode('", "', [ Report::LEVEL_INFO, Report::LEVEL_WARN, Report::LEVEL_FAIL ])
+                ))
+            }
+        ));
     }
 
     public function warns(): self

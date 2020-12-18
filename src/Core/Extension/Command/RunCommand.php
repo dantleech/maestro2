@@ -14,12 +14,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
+use Webmozart\Assert\Assert;
 
 class RunCommand extends Command
 {
     private const NAME = 'run';
     private const ARG_PIPELINE = 'pipeline';
     private const OPT_REPO = 'repo';
+    const OPT_REPORT_LEVEL = 'report-level';
 
     public function __construct(
         private Maestro $maestro,
@@ -34,6 +36,7 @@ class RunCommand extends Command
         $this->setDescription('Run a pipeline');
         $this->addArgument(self::ARG_PIPELINE, InputArgument::REQUIRED, 'Pipeline name');
         $this->addOption(self::OPT_REPO, null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Include this repository');
+        $this->addOption(self::OPT_REPORT_LEVEL, null, InputOption::VALUE_REQUIRED, 'Report level (error, warn, info, ok)', Report::LEVEL_OK);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -47,6 +50,9 @@ class RunCommand extends Command
 
             return $pipeline;
         })($input->getArgument(self::ARG_PIPELINE));
+        $reportLevel = $input->getOption(self::OPT_REPORT_LEVEL);
+        Assert::string($reportLevel, 'Report level must be a string');
+
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
             $output->writeln($error->getTraceAsString());
@@ -71,8 +77,12 @@ class RunCommand extends Command
         $output->writeln('');
         $reports = $this->reportProvider->groups();
         foreach ($reports as $group) {
+            $reportsForLevel = $group->reports()->forLevel($reportLevel);
+            if ($reportsForLevel->count() === 0) {
+                continue;
+            }
             $style->section($group->name());
-            foreach ($group->reports() as $report) {
+            foreach ($reportsForLevel as $report) {
                 assert($report instanceof Report);
                 $output->writeln(sprintf(
                     "  %s %s",
