@@ -1,4 +1,4 @@
-    phpstan:
+    psalm:
         name: "Psalm (${{ '{{ matrix.php-version }}' }})"
 
         runs-on: "ubuntu-latest"
@@ -29,5 +29,5 @@
                     composer-options: "--no-scripts"
 
             -
-                name: "Run PHPStan"
+                name: "Run Psalm"
                 run: "vendor/bin/psalm"
