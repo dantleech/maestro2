@@ -5,7 +5,6 @@ namespace Maestro2\Core\Queue;
 use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Task\HandlerFactory;
-use Maestro2\Core\Task\Task;
 use Maestro2\Core\Task\TaskContext;
 use Maestro2\Core\Task\TaskUtil;
 use Psr\Log\LoggerInterface;
