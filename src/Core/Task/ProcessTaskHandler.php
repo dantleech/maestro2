@@ -18,10 +18,12 @@ use function Amp\call;
 
 class ProcessTaskHandler implements Handler
 {
+    private ReportPublisher $reportPublisher;
+
     public function __construct(
         private Filesystem $filesystem,
         private ProcessRunner $processRunner,
-        private ?ReportPublisher $reportPublisher = null
+        ?ReportPublisher $reportPublisher = null
     ) {
         $this->reportPublisher = $reportPublisher ?: new NullPublisher();
     }
