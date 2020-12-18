@@ -7,18 +7,24 @@ use Iterator;
 use IteratorAggregate;
 use Countable;
 
+/**
+ * @implements IteratorAggregate<Report>
+ */
 class Reports implements IteratorAggregate, Countable
 {
+    /**
+     * @var array<array-key,Report>
+     */
     private array $reports;
 
-    public function __construct(Report ...$reports)
+    public function __construct(array $reports)
     {
         $this->reports = $reports;
     }
 
     public function warns(): self
     {
-        return new self(...array_filter(
+        return new self(array_filter(
             $this->reports,
             fn (Report $report) => $report->level() === Report::LEVEL_WARN
         ));
@@ -26,7 +32,7 @@ class Reports implements IteratorAggregate, Countable
 
     public function fails(): self
     {
-        return new self(...array_filter(
+        return new self(array_filter(
             $this->reports,
             fn (Report $report) => $report->level() === Report::LEVEL_FAIL
         ));
@@ -34,7 +40,7 @@ class Reports implements IteratorAggregate, Countable
 
     public function infos(): self
     {
-        return new self(...array_filter(
+        return new self(array_filter(
             $this->reports,
             fn (Report $report) => $report->level() === Report::LEVEL_INFO
         ));
@@ -42,7 +48,7 @@ class Reports implements IteratorAggregate, Countable
 
     public function oks(): self
     {
-        return new self(...array_filter(
+        return new self(array_filter(
             $this->reports,
             fn (Report $report) => $report->level() === Report::LEVEL_OK
         ));

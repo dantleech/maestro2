@@ -3,10 +3,12 @@
 namespace Maestro2\Core\Queue;
 
 use Amp\Promise;
+use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\TaskContext;
 use Psr\Container\ContainerInterface;
 use Throwable;
+use Webmozart\Assert\Assert;
 
 class TestQueue implements Enqueuer, Dequeuer
 {
@@ -33,7 +35,7 @@ class TestQueue implements Enqueuer, Dequeuer
     /**
      * {@inheritDoc}
      */
-    public function resolve(TaskContext $task, mixed $result, ?Throwable $error = null): void
+    public function resolve(TaskContext $task, ?Context $context, ?Throwable $error = null): void
     {
     }
 
@@ -43,7 +45,9 @@ class TestQueue implements Enqueuer, Dequeuer
             return $this->enqueuer;
         }
 
-        $this->enqueuer = new TestEnqueuer($this->container->get(HandlerFactory::class));
+        $handlerFactory = $this->container->get(HandlerFactory::class);
+        Assert::isInstanceOf($handlerFactory, HandlerFactory::class);
+        $this->enqueuer = new TestEnqueuer($handlerFactory);
 
         return $this->enqueuer;
     }

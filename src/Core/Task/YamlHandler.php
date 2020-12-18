@@ -9,6 +9,7 @@ use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Exception\TaskError;
 use Symfony\Component\Yaml\Yaml;
+use Webmozart\Assert\Assert;
 
 class YamlHandler implements Handler
 {
@@ -37,7 +38,9 @@ class YamlHandler implements Handler
 
         if ($filesystem->exists($task->path())) {
             try {
+                /** @var array $existingData */
                 $existingData = Yaml::parse($filesystem->getContents($task->path()));
+                Assert::isArray($existingData, 'YAML contents must be an array');
             } catch (Exception $e) {
                 throw new TaskError(sprintf(
                     'Could not parse YAML: "%s"',

@@ -4,6 +4,9 @@ namespace Maestro2\Core\Report;
 
 class ReportGroup
 {
+    /**
+     * @param array<array-key, Report> $reports
+     */
     public function __construct(private string $name, private array $reports)
     {
     }
@@ -15,6 +18,6 @@ class ReportGroup
 
     public function reports(): Reports
     {
-        return new Reports(...$this->reports);
+        return new Reports($this->reports);
     }
 }

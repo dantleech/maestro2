@@ -63,8 +63,8 @@ class Worker
                 asyncCall(function () use ($task, &$promises, $id) {
                     $this->running[$id] = $task;
                     try {
-                        $result = yield $this->handlerFactory->handlerFor($task->task())->run($task->task(), $task->context());
-                        $this->dequeuer->resolve($task, $result);
+                        $context = yield $this->handlerFactory->handlerFor($task->task())->run($task->task(), $task->context());
+                        $this->dequeuer->resolve($task, $context);
                     } catch (Throwable $error) {
                         $this->dequeuer->resolve($task, null, $error);
                     }

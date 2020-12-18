@@ -7,6 +7,10 @@ use Maestro2\Core\Process\ProcessResult;
 
 class PhpProcessTask implements Task
 {
+    /**
+     * @param list<string> $args
+     * @param (Closure(ProcessResult, Context): Context)|null $after
+     */
     public function __construct(
         private array $args,
         private ?Closure $after = null,
@@ -15,7 +19,7 @@ class PhpProcessTask implements Task
     }
 
     /**
-     * @return Closure(ProcessResult, Context)
+     * @return (Closure(ProcessResult, Context): Context)|null
      */
     public function after(): ?Closure
     {
@@ -27,6 +31,9 @@ class PhpProcessTask implements Task
         return $this->allowFailure;
     }
 
+    /**
+     * @return list<string>
+     */
     public function args(): array
     {
         return $this->args;

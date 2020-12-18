@@ -24,8 +24,15 @@ class ReportGroups implements IteratorAggregate
 
     public function reports(): Reports
     {
-        return new Reports(...array_reduce($this->groups, function (array $initial, ReportGroup $group) {
-            return array_merge($initial, iterator_to_array($group->reports()));
-        }, []));
+        return new Reports(array_reduce(
+            $this->groups,
+            function (array $initial, ReportGroup $group) {
+                return array_merge(
+                    $initial,
+                    iterator_to_array($group->reports())
+                );
+            },
+            []
+        ));
     }
 }

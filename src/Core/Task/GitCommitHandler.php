@@ -59,9 +59,7 @@ class GitCommitHandler implements Handler
 
             yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
-                    args: array_merge([
-                        'git', 'add'
-                    ], $this->filterPaths(
+                    args: array_merge(['git', 'add'], $this->filterPaths(
                         $context->fact(CwdFact::class)->cwd(),
                         $context->fact(GroupFact::class)->group(),
                         $task->paths(),
@@ -84,9 +82,13 @@ class GitCommitHandler implements Handler
         });
     }
 
+    /**
+     * @param list<string> $paths
+     * @return list<string>
+     */
     private function filterPaths(string $cwd, string $group, array $paths): array
     {
-        return array_filter($paths, function (string $path) use ($group, $cwd) {
+        return array_values(array_filter($paths, function (string $path) use ($group, $cwd) {
             if (false === $this->filesystem->cd($cwd)->exists($path)) {
                 $this->publisher->publish(
                     $group,
@@ -99,6 +101,6 @@ class GitCommitHandler implements Handler
             }
 
             return true;
-        });
+        }));
     }
 }

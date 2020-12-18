@@ -4,6 +4,7 @@ namespace Maestro2\Core\Task;
 
 use Amp\Promise;
 use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Queue\Enqueuer;
 use function Amp\call;
 
@@ -23,12 +24,15 @@ class ProcessesHandler implements Handler
         assert($task instanceof ProcessesTask);
         return call(function () use ($task, $context) {
             foreach ($task->commands() as $command) {
-                $result = yield $this->enqueuer->enqueue(
+                $context = yield $this->enqueuer->enqueue(
                     TaskContext::create(new ProcessTask(
                         group: $context->fact(GroupFact::class)->group(),
                         args: $command
                     ), $context)
                 );
+
+                /** @var ProcessResult $result */
+                $result = $context->result();
 
                 if ($task->failFast() && false === $result->isOk()) {
                     break;

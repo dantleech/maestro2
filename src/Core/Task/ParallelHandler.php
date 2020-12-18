@@ -5,6 +5,7 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\TaskReportPublisher;
+use Throwable;
 use function Amp\Promise\any;
 use function Amp\call;
 
@@ -36,11 +37,15 @@ class ParallelHandler implements Handler
             }
 
             $results = yield any($promises);
+            assert(is_array($results));
 
+            /** @var int $index */
             foreach ($results[0] as $index => $error) {
+                assert($error instanceof Throwable);
                 $this->publisher->taskFail(array_values($task->tasks())[$index], $context, $error);
             }
 
+            /** @var Context $taskContext */
             foreach ($results[1] as $taskContext) {
                 $this->publisher->taskOk($task, $context);
                 $context = $context->merge($taskContext);

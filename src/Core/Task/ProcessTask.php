@@ -8,6 +8,10 @@ use Stringable;
 
 class ProcessTask implements Task, Stringable
 {
+    /**
+     * @param list<string> $args
+     * @param (Closure(ProcessResult, Context):Context)|null $after
+     */
     public function __construct(
         private array $args,
         private ?string $group = null,
@@ -16,6 +20,9 @@ class ProcessTask implements Task, Stringable
     ) {
     }
 
+    /**
+     * @return list<string>
+     */
     public function args(): array
     {
         return $this->args;
@@ -28,11 +35,14 @@ class ProcessTask implements Task, Stringable
 
     public function __toString(): string
     {
-        return sprintf('Running process: %s', implode(' ', array_map('escapeshellarg', $this->args)));
+        return sprintf(
+            'Running process: %s',
+            implode(' ', array_map('escapeshellarg', $this->args))
+        );
     }
 
     /**
-     * @return Closure(ProcessResult, Context)
+     * @return Closure(ProcessResult, Context): Context
      */
     public function after(): ?Closure
     {

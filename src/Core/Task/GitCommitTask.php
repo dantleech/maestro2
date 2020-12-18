@@ -6,6 +6,9 @@ use Stringable;
 
 class GitCommitTask implements Task, Stringable
 {
+    /**
+     * @param list<string> $paths
+     */
     public function __construct(
         private array $paths,
         private string $message,
@@ -18,6 +21,9 @@ class GitCommitTask implements Task, Stringable
         return $this->message;
     }
 
+    /**
+     * @return list<string>
+     */
     public function paths(): array
     {
         return $this->paths;

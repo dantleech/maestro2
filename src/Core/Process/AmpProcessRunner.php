@@ -9,12 +9,17 @@ use Amp\Process\ProcessInputStream;
 use Amp\Promise;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Psr\Log\LoggerInterface;
+use Webmozart\Assert\Assert;
 use function Amp\asyncCall;
 use function Amp\call;
 
 class AmpProcessRunner implements ProcessRunner
 {
     private int $running = 0;
+
+    /**
+     * @var array<Deferred>
+     */
     private array $locks = [];
 
     public function __construct(private LoggerInterface $logger, private int $concurrency = 4, private bool $verbose = true)
@@ -34,9 +39,6 @@ class AmpProcessRunner implements ProcessRunner
         });
     }
 
-    /**
-     * @return Promise<ProcessResult>
-     */
     public function run(array $args, ?string $cwd = null) : Promise
     {
         return call(function () use ($args, $cwd) {
@@ -63,6 +65,7 @@ class AmpProcessRunner implements ProcessRunner
 
             $stdOut = $stdErr = '';
             asyncCall(function (ProcessInputStream $stream, int $pid) use (&$stdErr) {
+                Assert::string($stdErr);
                 $reader = new LineReader($stream);
                 while (null !== $line = yield $reader->readLine()) {
                     $stdErr .= $line . "\n";
@@ -73,6 +76,7 @@ class AmpProcessRunner implements ProcessRunner
             }, $process->getStderr(), $pid);
 
             asyncCall(function (ProcessInputStream $stream, int $pid) use (&$stdOut) {
+                Assert::string($stdOut);
                 $reader = new LineReader($stream);
                 while (null !== $line = yield $reader->readLine()) {
                     $stdOut .= $line . "\n";
@@ -84,6 +88,7 @@ class AmpProcessRunner implements ProcessRunner
 
 
             $exitCode = yield $process->join();
+            Assert::integer($exitCode);
 
             $this->running--;
 
@@ -103,6 +108,8 @@ class AmpProcessRunner implements ProcessRunner
                 implode(' ', array_map('escapeshellarg', $args)),
                 $exitCode,
             ));
+            Assert::string($stdErr);
+            Assert::string($stdOut);
 
             return new ProcessResult(
                 $exitCode,

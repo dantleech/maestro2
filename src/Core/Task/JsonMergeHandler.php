@@ -7,6 +7,7 @@ use Amp\Success;
 use JsonException;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Exception\TaskError;
+use Webmozart\Assert\Assert;
 use stdClass;
 
 class JsonMergeHandler implements Handler
@@ -30,6 +31,7 @@ class JsonMergeHandler implements Handler
             $jsonContents = $this->filesystem->getContents($task->path());
 
             try {
+                /** @var mixed $existingData */
                 $existingData = json_decode(
                     $jsonContents,
                     false,
@@ -42,6 +44,9 @@ class JsonMergeHandler implements Handler
                 ), 0, $e);
             }
         }
+
+        Assert::isInstanceOf($existingData, stdClass::class, 'JSON document must be an object');
+
         $data = $this->mergeData($existingData, $task->data());
 
         if ($filter = $task->filter()) {
@@ -59,15 +64,19 @@ class JsonMergeHandler implements Handler
         return new Success($context);
     }
 
-    private function mergeData(object $existingData, array $data): object
+    private function mergeData(stdClass $existingData, array $data): object
     {
+        /** @var mixed $value */
         foreach ($data as $key => $value) {
-            if (!property_exists($existingData, $key)) {
+            if (!property_exists($existingData, (string)$key)) {
                 $existingData->$key = [];
             }
 
-            if (is_array($value) && is_object($existingData->$key)) {
-                $this->mergeData($existingData->$key, $value);
+            /** @var mixed $existingValue */
+            $existingValue = $existingData->$key;
+
+            if (is_array($value) && $existingValue instanceof stdClass) {
+                $this->mergeData($existingValue, $value);
                 continue;
             }
 

@@ -9,6 +9,9 @@ use function json_decode;
 
 class ConfigLoader
 {
+    /**
+     * @var array<string>
+     */
     private array $filenames;
 
     public function __construct(array $filenames)
@@ -33,7 +36,7 @@ class ConfigLoader
             throw CouldNotLoadConfig::couldNotDecodeJson($exception);
         }
 
-        $mainNode = Invoke::new(MainNode::class, $config);
+        $mainNode = Invoke::new(MainNode::class, (array)$config);
         assert($mainNode instanceof MainNode);
 
         return $mainNode;

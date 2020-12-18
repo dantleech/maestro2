@@ -4,6 +4,7 @@ namespace Maestro2\Core\Extension;
 
 use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Config\MainNode;
+use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
 use Maestro2\Core\Filesystem\Filesystem;
@@ -83,7 +84,10 @@ class CoreExtension implements Extension
 
         $container->register(HandlerFactory::class, function (Container $container) {
             return new HandlerFactory(array_merge([
-                new SequentialHandler($container->get(Queue::class), $container->get(ReportManager::class)),
+                new SequentialHandler(
+                    $container->get(Queue::class),
+                    $container->get(ReportManager::class)
+                ),
                 new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FileHandler($container->get(Filesystem::class), $container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(Queue::class)),
@@ -110,8 +114,16 @@ class CoreExtension implements Extension
                 new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new CatHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
             ], (static function (array $taggedServices) use ($container) {
-                return array_map(static function (string $serviceId) use ($container): Handler {
-                    return $container->get($serviceId);
+                return array_map(static function ($serviceId) use ($container): Handler {
+                    $handler = $container->get($serviceId);
+                    if (!$handler instanceof Handler) {
+                        throw new RuntimeException(sprintf(
+                            'Expected service "%s" to be a handler but it\'s not',
+                            $serviceId
+                        ));
+                    }
+
+                    return $handler;
                 }, array_keys($taggedServices));
             })($container->getServiceIdsForTag(self::TAG_TASK_HANDLER))));
         });
