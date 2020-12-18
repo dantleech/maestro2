@@ -34,6 +34,7 @@ class GithubActionsPipeline extends BasePipeline
             new GitCommitTask(
                 message: 'Maestro is adding Github Actions',
                 paths: [
+                    'asd',
                     '.github/workflows/ci.yml'
                 ],
             ),
@@ -41,9 +42,9 @@ class GithubActionsPipeline extends BasePipeline
             new ProcessTask(
                 args: ['git', 'checkout', '-b', 'github-actions'],
             ),
-            new ProcessTask(
-                args: ['git', 'push', 'origin', 'HEAD', '--force'],
-            )
+            //new ProcessTask(
+            //    args: ['git', 'push', 'origin', 'HEAD', '--force'],
+            //)
         ]);
 
     }

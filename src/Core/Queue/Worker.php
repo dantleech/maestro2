@@ -5,9 +5,11 @@ namespace Maestro2\Core\Queue;
 use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Task\HandlerFactory;
+use Maestro2\Core\Task\Task;
 use Maestro2\Core\Task\TaskContext;
 use Maestro2\Core\Task\TaskUtil;
 use Psr\Log\LoggerInterface;
+use Stringable;
 use Throwable;
 use function Amp\asyncCall;
 use function Amp\call;
@@ -39,7 +41,10 @@ class Worker
                         count($this->running),
                         implode('", "', array_map(function (TaskContext $task) {
                             return TaskUtil::describeShortName($task->task());
-                        }, $this->running)),
+                        }, array_filter(
+                            $this->running,
+                            fn (TaskContext $task) => $task->task() instanceof Stringable
+                        ))),
                         number_format(memory_get_usage(true))
                     ));
                     yield delay(1000);
