@@ -40,14 +40,14 @@ class ReplaceLineHandler implements Handler
 
     private function runReplaceLine(ReplaceLineTask $task, Filesystem $filesystem, string $group): void
     {
-        if (!$this->filesystem->exists($task->path())) {
+        if (!$filesystem->exists($task->path())) {
             throw new TaskError(sprintf(
                 'File "%s" does not exist',
                 $task->path()
             ));
         }
         
-        $before = $this->filesystem->getContents($task->path());
+        $before = $filesystem->getContents($task->path());
         $after = implode('', array_map(function (string $lineOrDelim) use ($task): string {
             if (preg_match($task->regexp(), $lineOrDelim)) {
                 return $task->line();
@@ -62,7 +62,7 @@ class ReplaceLineHandler implements Handler
         ))));
         
         if ($before !== $after) {
-            $this->filesystem->putContents($task->path(), $after);
+            $filesystem->putContents($task->path(), $after);
             $this->publisher->publish(
                 $group,
                 Report::ok(sprintf('Replaced line(s) in "%s"', $task->path()))

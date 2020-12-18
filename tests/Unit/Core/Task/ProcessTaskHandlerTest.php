@@ -8,6 +8,7 @@ use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcess;
 use Maestro2\Core\Process\TestProcessRunner;
+use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
@@ -17,11 +18,13 @@ use Maestro2\Core\Task\ProcessTaskHandler;
 class ProcessTaskHandlerTest extends HandlerTestCase
 {
     private TestProcessRunner $testRunner;
+    private ReportManager $reportPublisher;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->testRunner = new TestProcessRunner();
+        $this->reportPublisher = new ReportManager();
     }
 
     protected function defaultContext(): Context
@@ -35,7 +38,8 @@ class ProcessTaskHandlerTest extends HandlerTestCase
     {
         return new ProcessTaskHandler(
             new Filesystem($this->workspace()->path()),
-            $this->testRunner
+            $this->testRunner,
+            $this->reportPublisher
         );
     }
 
@@ -72,6 +76,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
             allowFailure: true
         ));
         self::assertInstanceOf(Context::class, $context);
+        self::assertCount(1, $this->reportPublisher->groups()->reports()->warns());
     }
 
     public function testAllowsModificationOfContextAfterProcessRuns(): void

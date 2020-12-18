@@ -5,10 +5,14 @@ namespace Maestro2\Core\Task;
 use Amp\Promise;
 use Closure;
 use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
+use Maestro2\Core\Report\Publisher\NullPublisher;
+use Maestro2\Core\Report\Report;
+use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
 use function Amp\call;
 
@@ -16,8 +20,10 @@ class ProcessTaskHandler implements Handler
 {
     public function __construct(
         private Filesystem $filesystem,
-        private ProcessRunner $processRunner
+        private ProcessRunner $processRunner,
+        private ?ReportPublisher $reportPublisher = null
     ) {
+        $this->reportPublisher = $reportPublisher ?: new NullPublisher();
     }
 
     public function taskFqn(): string
@@ -28,17 +34,15 @@ class ProcessTaskHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof ProcessTask);
-        return call(function (string $cwd) use ($task, $context) {
+        return call(function (string $cwd, string $group) use ($task, $context) {
             $result = yield $this->processRunner->run(
                 $task->args(),
                 $this->filesystem->localPath($cwd)
             );
             assert($result instanceof ProcessResult);
 
-            if (false === $task->allowFailure() && false === $result->isOk()) {
-                throw (function (ProcessFailure $failure) {
-                    return new TaskError($failure->getMessage(), 0, $failure);
-                })(ProcessFailure::fromResult($result, $task->args()));
+            if (false === $result->isOk()) {
+                $this->handleFailure($task, $result, $group);
             }
 
             return (static function (?Closure $after, ProcessResult $result, Context $context): Context {
@@ -60,11 +64,26 @@ class ProcessTaskHandler implements Handler
 
                 return $context;
             })($task->after(), $result, $context)->withResult($result);
-        }, $context->factOrNull(CwdFact::class)?->cwd() ?: '/');
+        }, $context->factOrNull(CwdFact::class)?->cwd() ?: '/', $context->factOrNull(GroupFact::class)?->group() ?: 'process');
     }
 
     private function formatArgs(ProcessTask $task): string
     {
         return implode(' ', array_map('escapeshellarg', $task->args()));
+    }
+
+    private function handleFailure(ProcessTask $task, ProcessResult $result, string $group): void
+    {
+        if (false === $task->allowFailure()) {
+            throw (function (ProcessFailure $failure) {
+                return new TaskError($failure->getMessage(), 0, $failure);
+            })(ProcessFailure::fromResult($result, $task->args()));
+        }
+
+        $this->reportPublisher->publish($group, Report::warn(sprintf(
+            'Tolerated process failure: "%s" failed with "%s"',
+            $this->formatArgs($task),
+            $result->exitCode()
+        )));
     }
 }
