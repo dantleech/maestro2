@@ -2,6 +2,7 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
@@ -30,7 +31,8 @@ class GitCommitHandlerTest extends HandlerTestCase
     protected function defaultContext(): Context
     {
         return Context::fromFacts(
-            new GroupFact('git-commit')
+            new GroupFact('git-commit'),
+            new CwdFact('/')
         );
     }
 
@@ -41,11 +43,14 @@ class GitCommitHandlerTest extends HandlerTestCase
                 new ProcessTaskHandler(new Filesystem($this->workspace()->path()), $this->testRunner)
             ]),
             $this->reportPublisher,
+            new Filesystem($this->workspace()->path())
         );
     }
 
     public function testExecutedGitCommit(): void
     {
+        $this->workspace()->put('foo', '');
+        $this->workspace()->put('bar', '');
         $this->testRunner->push(ProcessResult::ok([], $this->workspace()->path(), $this->workspace()->path()));
         $this->testRunner->push(ProcessResult::ok([], '/'));
         $this->testRunner->push(ProcessResult::ok([], '/'));
@@ -58,6 +63,25 @@ class GitCommitHandlerTest extends HandlerTestCase
         self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->pop()->argsAsString());
         self::assertEquals('git add foo bar', $this->testRunner->pop()->argsAsString());
         self::assertEquals('git commit -m Foobar', $this->testRunner->pop()->argsAsString());
+    }
+
+    public function testWarnsOnNonExistingPaths(): void
+    {
+        $this->workspace()->put('foo', '');
+
+        $this->testRunner->push(ProcessResult::ok([], $this->workspace()->path(), $this->workspace()->path()));
+        $this->testRunner->push(ProcessResult::ok([], '/'));
+        $this->testRunner->push(ProcessResult::ok([], '/'));
+
+        $this->runTask(new GitCommitTask(
+            paths: ['foo', 'bar', 'baz'],
+            message: 'Foobar',
+        ));
+
+        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->pop()->argsAsString());
+        self::assertEquals('git add foo', $this->testRunner->pop()->argsAsString());
+        self::assertEquals('git commit -m Foobar', $this->testRunner->pop()->argsAsString());
+        self::assertCount(2, $this->reportPublisher->groups()->reports()->warns());
     }
 
     public function testTaskErrorIfNotAGitRepository(): void

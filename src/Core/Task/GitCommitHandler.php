@@ -3,8 +3,12 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
+use Maestro2\Core\Fact\CwdFact;
+use Maestro2\Core\Fact\GroupFact;
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Queue\Enqueuer;
+use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
 use function Amp\call;
@@ -13,7 +17,8 @@ class GitCommitHandler implements Handler
 {
     public function __construct(
         private Enqueuer $enqueuer,
-        private ReportPublisher $publisher
+        private ReportPublisher $publisher,
+        private Filesystem $filesystem
     ) {
     }
 
@@ -56,7 +61,11 @@ class GitCommitHandler implements Handler
                 TaskContext::create(new ProcessTask(
                     args: array_merge([
                         'git', 'add'
-                    ], $task->paths()),
+                    ], $this->filterPaths(
+                        $context->fact(CwdFact::class)->cwd(),
+                        $context->fact(GroupFact::class)->group(),
+                        $task->paths(),
+                    ))
                 ), $context)
             );
 
@@ -72,6 +81,24 @@ class GitCommitHandler implements Handler
             );
 
             return $context;
+        });
+    }
+
+    private function filterPaths(string $cwd, string $group, array $paths): array
+    {
+        return array_filter($paths, function (string $path) use ($group, $cwd) {
+            if (false === $this->filesystem->cd($cwd)->exists($path)) {
+                $this->publisher->publish(
+                    $group,
+                    Report::warn(sprintf(
+                        'Git commit: file/directory "%s" does not exist, ignoring',
+                        $path
+                    ))
+                );
+                return false;
+            }
+
+            return true;
         });
     }
 }
