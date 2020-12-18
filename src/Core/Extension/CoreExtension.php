@@ -105,7 +105,7 @@ class CoreExtension implements Extension
                     $container->get(Queue::class)
                 ),
                 new GitDiffHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class), $container->get(ReportManager::class)),
-                new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class)),
+                new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class), $container->get(Filesystem::class)),
                 new FactHandler(),
                 new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new CatHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
