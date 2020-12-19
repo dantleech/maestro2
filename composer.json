@@ -40,7 +40,8 @@
         "symfony/filesystem": "^5.2",
         "symfony/error-handler": "^5.2",
         "webmozart/path-util": "^2.3",
-        "clue/arguments": "^2.1"
+        "clue/arguments": "^2.1",
+        "phpactor/config-loader": "^0.1.1"
     },
     "require-dev": {
         "phpactor/test-utils": "^1.0",
