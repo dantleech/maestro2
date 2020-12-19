@@ -5,19 +5,26 @@ namespace Maestro2\Core\Task;
 use Closure;
 use Maestro2\Core\Process\ProcessResult;
 use Stringable;
+use function Clue\Arguments\split;
 
 class ProcessTask implements Task, Stringable
 {
+    private array $cmd;
+
     /**
-     * @param list<string> $cmd
+     * @param list<string>|string $cmd
      * @param (Closure(ProcessResult, Context):Context)|null $after
      */
     public function __construct(
-        private array $cmd,
+        array|string $cmd,
         private ?string $group = null,
         private ?Closure $after = null,
         private bool $allowFailure = false
     ) {
+        if (is_string($cmd)) {
+            $cmd = split($cmd);
+        }
+        $this->cmd = $cmd;
     }
 
     /**

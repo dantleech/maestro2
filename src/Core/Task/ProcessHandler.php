@@ -53,6 +53,7 @@ class ProcessHandler implements Handler
                 }
 
                 $context = $after($result, $context);
+
                 /**
                  * @psalm-suppress RedundantCondition
                  * @psalm-suppress TypeDoesNotContainType

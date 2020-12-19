@@ -59,6 +59,23 @@ class ProcessHandlerTest extends HandlerTestCase
         self::assertInstanceOf(Context::class, $context);
     }
 
+    public function testRunsProcessFromCommandString(): void
+    {
+        $this->testRunner->push(ProcessResult::ok([], '/'));
+        $context = $this->runTask(new ProcessTask(
+            cmd: 'foobar "barfoo"',
+        ), Context::create([], [
+            new CwdFact('foobar')
+        ]));
+        $process = $this->testRunner->shift();
+
+        self::assertInstanceOf(TestProcess::class, $process);
+        self::assertEquals(['foobar', 'barfoo'], $process->cmd());
+        self::assertEquals($this->workspace()->path('/foobar'), $process->cwd());
+        self::assertInstanceOf(Context::class, $context);
+    }
+
+
     public function testFailsWhenProcssFails(): void
     {
         $this->expectException(ProcessFailure::class);
