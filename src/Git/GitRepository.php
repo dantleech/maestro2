@@ -15,32 +15,33 @@ use Maestro2\Core\Vcs\Tag;
 use Maestro2\Core\Vcs\Tags;
 use Maestro2\Git\Exception\GitException;
 use Psr\Log\LoggerInterface;
+use Webmozart\PathUtil\Path;
 use function Amp\call;
 
 class GitRepository implements Repository
 {
-    public function __construct(private ProcessRunner $runner, private LoggerInterface $logger, private string $cwd)
+    public function __construct(private ProcessRunner $runner, private LoggerInterface $logger, private string $path)
     {
     }
 
     public function isCheckedOut(): bool
     {
-        return file_exists($this->cwd . '/.git');
+        return file_exists($this->path . '/.git');
     }
 
     /**
      * {@inheritDoc}
      */
-    public function checkout(string $url, string $target): Promise
+    public function checkout(string $url): Promise
     {
-        return call(function () use ($url, $target) {
+        return call(function () use ($url) {
             $result = yield $this->runner->run(
                 args: [
                     'git',
                     'clone',
                     '--depth=1',
                     $url,
-                    $target
+                    $this->path
                 ]
             );
             assert($result instanceof ProcessResult);
@@ -49,7 +50,7 @@ class GitRepository implements Repository
                 throw new CheckoutError(sprintf(
                     'Could not clone "%s" to "%s" exit code "%s": %s',
                     $url,
-                    $this->cwd,
+                    $this->path,
                     $result->exitCode(),
                     $result->stderr()
                 ));
@@ -65,14 +66,14 @@ class GitRepository implements Repository
             $result = yield $this->runner->run([
                 'git',
                 'tag',
-                '--format=%(refname:strip=2) %(objectname)"'
-            ], $this->cwd);
+                '--format=%(refname:strip=2) %(objectname)'
+            ], $this->path);
             assert($result instanceof ProcessResult);
 
             if ($result->exitCode() !== 0) {
                 throw new GitException(sprintf(
                     'Could not list tags in "%s"',
-                    $this->cwd
+                    $this->path
                 ));
             }
 
@@ -102,7 +103,7 @@ class GitRepository implements Repository
                 'git',
                 'tag',
                 $tag
-            ], $this->cwd);
+            ], $this->path);
             assert($result instanceof ProcessResult);
 
             if ($result->exitCode() !== 0) {
@@ -113,7 +114,7 @@ class GitRepository implements Repository
 
                 throw new GitException(sprintf(
                     'Could not list tags in "%s": %s',
-                    $this->cwd,
+                    $this->path,
                     $result->stderr()
                 ));
             }
@@ -131,13 +132,13 @@ class GitRepository implements Repository
                 'git',
                 'rev-parse',
                 'HEAD'
-            ], $this->cwd);
+            ], $this->path);
             assert($result instanceof ProcessResult);
 
             if ($result->exitCode() !== 0) {
                 throw new GitException(sprintf(
                     'Could not parse current revision in "%s"',
-                    $this->cwd
+                    $this->path
                 ));
             }
 
@@ -151,11 +152,11 @@ class GitRepository implements Repository
             $result = yield $this->runner->run([
                 'git',
                 'rev-list',
-                sprintf(' %s...%s',
+                sprintf('%s...%s',
                     $start,
                     $end
                 ),
-            ], $this->cwd);
+            ], $this->path);
 
             assert($result instanceof ProcessResult);
 
@@ -164,7 +165,7 @@ class GitRepository implements Repository
                     'Could not list commit Ids between "%s" and "%s" in "%s"',
                     $start,
                     $end,
-                    $this->cwd
+                    $this->path
                 ));
             }
 
@@ -180,15 +181,15 @@ class GitRepository implements Repository
                 'log',
                 $commitId,
                 '-1',
-                '--pretty=%%B',
-            ], $this->cwd);
+                '--pretty=%B',
+            ], $this->path);
             assert($result instanceof ProcessResult);
 
             if ($result->exitCode() !== 0) {
                 throw new GitException(sprintf(
                     'Could not read commit message for "%s" in "%s"',
                     $commitId,
-                    $this->cwd
+                    $this->path
                 ));
             }
 
@@ -212,13 +213,13 @@ class GitRepository implements Repository
      */
     private function execGit(array $cmd): Generator
     {
-        $result = yield $this->runner->run(array_values(array_merge(['git'], $cmd)), $this->cwd);
+        $result = yield $this->runner->run(array_values(array_merge(['git'], $cmd)), $this->path);
 
         if ($result->exitCode() !== 0) {
             throw new GitException(sprintf(
                 'Could not execute "%s" in "%s": %s',
                 implode(' ', $cmd),
-                $this->cwd,
+                $this->path,
                 $result->stderr()
             ));
         }

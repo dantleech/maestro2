@@ -11,7 +11,7 @@ interface Repository
      * @throws CheckoutError
      * @return Promise<null>
      */
-    public function checkout(string $url, string $target): Promise;
+    public function checkout(string $url): Promise;
 
     /**
      * @return Promise<Tags>
