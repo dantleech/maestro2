@@ -6,7 +6,6 @@ use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Exception\RuntimeException as Maestro2RuntimeException;
 use Maestro2\Core\Process\Exception\ProcessFailure;
-use RuntimeException;
 use function Amp\call;
 
 class TestProcessRunner implements ProcessRunner

@@ -10,7 +10,7 @@ use function Clue\Arguments\split;
 class ProcessTask implements Task, Stringable
 {
     /**
-     * @var list<string>|string
+     * @var list<string>
      */
     private array $cmd;
 
@@ -25,7 +25,7 @@ class ProcessTask implements Task, Stringable
         private bool $allowFailure = false
     ) {
         if (is_string($cmd)) {
-            $cmd = split($cmd);
+            $cmd = array_values(split($cmd));
         }
         $this->cmd = $cmd;
     }

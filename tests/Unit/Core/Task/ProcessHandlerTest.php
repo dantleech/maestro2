@@ -6,7 +6,6 @@ use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
-use Maestro2\Core\Process\TestProcess;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\Context;
