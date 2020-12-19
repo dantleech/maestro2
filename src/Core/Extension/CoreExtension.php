@@ -15,7 +15,6 @@ use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CatHandler;
 use Maestro2\Core\Task\PhpProcessHandler;
-use Maestro2\Core\Task\ProcessesHandler;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ConditionalHandler;
 use Maestro2\Core\Task\FactHandler;
@@ -93,7 +92,6 @@ class CoreExtension implements Extension
                 new GitRepositoryHandler($container->get(Queue::class)),
                 new ProcessHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class)),
                 new PhpProcessHandler($container->get(Queue::class)),
-                new ProcessesHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
                 new TemplateHandler(
                     $container->get(Filesystem::class),
