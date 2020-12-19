@@ -10,14 +10,21 @@ use function Amp\call;
 
 class TestProcessRunner implements ProcessRunner
 {
+    /**
+     * @var list<TestProcess>
+     */
     private array $ran = [];
+
+    /**
+     * @var list<ProcessResult>
+     */
     private array $results = [];
 
-    public function pop(): TestProcess
+    public function shift(): TestProcess
     {
         if (!$process = array_shift($this->ran)) {
             throw new RuntimeException(
-                'No test processes were invoked'
+                'No test more processes left to shift'
             );
         }
 

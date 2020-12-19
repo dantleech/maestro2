@@ -53,6 +53,7 @@ class GitCommitHandlerTest extends HandlerTestCase
         $this->workspace()->put('bar', '');
         $this->testRunner->push(ProcessResult::ok([], $this->workspace()->path(), $this->workspace()->path()));
         $this->testRunner->push(ProcessResult::ok([], '/'));
+        $this->testRunner->push(ProcessResult::new([], '/', 1));
         $this->testRunner->push(ProcessResult::ok([], '/'));
 
         $this->runTask(new GitCommitTask(
@@ -60,9 +61,10 @@ class GitCommitHandlerTest extends HandlerTestCase
             message: 'Foobar',
         ));
 
-        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->pop()->argsAsString());
-        self::assertEquals('git add foo bar', $this->testRunner->pop()->argsAsString());
-        self::assertEquals('git commit -m Foobar', $this->testRunner->pop()->argsAsString());
+        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->shift()->argsAsString());
+        self::assertEquals('git add foo bar', $this->testRunner->shift()->argsAsString());
+        self::assertEquals('git diff --staged --exit-code', $this->testRunner->shift()->argsAsString());
+        self::assertEquals('git commit -m Foobar', $this->testRunner->shift()->argsAsString());
     }
 
     public function testWarnsOnNonExistingPaths(): void
@@ -71,6 +73,7 @@ class GitCommitHandlerTest extends HandlerTestCase
 
         $this->testRunner->push(ProcessResult::ok([], $this->workspace()->path(), $this->workspace()->path()));
         $this->testRunner->push(ProcessResult::ok([], '/'));
+        $this->testRunner->push(ProcessResult::new([], '/', 1));
         $this->testRunner->push(ProcessResult::ok([], '/'));
 
         $this->runTask(new GitCommitTask(
@@ -78,9 +81,10 @@ class GitCommitHandlerTest extends HandlerTestCase
             message: 'Foobar',
         ));
 
-        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->pop()->argsAsString());
-        self::assertEquals('git add foo', $this->testRunner->pop()->argsAsString());
-        self::assertEquals('git commit -m Foobar', $this->testRunner->pop()->argsAsString());
+        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->shift()->argsAsString());
+        self::assertEquals('git add foo', $this->testRunner->shift()->argsAsString());
+        self::assertEquals('git diff --staged --exit-code', $this->testRunner->shift()->argsAsString());
+        self::assertEquals('git commit -m Foobar', $this->testRunner->shift()->argsAsString());
         self::assertCount(2, $this->reportPublisher->groups()->reports()->warns());
     }
 

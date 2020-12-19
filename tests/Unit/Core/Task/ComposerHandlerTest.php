@@ -158,7 +158,7 @@ EOT
             PHP_BINARY,
             'composer',
             'update',
-        ], $this->testRunner->pop()->args());
+        ], $this->testRunner->shift()->args());
     }
 
     public function testFailure(): void

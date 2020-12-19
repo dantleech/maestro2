@@ -51,7 +51,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
         ), Context::create([], [
             new CwdFact('foobar')
         ]));
-        $process = $this->testRunner->pop();
+        $process = $this->testRunner->shift();
 
         self::assertInstanceOf(TestProcess::class, $process);
         self::assertEquals(['foobar'], $process->args());

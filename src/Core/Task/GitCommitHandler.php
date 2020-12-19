@@ -70,12 +70,7 @@ class GitCommitHandler implements Handler
             $context = yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
                     allowFailure: true,
-                    args: [
-                        'git',
-                        'diff',
-                        '--staged',
-                        '--exit-code',
-                    ]
+                    args: ['git', 'diff', '--staged', '--exit-code']
                 ), $context)
             );
             assert($context instanceof Context);
