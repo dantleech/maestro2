@@ -57,7 +57,7 @@ class RectorComposerUpgradeHandler implements Handler
                             ]
                         ),
                         new SequentialTask(array_map(fn (string $path) => new ProcessTask(
-                            args: [
+                            cmd: [
                                 $context->fact(PhpFact::class)->phpBin(),
                                 $context->fact(RectorInstallFact::class)->binPath(),
                                 'process',

@@ -4,13 +4,13 @@ namespace Maestro2\Core\Process;
 
 class TestProcess
 {
-    public function __construct(private array $args, private ?string $cwd = null)
+    public function __construct(private array $cmd, private ?string $cwd = null)
     {
     }
 
-    public function args(): array
+    public function cmd(): array
     {
-        return $this->args;
+        return $this->cmd;
     }
 
     public function cwd(): ?string
@@ -18,8 +18,8 @@ class TestProcess
         return $this->cwd;
     }
 
-    public function argsAsString(): string
+    public function cmdAsString(): string
     {
-        return implode(' ', $this->args);
+        return implode(' ', $this->cmd);
     }
 }

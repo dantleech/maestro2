@@ -87,7 +87,7 @@ class UpgradePhpStanPipeline extends BasePipeline
     private function phpstanTask(RepositoryNode $repository, bool $allowFailure = false)
     {
         return new ProcessTask(
-            args: [
+            cmd: [
                 $repository->main()->php()->phpBin(),
                 './vendor/bin/phpstan',
                 '--no-interaction',
@@ -104,7 +104,7 @@ class UpgradePhpStanPipeline extends BasePipeline
     {
         return new SequentialTask([
             new ProcessTask(
-                args: [
+                cmd: [
                     $repository->main()->php()->phpBin(),
                     './vendor/bin/phpstan',
                     'analyse',

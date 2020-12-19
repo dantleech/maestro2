@@ -9,11 +9,11 @@ use Stringable;
 class ProcessTask implements Task, Stringable
 {
     /**
-     * @param list<string> $args
+     * @param list<string> $cmd
      * @param (Closure(ProcessResult, Context):Context)|null $after
      */
     public function __construct(
-        private array $args,
+        private array $cmd,
         private ?string $group = null,
         private ?Closure $after = null,
         private bool $allowFailure = false
@@ -23,9 +23,9 @@ class ProcessTask implements Task, Stringable
     /**
      * @return list<string>
      */
-    public function args(): array
+    public function cmd(): array
     {
-        return $this->args;
+        return $this->cmd;
     }
 
     public function group(): ?string
@@ -37,7 +37,7 @@ class ProcessTask implements Task, Stringable
     {
         return sprintf(
             'Running process: %s',
-            implode(' ', array_map('escapeshellarg', $this->args))
+            implode(' ', array_map('escapeshellarg', $this->cmd))
         );
     }
 

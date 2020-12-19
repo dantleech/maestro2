@@ -47,14 +47,14 @@ class ProcessTaskHandlerTest extends HandlerTestCase
     {
         $this->testRunner->push(ProcessResult::ok([], '/'));
         $context = $this->runTask(new ProcessTask(
-            args: ['foobar']
+            cmd: ['foobar']
         ), Context::create([], [
             new CwdFact('foobar')
         ]));
         $process = $this->testRunner->shift();
 
         self::assertInstanceOf(TestProcess::class, $process);
-        self::assertEquals(['foobar'], $process->args());
+        self::assertEquals(['foobar'], $process->cmd());
         self::assertEquals($this->workspace()->path('/foobar'), $process->cwd());
         self::assertInstanceOf(Context::class, $context);
     }
@@ -64,7 +64,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
         $this->expectException(ProcessFailure::class);
         $this->testRunner->push(ProcessResult::new([], '/', 127));
         $context = $this->runTask(new ProcessTask(
-            args: ['foobar']
+            cmd: ['foobar']
         ));
     }
 
@@ -72,7 +72,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
     {
         $this->testRunner->push(ProcessResult::new([], '/', 127));
         $context = $this->runTask(new ProcessTask(
-            args: ['foobar'],
+            cmd: ['foobar'],
             allowFailure: true
         ));
         self::assertInstanceOf(Context::class, $context);
@@ -83,7 +83,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
     {
         $this->testRunner->push(ProcessResult::ok([], '/'));
         $context = $this->runTask(new ProcessTask(
-            args: ['foobar'],
+            cmd: ['foobar'],
             after: function (ProcessResult $result, Context $context) {
                 return $context->withVar('foo', 'bar');
             }
@@ -98,7 +98,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
         $this->testRunner->push($expectedResult);
 
         $context = $this->runTask(new ProcessTask(
-            args: ['foobar'],
+            cmd: ['foobar'],
             after: function (ProcessResult $result, Context $context) {
                 return $context->withVar('foo', 'bar');
             }
@@ -111,7 +111,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
         $this->expectException(TaskError::class);
         $this->testRunner->push(ProcessResult::ok([], '/'));
         $context = $this->runTask(new ProcessTask(
-            args: ['foobar'],
+            cmd: ['foobar'],
             after: function (ProcessResult $result, Context $context) {
                 return 'foobar';
             }

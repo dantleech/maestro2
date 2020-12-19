@@ -33,7 +33,7 @@ class UpgradePhpUnit8Pipeline extends BasePipeline
                 update: true,
             ),
             new ProcessTask(
-                args: [
+                cmd: [
                     $repository->main()->php()->phpBin(),
                     'vendor/bin/phpunit'
                 ],

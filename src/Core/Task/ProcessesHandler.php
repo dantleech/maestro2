@@ -27,7 +27,7 @@ class ProcessesHandler implements Handler
                 $context = yield $this->enqueuer->enqueue(
                     TaskContext::create(new ProcessTask(
                         group: $context->fact(GroupFact::class)->group(),
-                        args: $command
+                        cmd: $command
                     ), $context)
                 );
 

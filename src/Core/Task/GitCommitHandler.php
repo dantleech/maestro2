@@ -33,7 +33,7 @@ class GitCommitHandler implements Handler
         return call(function () use ($task, $context) {
             $result = (yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
-                    args: ['git', 'rev-parse', '--show-toplevel'],
+                    cmd: ['git', 'rev-parse', '--show-toplevel'],
                     allowFailure: true
                 ), $context)
             ))->result();
@@ -59,7 +59,7 @@ class GitCommitHandler implements Handler
 
             yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
-                    args: array_merge(['git', 'add'], $this->filterPaths(
+                    cmd: array_merge(['git', 'add'], $this->filterPaths(
                         $context->fact(CwdFact::class)->cwd(),
                         $context->fact(GroupFact::class)->group(),
                         $task->paths(),
@@ -70,7 +70,7 @@ class GitCommitHandler implements Handler
             $context = yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
                     allowFailure: true,
-                    args: ['git', 'diff', '--staged', '--exit-code']
+                    cmd: ['git', 'diff', '--staged', '--exit-code']
                 ), $context)
             );
             assert($context instanceof Context);
@@ -89,7 +89,7 @@ class GitCommitHandler implements Handler
 
             yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
-                    args: [
+                    cmd: [
                         'git',
                         'commit',
                         '-m',

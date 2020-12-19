@@ -45,7 +45,7 @@ class ComposerHandler implements Handler
                 if ($task->update() === true) {
                     $finder = new ExecutableFinder();
                     yield $this->enqueuer->enqueue(TaskContext::create(new PhpProcessTask(
-                        args: [
+                        cmd: [
                             $task->composerBin() ?: $finder->find('composer') ?: 'composer',
                             'update',
                         ]

@@ -61,10 +61,10 @@ class GitCommitHandlerTest extends HandlerTestCase
             message: 'Foobar',
         ));
 
-        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->shift()->argsAsString());
-        self::assertEquals('git add foo bar', $this->testRunner->shift()->argsAsString());
-        self::assertEquals('git diff --staged --exit-code', $this->testRunner->shift()->argsAsString());
-        self::assertEquals('git commit -m Foobar', $this->testRunner->shift()->argsAsString());
+        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->shift()->cmdAsString());
+        self::assertEquals('git add foo bar', $this->testRunner->shift()->cmdAsString());
+        self::assertEquals('git diff --staged --exit-code', $this->testRunner->shift()->cmdAsString());
+        self::assertEquals('git commit -m Foobar', $this->testRunner->shift()->cmdAsString());
     }
 
     public function testWarnsOnNonExistingPaths(): void
@@ -81,10 +81,10 @@ class GitCommitHandlerTest extends HandlerTestCase
             message: 'Foobar',
         ));
 
-        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->shift()->argsAsString());
-        self::assertEquals('git add foo', $this->testRunner->shift()->argsAsString());
-        self::assertEquals('git diff --staged --exit-code', $this->testRunner->shift()->argsAsString());
-        self::assertEquals('git commit -m Foobar', $this->testRunner->shift()->argsAsString());
+        self::assertEquals('git rev-parse --show-toplevel', $this->testRunner->shift()->cmdAsString());
+        self::assertEquals('git add foo', $this->testRunner->shift()->cmdAsString());
+        self::assertEquals('git diff --staged --exit-code', $this->testRunner->shift()->cmdAsString());
+        self::assertEquals('git commit -m Foobar', $this->testRunner->shift()->cmdAsString());
         self::assertCount(2, $this->reportPublisher->groups()->reports()->warns());
     }
 

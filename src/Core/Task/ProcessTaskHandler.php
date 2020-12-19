@@ -38,7 +38,7 @@ class ProcessTaskHandler implements Handler
         assert($task instanceof ProcessTask);
         return call(function (string $cwd, string $group) use ($task, $context) {
             $result = yield $this->processRunner->run(
-                $task->args(),
+                $task->cmd(),
                 $this->filesystem->localPath($cwd)
             );
             assert($result instanceof ProcessResult);
@@ -71,7 +71,7 @@ class ProcessTaskHandler implements Handler
 
     private function formatArgs(ProcessTask $task): string
     {
-        return implode(' ', array_map('escapeshellarg', $task->args()));
+        return implode(' ', array_map('escapeshellarg', $task->cmd()));
     }
 
     private function handleFailure(ProcessTask $task, ProcessResult $result, string $group): void
@@ -79,7 +79,7 @@ class ProcessTaskHandler implements Handler
         if (false === $task->allowFailure()) {
             throw (function (ProcessFailure $failure) {
                 return new TaskError($failure->getMessage(), 0, $failure);
-            })(ProcessFailure::fromResult($result, $task->args()));
+            })(ProcessFailure::fromResult($result, $task->cmd()));
         }
 
         $this->reportPublisher->publish($group, Report::warn(sprintf(

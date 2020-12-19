@@ -23,7 +23,7 @@ class GitRepositoryHandler implements Handler
             assert($task instanceof GitRepositoryTask);
 
             yield $this->enqueuer->enqueue(TaskContext::create(new ProcessTask(
-                args: [
+                cmd: [
                     'git',
                     'clone',
                     '--depth=1',

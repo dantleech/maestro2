@@ -25,9 +25,9 @@ class PhpProcessHandler implements Handler
         assert($task instanceof PhpProcessTask);
         return $this->enqueuer->enqueue(
             TaskContext::create(new ProcessTask(
-                args: array_merge([
+                cmd: array_merge([
                     $context->factOrNull(PhpFact::class)?->phpBin() ?: PHP_BINARY
-                ], $task->args()),
+                ], $task->cmd()),
                 after: $task->after(),
                 allowFailure: $task->allowFailure(),
             ), $context)

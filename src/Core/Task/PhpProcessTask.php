@@ -8,11 +8,11 @@ use Maestro2\Core\Process\ProcessResult;
 class PhpProcessTask implements Task
 {
     /**
-     * @param list<string> $args
+     * @param list<string> $cmd
      * @param (Closure(ProcessResult, Context): Context)|null $after
      */
     public function __construct(
-        private array $args,
+        private array $cmd,
         private ?Closure $after = null,
         private bool $allowFailure = false
     ) {
@@ -34,8 +34,8 @@ class PhpProcessTask implements Task
     /**
      * @return list<string>
      */
-    public function args(): array
+    public function cmd(): array
     {
-        return $this->args;
+        return $this->cmd;
     }
 }
