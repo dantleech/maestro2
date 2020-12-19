@@ -3,8 +3,8 @@
 namespace Maestro2\Examples\Pipeline;
 
 use Maestro2\Composer\Task\ComposerJsonFactTask;
-use Maestro2\Core\Config\MainNode;
-use Maestro2\Core\Config\RepositoryNode;
+use Maestro2\Core\Inventory\MainNode;
+use Maestro2\Core\Inventory\RepositoryNode;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Pipeline\Pipeline;
@@ -23,7 +23,7 @@ class BasePipeline implements Pipeline
     public function build(MainNode $mainNode): Task
     {
         return new SequentialTask([
-            new FactTask(new GroupFact('workspace')),
+            new GroupFact('workspace'),
             new FileTask(
                 type: 'directory',
                 path: 'build',
@@ -36,13 +36,13 @@ class BasePipeline implements Pipeline
             ),
             new ParallelTask(array_map(function (RepositoryNode $repositoryNode) {
                 return new SequentialTask([
-                    new FactTask(new GroupFact($repositoryNode->name())),
-                    new FactTask(new CwdFact('build')),
+                    new GroupFact($repositoryNode->name()),
+                    new CwdFact('build'),
                     new GitRepositoryTask(
                         url: $repositoryNode->url(),
                         path: $repositoryNode->name()
                     ),
-                    new FactTask(new CwdFact('build/' . $repositoryNode->name())),
+                    new CwdFact('build/' . $repositoryNode->name()),
                     $this->buildRepository($repositoryNode)
                 ]);
             }, $mainNode->selectedRepositories()))

@@ -43,12 +43,12 @@ class TestRepository implements Repository
 
     public function isCheckedOut(): bool
     {
-        return new Success();
+        return true;
     }
 
     public function message(string $commitId): Promise
     {
-        return new Success();
+        return new Success('Hello World');
     }
 
     public function update(): Promise

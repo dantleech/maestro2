@@ -3,7 +3,8 @@
 namespace Maestro2;
 
 use Amp\Promise;
-use Maestro2\Core\Config\MainNode;
+use Maestro2\Core\Inventory\InventoryLoader;
+use Maestro2\Core\Inventory\MainNode;
 use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Pipeline\NullPipeline;
 use Maestro2\Core\Pipeline\Pipeline;
@@ -18,7 +19,7 @@ use function Amp\call;
 class Maestro
 {
     public function __construct(
-        private MainNode $config,
+        private InventoryLoader $loader,
         private Worker $worker,
         private Enqueuer $enqueuer
     ) {
@@ -28,21 +29,18 @@ class Maestro
         string $pipeline,
         ?array $repos = []
     ): Promise {
-        return call(function () use ($pipeline, $repos) {
-            $promise = $this->enqueuer->enqueue(
+        return call(function (MainNode $inventory) use ($pipeline, $repos) {
+            $context = $this->enqueuer->enqueue(
                 TaskContext::create(
                     $this->resolvePipeline($pipeline)->build(
-                        $repos ? $this->config->withSelectedRepos($repos) : $this->config
+                        $repos ? $inventory->withSelectedRepos($repos) : $inventory
                     ),
-                    Context::create([], [
-                        $this->config->php()
-                    ])
+                    Context::create()
                 )
             );
-
             yield $this->worker->start();
-            yield $promise;
-        });
+            yield $context;
+        }, $this->loader->load());
     }
 
     private function resolvePipeline(?string $pipeline): Pipeline
@@ -61,7 +59,7 @@ class Maestro
         }
 
         try {
-            $pipelineInstance = new $pipelineClass;
+            $pipelineInstance = new $pipelineClass();
         } catch (Throwable $error) {
             throw new RuntimeException(sprintf(
                 'Could not instantiate pipeline class "%s": %s',
@@ -69,6 +67,7 @@ class Maestro
                 $error->getMessage()
             ), 0, $error);
         }
+
         if (!$pipelineInstance instanceof Pipeline) {
             throw new RuntimeException(sprintf(
                 'Class "%s" is not a Pipeline (implementing %s)',

@@ -2,7 +2,7 @@
 
 namespace Maestro2\Tests\Unit\Core\Config;
 
-use Maestro2\Core\Config\MainNode;
+use Maestro2\Core\Inventory\MainNode;
 use PHPUnit\Framework\TestCase;
 
 class MainNodeTest extends TestCase

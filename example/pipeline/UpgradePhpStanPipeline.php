@@ -2,7 +2,7 @@
 
 namespace Maestro2\Examples\Pipeline;
 
-use Maestro2\Core\Config\RepositoryNode;
+use Maestro2\Core\Inventory\RepositoryNode;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Task\ComposerTask;
 use Maestro2\Core\Task\ConditionalTask;

@@ -3,7 +3,6 @@
 namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CatHandler;
 use Maestro2\Core\Task\CatTask;

@@ -6,7 +6,6 @@ use ArrayIterator;
 use Countable;
 use Iterator;
 use IteratorAggregate;
-use Maestro2\Core\Vcs\Exception\VcsException;
 
 class Tags implements IteratorAggregate, Countable
 {

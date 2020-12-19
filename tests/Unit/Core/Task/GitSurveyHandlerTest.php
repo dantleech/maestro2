@@ -10,7 +10,6 @@ use Maestro2\Core\Task\GitSurveyHandler;
 use Maestro2\Core\Task\GitSurveyTask;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Vcs\TestRepositoryFactory;
-use PHPUnit\Framework\TestCase;
 
 class GitSurveyHandlerTest extends HandlerTestCase
 {

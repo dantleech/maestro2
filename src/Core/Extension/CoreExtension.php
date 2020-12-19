@@ -2,8 +2,7 @@
 
 namespace Maestro2\Core\Extension;
 
-use Maestro2\Core\Config\ConfigLoader;
-use Maestro2\Core\Config\MainNode;
+use Maestro2\Core\Inventory\InventoryLoader;
 use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
@@ -33,7 +32,6 @@ use Maestro2\Core\Task\ReplaceLineHandler;
 use Maestro2\Core\Task\SequentialHandler;
 use Maestro2\Core\Task\TemplateHandler;
 use Maestro2\Core\Task\YamlHandler;
-use Maestro2\Core\Vcs\Repository;
 use Maestro2\Core\Vcs\RepositoryFactory;
 use Maestro2\Git\GitRepositoryFactory;
 use Maestro2\Maestro;
@@ -50,7 +48,11 @@ use Twig\Loader\FilesystemLoader;
 
 class CoreExtension implements Extension
 {
-    const TAG_TASK_HANDLER = 'maestro.task_handler';
+    public const TAG_TASK_HANDLER = 'maestro.taskHandler';
+
+    public const PARAM_TEMPLATE_PATHS = 'core.templatePaths';
+    public const PARAM_INVENTORY = 'core.inventory';
+    public const PARAM_WORKSPACE_PATH = 'core.workspacePath';
 
     /**
      * {@inheritDoc}
@@ -66,23 +68,14 @@ class CoreExtension implements Extension
 
         $container->register(Maestro::class, function (Container $container) {
             return new Maestro(
-                $container->get(MainNode::class),
+                $container->get(InventoryLoader::class),
                 $container->get(Worker::class),
                 $container->get(Queue::class)
             );
         });
 
-        $container->register(MainNode::class, function (Container $container) {
-            return (function (ConfigLoader $loader) {
-                return $loader->load();
-            })($container->get(ConfigLoader::class));
-        });
-
-        $container->register(ConfigLoader::class, function (Container $container) {
-            return new ConfigLoader([
-                'maestro.json.dist',
-                'maestro.json',
-            ]);
+        $container->register(InventoryLoader::class, function (Container $container) {
+            return new InventoryLoader($container->getParameter(self::PARAM_INVENTORY));
         });
 
         $container->register(HandlerFactory::class, function (Container $container) {
@@ -155,7 +148,7 @@ class CoreExtension implements Extension
             return new Environment(
                 new ChainLoader([
                     new FilesystemLoader(
-                        $container->get(MainNode::class)->templatePaths()
+                        $container->getParameter(self::PARAM_TEMPLATE_PATHS)
                     )
                 ]),
                 [
@@ -169,7 +162,9 @@ class CoreExtension implements Extension
         });
 
         $container->register(Filesystem::class, function (Container $container) {
-            return new Filesystem($container->get(MainNode::class)->workspacePath());
+            return new Filesystem(
+                $container->getParameter(self::PARAM_WORKSPACE_PATH)
+            );
         });
 
         $container->register(RepositoryFactory::class, function (Container $container) {
@@ -185,13 +180,12 @@ class CoreExtension implements Extension
      */
     public function configure(Resolver $schema): void
     {
-        $schema->setRequired([
-            'core.path.config'
+        $schema->setDefaults([
+            self::PARAM_INVENTORY => 'maestro-inventory.json',
+            self::PARAM_TEMPLATE_PATHS => [
+                'templates',
+            ],
+            self::PARAM_WORKSPACE_PATH => 'workspace',
         ]);
-    }
-
-    private function getConfig(Container $container): MainNode
-    {
-        return $container->get(MainNode::class);
     }
 }

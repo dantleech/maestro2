@@ -3,13 +3,10 @@
 namespace Maestro2\Core\Task;
 
 use Amp\Promise;
-use Amp\Success;
 use Generator;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Queue\Enqueuer;
-use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Report\ReportTablePublisher;
 use Maestro2\Core\Vcs\Repository;
 use Maestro2\Core\Vcs\RepositoryFactory;
@@ -56,7 +53,7 @@ class GitSurveyHandler implements Handler
         $this->publisher->publishTableRow(
             $group,
             [
-                'tag' => $latestTag?->name() ?: '<none>',
+                'tag' => $latestTagname() ?: '<none>',
                 'then' => sprintf('+ %s', $nbCommitsAhead),
                 'message' => $message,
             ]

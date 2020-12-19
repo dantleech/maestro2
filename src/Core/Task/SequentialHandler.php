@@ -4,6 +4,7 @@ namespace Maestro2\Core\Task;
 
 use Amp\Promise;
 use Maestro2\Core\Exception\RuntimeException;
+use Maestro2\Core\Fact\Fact;
 use Maestro2\Core\Queue\Enqueuer;
 use Maestro2\Core\Report\TaskReportPublisher;
 use Maestro2\Core\Task\Exception\SequentialTaskError;
@@ -26,6 +27,10 @@ class SequentialHandler implements Handler
         assert($task instanceof SequentialTask);
         return call(function () use ($task, $context) {
             foreach ($task->tasks() as $sequentialTask) {
+                if ($sequentialTask instanceof Fact) {
+                    $context = $context->withFact($sequentialTask);
+                    continue;
+                }
                 try {
                     $context = yield $this->runTask($context, $sequentialTask);
                     $this->reportPublisher->taskOk($sequentialTask, $context);

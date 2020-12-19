@@ -2,7 +2,7 @@
 
 namespace Maestro2\Core\Pipeline;
 
-use Maestro2\Core\Config\MainNode;
+use Maestro2\Core\Inventory\MainNode;
 use Maestro2\Core\Task\NullTask;
 use Maestro2\Core\Task\Task;
 

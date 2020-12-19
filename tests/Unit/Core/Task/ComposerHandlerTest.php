@@ -4,7 +4,6 @@ namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\PhpFact;
-use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Task\ComposerHandler;

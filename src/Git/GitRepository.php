@@ -7,15 +7,12 @@ use Amp\Success;
 use Generator;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Script\ScriptResult;
-use Maestro2\Core\Script\ScriptRunner;
 use Maestro2\Core\Vcs\Exception\CheckoutError;
 use Maestro2\Core\Vcs\Repository;
 use Maestro2\Core\Vcs\Tag;
 use Maestro2\Core\Vcs\Tags;
 use Maestro2\Git\Exception\GitException;
 use Psr\Log\LoggerInterface;
-use Webmozart\PathUtil\Path;
 use function Amp\call;
 
 class GitRepository implements Repository
@@ -77,7 +74,7 @@ class GitRepository implements Repository
                 ));
             }
 
-            return new Tags(array_map(function ($tag) {
+            return new Tags(array_values(array_map(function ($tag) {
                 return new Tag($tag[0], $tag[1]);
             }, array_filter(
                 array_map(
@@ -92,7 +89,7 @@ class GitRepository implements Repository
                         $result->stdout()
                     )
                 )
-            )));
+            ))));
         });
     }
 
@@ -152,7 +149,8 @@ class GitRepository implements Repository
             $result = yield $this->runner->run([
                 'git',
                 'rev-list',
-                sprintf('%s...%s',
+                sprintf(
+                    '%s...%s',
                     $start,
                     $end
                 ),

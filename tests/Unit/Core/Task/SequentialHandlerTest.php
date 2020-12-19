@@ -4,6 +4,7 @@ namespace Maestro2\Tests\Unit\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
+use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Queue\TestEnqueuer;
 use Maestro2\Core\Report\ReportManager;
@@ -100,5 +101,22 @@ class SequentialHandlerTest extends HandlerTestCase
         self::assertInstanceOf(SequentialTaskError::class, $error, 'Correct error type thrown');
 
         self::assertCount(0, $this->reportManager->groups()->reports()->fails(), 'Did not publish failure report');
+    }
+
+    public function testAssimilatesFactsAndContinues(): void
+    {
+        $context = $this->runTask(new SequentialTask([
+            new ClosureTask(function (array $args, Context $context): Promise {
+                return new Success($context->withVar('count', 1));
+            }),
+            new CwdFact('foobar'),
+            new ClosureTask(function (array $args, Context $context): Promise {
+                return new Success(
+                    $context->withVar('count', $context->var('count') + 1)
+                );
+            })
+        ]));
+
+        self::assertEquals('foobar', $context->fact(CwdFact::class)->cwd());
     }
 }

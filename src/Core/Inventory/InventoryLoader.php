@@ -1,27 +1,33 @@
 <?php
 
-namespace Maestro2\Core\Config;
+namespace Maestro2\Core\Inventory;
 
 use DTL\Invoke\Invoke;
 use Exception;
-use Maestro2\Core\Config\Exception\CouldNotLoadConfig;
+use Maestro2\Core\Inventory\Exception\CouldNotLoadConfig;
 use function json_decode;
 
-class ConfigLoader
+class InventoryLoader
 {
-    /**
-     * @var array<string>
-     */
-    private array $filenames;
-
-    public function __construct(array $filenames)
+    public function __construct(private string $defaultInventory)
     {
-        $this->filenames = $filenames;
     }
 
     public function load(): MainNode
     {
-        return $this->readConfig();
+        return $this->readConfig($this->defaultInventory);
+    }
+
+    private function readConfig(string $name): MainNode
+    {
+        if (is_readable($name)) {
+            return $this->loadFile($name);
+        }
+
+        throw new CouldNotLoadConfig(sprintf(
+            'Inventory "%s" not found',
+            $name
+        ));
     }
 
     private function loadFile(string $filename): MainNode
@@ -40,16 +46,5 @@ class ConfigLoader
         assert($mainNode instanceof MainNode);
 
         return $mainNode;
-    }
-
-    private function readConfig(): MainNode
-    {
-        foreach ($this->filenames as $filename) {
-            if (is_readable($filename)) {
-                return $this->loadFile($filename);
-            }
-        }
-
-        throw CouldNotLoadConfig::noConfigFileFound($this->filenames);
     }
 }

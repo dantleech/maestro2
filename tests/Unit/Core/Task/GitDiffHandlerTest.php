@@ -3,7 +3,6 @@
 namespace Maestro2\Tests\Unit\Core\Task;
 
 use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Process\ProcessResult;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Report\ReportManager;
