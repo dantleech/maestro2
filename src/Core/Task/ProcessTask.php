@@ -9,6 +9,9 @@ use function Clue\Arguments\split;
 
 class ProcessTask implements Task, Stringable
 {
+    /**
+     * @var list<string>|string
+     */
     private array $cmd;
 
     /**

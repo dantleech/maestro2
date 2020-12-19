@@ -30,7 +30,9 @@ class ComposerHandlerTest extends HandlerTestCase
     protected function defaultContext(): Context
     {
         return Context::fromFacts(
-            new PhpFact(),
+            new PhpFact(
+                phpBin: 'php3',
+            ),
             new CwdFact('/')
         );
     }
@@ -148,27 +150,24 @@ EOT
 
     public function testUpdate(): void
     {
-        $this->testRunner->push(ProcessResult::ok([], '/'));
+        $this->testRunner->expect(ProcessResult::ok('php3 composer update', '/'));
         $this->runTask(new ComposerTask(
             update: true,
             composerBin: 'composer',
         ));
-
-        $this->assertEquals([
-            PHP_BINARY,
-            'composer',
-            'update',
-        ], $this->testRunner->shift()->cmd());
+        self::assertCount(0, $this->testRunner->remainingExpectations());
     }
 
     public function testFailure(): void
     {
         $this->expectException(ProcessFailure::class);
+        $this->testRunner->expect(ProcessResult::fail('php3 compoaaser update', '/'));
 
-        $this->testRunner->push(ProcessResult::new([], '/', 127, 'No', 'No'));
         $this->runTask(new ComposerTask(
             update: true,
-            composerBin: 'compoasser',
+            composerBin: 'compoaaser',
         ));
+
+        self::assertCount(0, $this->testRunner->remainingExpectations());
     }
 }

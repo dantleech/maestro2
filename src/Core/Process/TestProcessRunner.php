@@ -4,6 +4,7 @@ namespace Maestro2\Core\Process;
 
 use Amp\Promise;
 use Amp\Success;
+use Maestro2\Core\Exception\RuntimeException as Maestro2RuntimeException;
 use Maestro2\Core\Process\Exception\ProcessFailure;
 use RuntimeException;
 use function Amp\call;
@@ -11,30 +12,32 @@ use function Amp\call;
 class TestProcessRunner implements ProcessRunner
 {
     /**
-     * @var list<TestProcess>
-     */
-    private array $ran = [];
-
-    /**
      * @var list<ProcessResult>
      */
-    private array $results = [];
+    private array $expectations = [];
 
-    public function shift(): TestProcess
+    /**
+     * @return list<ProcessResult>
+     */
+    public function remainingExpectations(): array
     {
-        if (!$process = array_shift($this->ran)) {
-            throw new RuntimeException(
-                'No test more processes left to shift'
-            );
-        }
-
-        return $process;
+        return $this->expectations;
     }
 
     public function run(array $args, ?string $cwd = null): Promise
     {
-        $this->ran[] = new TestProcess($args, $cwd);
-        return new Success($this->shiftResult());
+        foreach ($this->expectations as $index => $result) {
+            assert($result instanceof ProcessResult);
+            if ($result->cmd() === $args) {
+                unset($this->expectations[$index]);
+                return new Success($result);
+            }
+        }
+
+        throw new Maestro2RuntimeException(sprintf(
+            'Could not find test expectation for process "%s"',
+            join(' ', $args)
+        ));
     }
 
     public function mustRun(array $args, ?string $cwd = null): Promise
@@ -49,19 +52,8 @@ class TestProcessRunner implements ProcessRunner
         });
     }
 
-    public function push(ProcessResult $processResult): void
+    public function expect(ProcessResult $processResult): void
     {
-        $this->results[] = $processResult;
-    }
-
-    private function shiftResult(): ProcessResult
-    {
-        if ([] === $this->results) {
-            throw new RuntimeException(
-                'No more results left in test process runner'
-            );
-        }
-
-        return array_shift($this->results);
+        $this->expectations[] = $processResult;
     }
 }

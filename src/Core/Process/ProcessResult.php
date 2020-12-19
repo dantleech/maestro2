@@ -2,26 +2,50 @@
 
 namespace Maestro2\Core\Process;
 
+use function Clue\Arguments\split;
+
 class ProcessResult
 {
+    /**
+     * @var list<string>
+     */
+    private array $cmd;
+
+    /**
+     * @param list<string>|string $cmd
+     */
     public function __construct(
         private int $exitCode,
         private string $stdOut,
         private string $stdErr,
-        private array $args,
+        array|string $cmd,
         private string $cwd
     ) {
+        if (is_string($cmd)) {
+            $cmd = array_values(split($cmd));
+        }
+
+        $this->cmd = $cmd;
     }
 
-    public static function ok(array $args, string $cwd, string $stdOut = '', string $stdErr = ''): self
+    /**
+     * @param list<string>|string $cmd
+     */
+    public static function ok(array|string $cmd, string $cwd, string $stdOut = '', string $stdErr = ''): self
     {
-        return new self(0, $stdOut, $stdErr, $args, $cwd);
+        return new self(0, $stdOut, $stdErr, $cmd, $cwd);
     }
 
-    public static function new(array $args, string $cwd, int $exitCode, string $stdOut = '', string $stdErr = ''): self
+    public static function new(array|string $cmd, string $cwd, int $exitCode, string $stdOut = '', string $stdErr = ''): self
     {
-        return new self($exitCode, $stdOut, $stdErr, $args, $cwd);
+        return new self($exitCode, $stdOut, $stdErr, $cmd, $cwd);
     }
+
+    public static function fail(array|string $cmd, string $cwd, int $exitCode = 127, string $stdOut = '', string $stdErr = ''): self
+    {
+        return new self($exitCode, $stdOut, $stdErr, $cmd, $cwd);
+    }
+
 
     public function exitCode(): int
     {
@@ -46,5 +70,10 @@ class ProcessResult
     public function cwd(): string
     {
         return $this->cwd;
+    }
+
+    public function cmd(): array
+    {
+        return $this->cmd;
     }
 }
