@@ -108,6 +108,10 @@ class RunCommand extends Command
             $output->writeln('');
         }
 
+        if ($this->reportProvider->table()->rows()) {
+            $this->renderTable($output, $this->reportProvider->table());
+        }
+
         (function (int $total, int $infos, int $warns, int $fails) use ($output, $duration) {
             $output->writeln(sprintf(
                 '<%s;options=bold>%s reports, %s informations, %s warnings, %s failed in %ss</>',
@@ -124,10 +128,6 @@ class RunCommand extends Command
             $reports->reports()->warns()->count(),
             $reports->reports()->fails()->count(),
         );
-
-        if ($this->reportProvider->table()->rows()) {
-            $this->renderTable($output, $this->reportProvider->table());
-        }
 
         return 0;
     }

@@ -43,8 +43,17 @@ class Table
             return [];
         }
 
-        return array_merge(['group'], array_keys(array_reduce($this->rows, function (array $sum, array $row) {
-            return array_merge($sum, $row);
-        }, [])));
+        return array_merge(
+            ['group'],
+            array_keys(
+                array_reduce(
+                    $this->rows,
+                    function (array $sum, array $row) {
+                        return array_merge($sum, $row);
+                    },
+                    []
+                )
+            )
+        );
     }
 }

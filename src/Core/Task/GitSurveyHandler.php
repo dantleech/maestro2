@@ -46,10 +46,19 @@ class GitSurveyHandler implements Handler
 
     private function survey(string $group, Repository $repository): Generator
     {
+        $headId = yield $repository->headId();
+        $latestTag = (yield $repository->listTags())->mostRecent();
+        $nbCommitsAhead = count(yield $repository->commitsBetween(
+            $latestTag ? $latestTag->commitId() : $headId,
+            $headId
+        ));
+        $message = yield $repository->message($headId);
         $this->publisher->publishTableRow(
             $group,
             [
-                'vcs-tag' => (yield $repository->listTags())->mostRecent()?->name() ?: '<none>',
+                'tag' => $latestTag?->name() ?: '<none>',
+                'then' => sprintf('+ %s', $nbCommitsAhead),
+                'message' => $message,
             ]
         );
     }

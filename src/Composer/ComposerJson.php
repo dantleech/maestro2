@@ -68,6 +68,15 @@ final class ComposerJson
         return $paths;
     }
 
+    public function branchAliases(): array
+    {
+        if (!isset($this->object->extra->{'branch-alias'})) {
+            return [];
+        }
+
+        return (array)$this->object->extra->{'branch-alias'};
+    }
+
     public static function fromArray(array $array): self
     {
         return new self((object)json_decode(json_encode($array), false));
