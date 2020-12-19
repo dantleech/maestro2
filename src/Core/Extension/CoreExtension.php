@@ -14,6 +14,7 @@ use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CatHandler;
+use Maestro2\Core\Task\GitSurveyHandler;
 use Maestro2\Core\Task\PhpProcessHandler;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ConditionalHandler;
@@ -32,6 +33,9 @@ use Maestro2\Core\Task\ReplaceLineHandler;
 use Maestro2\Core\Task\SequentialHandler;
 use Maestro2\Core\Task\TemplateHandler;
 use Maestro2\Core\Task\YamlHandler;
+use Maestro2\Core\Vcs\Repository;
+use Maestro2\Core\Vcs\RepositoryFactory;
+use Maestro2\Git\GitRepositoryFactory;
 use Maestro2\Maestro;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
@@ -111,6 +115,7 @@ class CoreExtension implements Extension
                 new FactHandler(),
                 new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new CatHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
+                new GitSurveyHandler($container->get(Filesystem::class), $container->get(RepositoryFactory::class), $container->get(ReportManager::class)),
             ], (static function (array $taggedServices) use ($container) {
                 return array_map(static function ($serviceId) use ($container): Handler {
                     $handler = $container->get($serviceId);
@@ -165,6 +170,13 @@ class CoreExtension implements Extension
 
         $container->register(Filesystem::class, function (Container $container) {
             return new Filesystem($container->get(MainNode::class)->workspacePath());
+        });
+
+        $container->register(RepositoryFactory::class, function (Container $container) {
+            return new GitRepositoryFactory(
+                $container->get(ProcessRunner::class),
+                $container->get(LoggerInterface::class)
+            );
         });
     }
 

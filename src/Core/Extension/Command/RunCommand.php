@@ -6,8 +6,10 @@ use Amp\Loop;
 use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportProvider;
+use Maestro2\Core\Report\Table;
 use Maestro2\Maestro;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table as SymfonyTable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,7 +23,7 @@ class RunCommand extends Command
     private const NAME = 'run';
     private const ARG_PIPELINE = 'pipeline';
     private const OPT_REPO = 'repo';
-    const OPT_REPORT_LEVEL = 'report-level';
+    private const OPT_REPORT_LEVEL = 'report-level';
 
     public function __construct(
         private Maestro $maestro,
@@ -123,6 +125,22 @@ class RunCommand extends Command
             $reports->reports()->fails()->count(),
         );
 
+        if ($this->reportProvider->table()->rows()) {
+            $this->renderTable($output, $this->reportProvider->table());
+        }
+
         return 0;
+    }
+
+    private function renderTable(OutputInterface $output, Table $table): void
+    {
+        $consoleTable = new SymfonyTable($output);
+        $consoleTable->setHeaders($table->headers());
+
+        foreach ($table->rows() as $row) {
+            $consoleTable->addRow($row);
+        }
+
+        $consoleTable->render();
     }
 }

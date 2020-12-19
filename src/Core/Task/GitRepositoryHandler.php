@@ -26,7 +26,6 @@ class GitRepositoryHandler implements Handler
                 cmd: [
                     'git',
                     'clone',
-                    '--depth=1',
                     $task->url(),
                     $task->path()
                 ]

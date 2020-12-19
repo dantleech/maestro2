@@ -2,6 +2,6 @@
 
 namespace Maestro2\Core\Task;
 
-class GitSurveyTask
+class GitSurveyTask implements Task
 {
 }

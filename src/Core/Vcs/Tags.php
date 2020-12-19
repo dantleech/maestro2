@@ -6,26 +6,15 @@ use ArrayIterator;
 use Countable;
 use Iterator;
 use IteratorAggregate;
-use Maestro\Library\Vcs\Exception\VcsException;
+use Maestro2\Core\Vcs\Exception\VcsException;
 
 class Tags implements IteratorAggregate, Countable
 {
     /**
-     * @var Tag[]
+     * @param list<Tag> $tags
      */
-    private $tags = [];
-
-    public function __construct(array $tags)
+    public function __construct(private array $tags)
     {
-        $tags = $this->sortTags($tags);
-        foreach ($tags as $element) {
-            $this->add($element);
-        }
-    }
-
-    private function add(Tag $element): void
-    {
-        $this->tags[] = $element;
     }
 
     public function names(): array
@@ -40,18 +29,19 @@ class Tags implements IteratorAggregate, Countable
         return new ArrayIterator($this->tags);
     }
 
-    public function mostRecent(): Tag
+    public function mostRecent(): ?Tag
     {
-        if (count($this->tags) === 0) {
-            throw new VcsException(
-                'Must have at least one tag in order to retrieve the most recent'
-            );
+        $tags = $this->sortTags($this->tags);
+        $mostRecentKey = array_key_last($tags);
+
+        if (null === $mostRecentKey) {
+            return null;
         }
 
-        return $this->tags[array_key_last($this->tags)];
+        return $tags[$mostRecentKey];
     }
 
-    public function has(string $tagName)
+    public function has(string $tagName): bool
     {
         foreach ($this->tags as $tag) {
             if ($tag->name() === $tagName) {
@@ -70,6 +60,10 @@ class Tags implements IteratorAggregate, Countable
         return count($this->tags);
     }
 
+    /**
+     * @param list<Tag> $tags
+     * @return list<Tag>
+     */
     private function sortTags(array $tags): array
     {
         usort($tags, function (Tag $tag1, Tag $tag2) {

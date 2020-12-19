@@ -8,13 +8,21 @@ use Maestro2\Core\Task\Task;
 use RuntimeException;
 use Stringable;
 use Throwable;
+use Maestro2\Core\Report\Table;
 
-class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublisher
+class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublisher, ReportTablePublisher
 {
     /**
      * @var array<string, array<Report>>
      */
     private $reports = [];
+
+    private Table $table;
+
+    public function __construct()
+    {
+        $this->table = new Table();
+    }
 
     public function publish(string $group, Report $report): void
     {
@@ -70,5 +78,15 @@ class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublis
                 $error->getMessage()
             ),
         );
+    }
+
+    public function publishTableRow(string $group, array $data): void
+    {
+        $this->table->mergeRow($group, $data);
+    }
+
+    public function table(): Table
+    {
+        return $this->table;
     }
 }
