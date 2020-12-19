@@ -28,7 +28,7 @@ use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\NullTaskHandler;
 use Maestro2\Core\Task\ParallelHandler;
-use Maestro2\Core\Task\ProcessTaskHandler;
+use Maestro2\Core\Task\ProcessHandler;
 use Maestro2\Core\Task\ReplaceLineHandler;
 use Maestro2\Core\Task\SequentialHandler;
 use Maestro2\Core\Task\TemplateHandler;
@@ -91,7 +91,7 @@ class CoreExtension implements Extension
                 new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FileHandler($container->get(Filesystem::class), $container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(Queue::class)),
-                new ProcessTaskHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class)),
+                new ProcessHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class)),
                 new PhpProcessHandler($container->get(Queue::class)),
                 new ProcessesHandler($container->get(Queue::class)),
                 new NullTaskHandler(),

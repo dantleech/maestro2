@@ -14,7 +14,7 @@ use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\GitCommitHandler;
 use Maestro2\Core\Task\GitCommitTask;
 use Maestro2\Core\Task\Handler;
-use Maestro2\Core\Task\ProcessTaskHandler;
+use Maestro2\Core\Task\ProcessHandler;
 
 class GitCommitHandlerTest extends HandlerTestCase
 {
@@ -40,7 +40,7 @@ class GitCommitHandlerTest extends HandlerTestCase
     {
         return new GitCommitHandler(
             TestEnqueuer::fromHandlers([
-                new ProcessTaskHandler(new Filesystem($this->workspace()->path()), $this->testRunner)
+                new ProcessHandler(new Filesystem($this->workspace()->path()), $this->testRunner)
             ]),
             $this->reportPublisher,
             new Filesystem($this->workspace()->path())

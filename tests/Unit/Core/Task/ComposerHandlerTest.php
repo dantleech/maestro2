@@ -15,7 +15,7 @@ use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\JsonMergeHandler;
 use Maestro2\Core\Task\PhpProcessHandler;
-use Maestro2\Core\Task\ProcessTaskHandler;
+use Maestro2\Core\Task\ProcessHandler;
 
 class ComposerHandlerTest extends HandlerTestCase
 {
@@ -43,7 +43,7 @@ class ComposerHandlerTest extends HandlerTestCase
             TestEnqueuer::fromHandlers([
                 new JsonMergeHandler($filesystem),
                 new PhpProcessHandler(TestEnqueuer::fromHandlers([
-                    new ProcessTaskHandler($filesystem, $this->testRunner),
+                    new ProcessHandler($filesystem, $this->testRunner),
                 ]))
             ]),
         );

@@ -16,7 +16,7 @@ use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Task\Exception\TaskError;
 use function Amp\call;
 
-class ProcessTaskHandler implements Handler
+class ProcessHandler implements Handler
 {
     private ReportPublisher $reportPublisher;
 

@@ -13,9 +13,9 @@ use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Exception\TaskError;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\ProcessTask;
-use Maestro2\Core\Task\ProcessTaskHandler;
+use Maestro2\Core\Task\ProcessHandler;
 
-class ProcessTaskHandlerTest extends HandlerTestCase
+class ProcessHandlerTest extends HandlerTestCase
 {
     private TestProcessRunner $testRunner;
     private ReportManager $reportPublisher;
@@ -36,7 +36,7 @@ class ProcessTaskHandlerTest extends HandlerTestCase
 
     protected function createHandler(): Handler
     {
-        return new ProcessTaskHandler(
+        return new ProcessHandler(
             new Filesystem($this->workspace()->path()),
             $this->testRunner,
             $this->reportPublisher
