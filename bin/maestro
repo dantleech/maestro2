@@ -2,11 +2,13 @@
 <?php
 
 use Maestro2\Composer\Extension\ComposerExtension;
+use Maestro2\Core\Config\ConfigLoader;
 use Maestro2\Core\Extension\Command\ReplCommand;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\CoreExtension;
 use Maestro2\Core\Extension\RealExtension;
 use Maestro2\Rector\Extension\RectorExtension;
+use Phpactor\ConfigLoader\ConfigLoaderBuilder;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Console\ConsoleExtension;
 use Symfony\Component\Console\Application;
@@ -27,15 +29,22 @@ if (is_file(__DIR__ . '/../vendor/autoload.php')) {
 
 
 ErrorHandler::register();
+
+$cwd = getcwd();
+
+$config = ConfigLoaderBuilder::create()
+    ->enableJsonDeserializer('json')
+    ->addCandidate($cwd . '/maestro.json', 'json')
+    ->addCandidate($cwd . '/maestro.json.dist', 'json')
+    ->loader()->load();
+
 $application = new Application('Maestro 2');
 $container = PhpactorContainer::fromExtensions([
     CoreExtension::class,
     RealExtension::class,
     RectorExtension::class,
     ComposerExtension::class,
-], [
-    'core.path.config' => getcwd(),
-]);
+], $config);
 
 $application->addCommands([
     $container->get(RunCommand::class),

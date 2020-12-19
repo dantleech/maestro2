@@ -53,7 +53,7 @@ class GitSurveyHandler implements Handler
         $this->publisher->publishTableRow(
             $group,
             [
-                'tag' => $latestTagname() ?: '<none>',
+                'tag' => $latestTag?->name() ?: '<none>',
                 'then' => sprintf('+ %s', $nbCommitsAhead),
                 'message' => $message,
             ]
