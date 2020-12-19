@@ -1,5 +1,6 @@
 {
     "core.inventory": "example/inventory.json",
     "core.templatePath": "example/templates",
-    "core.workspacePath": "var"
+    "core.workspacePath": "var",
+    "core.concurrency": 10
 }

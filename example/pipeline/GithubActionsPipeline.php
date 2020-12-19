@@ -25,7 +25,7 @@ class GithubActionsPipeline extends BasePipeline
                 vars: [
                     'name' => 'CI',
                     'repo' => $repository,
-                    'jobs' => $repository->vars()->get('jobs')
+                    'jobs' => $repository->vars()->get('ci.jobs')
                 ]
             ),
             new CatTask(

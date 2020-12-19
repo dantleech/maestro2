@@ -55,6 +55,7 @@ class CoreExtension implements Extension
     public const PARAM_WORKSPACE_PATH = 'core.workspacePath';
     public const PARAM_INVENTORY = 'core.inventory';
     public const PARAM_WORKING_DIRECTORY = 'core.workingDirectory';
+    const PARAM_CONCURRENCY = 'core.concurrency';
 
     /**
      * {@inheritDoc}
@@ -66,13 +67,16 @@ class CoreExtension implements Extension
             self::PARAM_TEMPLATE_PATH => 'templates',
             self::PARAM_WORKSPACE_PATH => 'workspace',
             self::PARAM_WORKING_DIRECTORY => getcwd(),
+            self::PARAM_CONCURRENCY => 4
         ]);
         $schema->setTypes([
             self::PARAM_INVENTORY => 'string',
             self::PARAM_TEMPLATE_PATH => 'string',
             self::PARAM_WORKSPACE_PATH => 'string',
+            self::PARAM_CONCURRENCY => 'integer',
         ]);
         $schema->setDescriptions([
+            self::PARAM_CONCURRENCY => 'Maximimum number of processes to run concurrently',
             self::PARAM_INVENTORY => 'Path to inventory',
             self::PARAM_TEMPLATE_PATH => 'Base path for all templates',
             self::PARAM_WORKSPACE_PATH => 'Path to workspace',
@@ -153,7 +157,10 @@ class CoreExtension implements Extension
         });
 
         $container->register(ProcessRunner::class, function (Container $container) {
-            return new AmpProcessRunner($container->get(LoggerInterface::class));
+            return new AmpProcessRunner(
+                $container->get(LoggerInterface::class),
+                $container->getParameter(self::PARAM_CONCURRENCY)
+            );
         });
 
         $container->register(LoggerInterface::class, function (Container $container) {

@@ -22,7 +22,6 @@ class IntegrationTestCase extends TestCase
             CoreExtension::class,
             TestExtension::class,
         ], array_merge([
-            'core.path.config' => $this->workspace()->path(),
         ], $config));
     }
 
