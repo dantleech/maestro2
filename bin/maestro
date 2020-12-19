@@ -44,7 +44,9 @@ $container = PhpactorContainer::fromExtensions([
     RealExtension::class,
     RectorExtension::class,
     ComposerExtension::class,
-], $config);
+], array_merge([
+    'core.workingDirectory' => $cwd,
+], $config));
 
 $application->addCommands([
     $container->get(RunCommand::class),

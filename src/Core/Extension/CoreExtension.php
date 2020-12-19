@@ -45,14 +45,40 @@ use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
+use Webmozart\PathUtil\Path;
 
 class CoreExtension implements Extension
 {
     public const TAG_TASK_HANDLER = 'maestro.taskHandler';
 
-    public const PARAM_TEMPLATE_PATHS = 'core.templatePaths';
-    public const PARAM_INVENTORY = 'core.inventory';
+    public const PARAM_TEMPLATE_PATH = 'core.templatePath';
     public const PARAM_WORKSPACE_PATH = 'core.workspacePath';
+    public const PARAM_INVENTORY = 'core.inventory';
+    public const PARAM_WORKING_DIRECTORY = 'core.workingDirectory';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(Resolver $schema): void
+    {
+        $schema->setDefaults([
+            self::PARAM_INVENTORY => 'maestro-inventory.json',
+            self::PARAM_TEMPLATE_PATH => 'templates',
+            self::PARAM_WORKSPACE_PATH => 'workspace',
+            self::PARAM_WORKING_DIRECTORY => getcwd(),
+        ]);
+        $schema->setTypes([
+            self::PARAM_INVENTORY => 'string',
+            self::PARAM_TEMPLATE_PATH => 'string',
+            self::PARAM_WORKSPACE_PATH => 'string',
+        ]);
+        $schema->setDescriptions([
+            self::PARAM_INVENTORY => 'Path to inventory',
+            self::PARAM_TEMPLATE_PATH => 'Base path for all templates',
+            self::PARAM_WORKSPACE_PATH => 'Path to workspace',
+            self::PARAM_WORKING_DIRECTORY => 'Working directory (set internally)',
+        ]);
+    }
 
     /**
      * {@inheritDoc}
@@ -75,7 +101,9 @@ class CoreExtension implements Extension
         });
 
         $container->register(InventoryLoader::class, function (Container $container) {
-            return new InventoryLoader($container->getParameter(self::PARAM_INVENTORY));
+            return new InventoryLoader(
+                $this->resolvePath($container, self::PARAM_INVENTORY)
+            );
         });
 
         $container->register(HandlerFactory::class, function (Container $container) {
@@ -148,7 +176,7 @@ class CoreExtension implements Extension
             return new Environment(
                 new ChainLoader([
                     new FilesystemLoader(
-                        $container->getParameter(self::PARAM_TEMPLATE_PATHS)
+                        [$this->resolvePath($container, self::PARAM_TEMPLATE_PATH)]
                     )
                 ]),
                 [
@@ -163,7 +191,7 @@ class CoreExtension implements Extension
 
         $container->register(Filesystem::class, function (Container $container) {
             return new Filesystem(
-                $container->getParameter(self::PARAM_WORKSPACE_PATH)
+                $this->resolvePath($container, self::PARAM_WORKSPACE_PATH)
             );
         });
 
@@ -175,17 +203,10 @@ class CoreExtension implements Extension
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function configure(Resolver $schema): void
+    private function resolvePath(Container $container, string $pathParameterName): string
     {
-        $schema->setDefaults([
-            self::PARAM_INVENTORY => 'maestro-inventory.json',
-            self::PARAM_TEMPLATE_PATHS => [
-                'templates',
-            ],
-            self::PARAM_WORKSPACE_PATH => 'workspace',
-        ]);
+        $workingDirectory = (string)$container->getParameter(self::PARAM_WORKING_DIRECTORY);
+
+        return Path::makeAbsolute($container->getParameter($pathParameterName), $workingDirectory);
     }
 }

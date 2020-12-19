@@ -1,7 +1,5 @@
 {
     "core.inventory": "example/inventory.json",
-    "core.templatePaths": [
-        "example/templates"
-    ],
+    "core.templatePath": "example/templates",
     "core.workspacePath": "var"
 }
