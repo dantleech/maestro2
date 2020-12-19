@@ -67,6 +67,31 @@ class GitCommitHandler implements Handler
                 ), $context)
             );
 
+            $context = yield $this->enqueuer->enqueue(
+                TaskContext::create(new ProcessTask(
+                    allowFailure: true,
+                    args: [
+                        'git',
+                        'diff',
+                        '--staged',
+                        '--exit-code',
+                    ]
+                ), $context)
+            );
+            assert($context instanceof Context);
+            $result = $context->result();
+            assert($result instanceof ProcessResult);
+
+            if ($result->exitCode() === 0) {
+                $this->publisher->publish(
+                    $context->fact(GroupFact::class)->group(),
+                    Report::warn(
+                        'Git commit: no files modified, not comitting anything',
+                    )
+                );
+                return $context;
+            }
+
             yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
                     args: [
