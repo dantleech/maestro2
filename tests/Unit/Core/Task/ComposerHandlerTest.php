@@ -39,7 +39,7 @@ class ComposerHandlerTest extends HandlerTestCase
 
     protected function createHandler(): Handler
     {
-        $filesystem = new Filesystem($this->workspace()->path('/'));
+        $filesystem = $this->filesystem();
         return new ComposerHandler(
             $filesystem,
             TestEnqueuer::fromHandlers([

@@ -38,7 +38,7 @@ class TestRepository implements Repository
 
     public function commitsBetween(string $start, string $end): Promise
     {
-        return new Success();
+        return new Success([]);
     }
 
     public function isCheckedOut(): bool

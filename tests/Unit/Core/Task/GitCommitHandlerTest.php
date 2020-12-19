@@ -40,10 +40,13 @@ class GitCommitHandlerTest extends HandlerTestCase
     {
         return new GitCommitHandler(
             TestEnqueuer::fromHandlers([
-                new ProcessHandler(new Filesystem($this->workspace()->path()), $this->testRunner)
+                new ProcessHandler(
+                    $this->filesystem(),
+                    $this->testRunner
+                )
             ]),
             $this->reportPublisher,
-            new Filesystem($this->workspace()->path())
+            $this->filesystem()
         );
     }
 

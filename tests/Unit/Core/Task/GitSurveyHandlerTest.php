@@ -24,6 +24,7 @@ class GitSurveyHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new GitSurveyHandler(
+            $this->filesystem(),
             new TestRepositoryFactory(),
             $this->reportManager
         );

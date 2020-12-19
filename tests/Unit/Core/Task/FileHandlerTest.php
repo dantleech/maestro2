@@ -133,7 +133,7 @@ class FileHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new FileHandler(
-            new Filesystem($this->workspace()->path(), '/'),
+            $this->filesystem(),
             new NullLogger()
         );
     }

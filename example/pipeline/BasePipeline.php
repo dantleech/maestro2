@@ -43,7 +43,6 @@ class BasePipeline implements Pipeline
                         path: $repositoryNode->name()
                     ),
                     new FactTask(new CwdFact('build/' . $repositoryNode->name())),
-                    new ComposerJsonFactTask(),
                     $this->buildRepository($repositoryNode)
                 ]);
             }, $mainNode->selectedRepositories()))

@@ -14,7 +14,7 @@ class JsonMergeHandlerTest extends HandlerTestCase
 {
     protected function createHandler(): Handler
     {
-        return new JsonMergeHandler(new Filesystem($this->workspace()->path('/')));
+        return new JsonMergeHandler($this->filesystem());
     }
 
     protected function defaultContext(): Context

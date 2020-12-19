@@ -2,6 +2,7 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
+use Maestro2\Core\Filesystem\Filesystem;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Handler;
 use Maestro2\Core\Task\HandlerFactory;
@@ -25,5 +26,10 @@ abstract class HandlerTestCase extends IntegrationTestCase
         return wait((new HandlerFactory([
             $this->createHandler()
         ]))->handlerFor($task)->run($task, $context)) ?: Context::create();
+    }
+
+    protected function filesystem(): Filesystem
+    {
+        return new Filesystem($this->workspace()->path());
     }
 }

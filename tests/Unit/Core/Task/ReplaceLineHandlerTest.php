@@ -15,7 +15,7 @@ class ReplaceLineHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new ReplaceLineHandler(
-            new Filesystem($this->workspace()->path()),
+            $this->filesystem(),
             new NullPublisher()
         );
     }

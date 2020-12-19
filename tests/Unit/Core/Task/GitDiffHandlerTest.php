@@ -34,7 +34,7 @@ class GitDiffHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new GitDiffHandler(
-            new Filesystem($this->workspace()->path()),
+            $this->filesystem(),
             $this->testRunner,
             $this->reportPublisher
         );

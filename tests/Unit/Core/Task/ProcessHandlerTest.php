@@ -36,7 +36,7 @@ class ProcessHandlerTest extends HandlerTestCase
     protected function createHandler(): Handler
     {
         return new ProcessHandler(
-            new Filesystem($this->workspace()->path()),
+            $this->filesystem(),
             $this->testRunner,
             $this->reportPublisher
         );
