@@ -63,8 +63,8 @@ class RunCommand extends Command
                 $error = $previous;
             }
         });
-        $start = microtime(true);
 
+        $start = microtime(true);
         $this->maestro->run(
             pipeline: $pipeline,
             repos: (array)$input->getOption(self::OPT_REPO)

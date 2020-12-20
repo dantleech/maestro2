@@ -31,9 +31,9 @@ class Maestro
     ): void {
         $pipeline = $this->resolvePipeline($pipeline);
 
-        Loop::repeat(1000, function () {
-            $this->worker->updateStatus();
-        });
+        //Loop::repeat(1000, function () {
+        //    $this->worker->updateStatus();
+        //});
 
         Loop::run(function () use ($pipeline, $repos) {
             yield call(function (MainNode $inventory) use ($pipeline, $repos) {
