@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Util;
+namespace Maestro\Core\Util;
 
 class PermissionUtil
 {

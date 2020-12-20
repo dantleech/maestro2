@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Task\CatTask;
+use Maestro\Core\Task\CatTask;
 
 class CatHandlerTest extends HandlerTestCase
 {

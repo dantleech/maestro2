@@ -1,17 +1,17 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
-use Maestro2\Core\Exception\RuntimeException;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Report\Publisher\NullPublisher;
-use Maestro2\Core\Report\Report;
-use Maestro2\Core\Report\ReportPublisher;
-use Maestro2\Core\Util\PermissionUtil;
+use Maestro\Core\Exception\RuntimeException;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Report\Publisher\NullPublisher;
+use Maestro\Core\Report\Report;
+use Maestro\Core\Report\ReportPublisher;
+use Maestro\Core\Util\PermissionUtil;
 use Twig\Environment;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;

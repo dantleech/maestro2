@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Core\Task\Exception;
+namespace Maestro\Core\Task\Exception;
 
-use Maestro2\Core\Exception\RuntimeException;
+use Maestro\Core\Exception\RuntimeException;
 
 class ResultNotSet extends RuntimeException
 {

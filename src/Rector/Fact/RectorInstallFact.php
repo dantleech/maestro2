@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Rector\Fact;
+namespace Maestro\Rector\Fact;
 
-use Maestro2\Core\Fact\Fact;
+use Maestro\Core\Fact\Fact;
 
 class RectorInstallFact implements Fact
 {

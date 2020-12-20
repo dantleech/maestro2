@@ -1,16 +1,16 @@
 <?php
 
-namespace Maestro2\Composer\Task;
+namespace Maestro\Composer\Task;
 
 use Amp\Promise;
 use Amp\Success;
-use Maestro2\Composer\ComposerJson;
-use Maestro2\Composer\Fact\ComposerJsonFact;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Handler;
-use Maestro2\Core\Task\Task;
+use Maestro\Composer\ComposerJson;
+use Maestro\Composer\Fact\ComposerJsonFact;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Handler;
+use Maestro\Core\Task\Task;
 
 class ComposerJsonFactHandler implements Handler
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Task\Exception;
+namespace Maestro\Core\Task\Exception;
 
 use RuntimeException;
 

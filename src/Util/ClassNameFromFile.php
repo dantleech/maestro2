@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Util;
+namespace Maestro\Util;
 
 class ClassNameFromFile
 {

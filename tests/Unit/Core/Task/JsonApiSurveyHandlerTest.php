@@ -1,12 +1,12 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
 use Amp\ByteStream\InMemoryStream;
 use Amp\Http\Client\Request;
 use Amp\Http\Client\Response;
-use Maestro2\Core\Task\Exception\TaskError;
-use Maestro2\Core\Task\JsonApiSurveyTask;
+use Maestro\Core\Task\Exception\TaskError;
+use Maestro\Core\Task\JsonApiSurveyTask;
 
 class JsonApiSurveyHandlerTest extends HandlerTestCase
 {

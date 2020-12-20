@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Task\JsonMergeTask;
+use Maestro\Core\Task\JsonMergeTask;
 use stdClass;
 
 class JsonMergeHandlerTest extends HandlerTestCase

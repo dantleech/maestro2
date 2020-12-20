@@ -1,16 +1,16 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Process\ProcessResult;
-use Maestro2\Core\Queue\Enqueuer;
-use Maestro2\Core\Report\Report;
-use Maestro2\Core\Report\ReportPublisher;
-use Maestro2\Core\Task\Exception\TaskError;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Process\ProcessResult;
+use Maestro\Core\Queue\Enqueuer;
+use Maestro\Core\Report\Report;
+use Maestro\Core\Report\ReportPublisher;
+use Maestro\Core\Task\Exception\TaskError;
 use function Amp\call;
 
 class GitCommitHandler implements Handler

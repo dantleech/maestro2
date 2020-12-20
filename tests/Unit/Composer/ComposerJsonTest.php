@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Composer;
+namespace Maestro\Tests\Unit\Composer;
 
 use Generator;
-use Maestro2\Composer\ComposerJson;
+use Maestro\Composer\ComposerJson;
 use PHPUnit\Framework\TestCase;
 
 class ComposerJsonTest extends TestCase

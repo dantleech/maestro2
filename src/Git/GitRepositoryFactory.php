@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Git;
+namespace Maestro\Git;
 
-use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Vcs\Repository;
-use Maestro2\Core\Vcs\RepositoryFactory;
+use Maestro\Core\Process\ProcessRunner;
+use Maestro\Core\Vcs\Repository;
+use Maestro\Core\Vcs\RepositoryFactory;
 use Psr\Log\LoggerInterface;
 
 class GitRepositoryFactory implements RepositoryFactory

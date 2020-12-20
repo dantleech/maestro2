@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Vcs\Exception;
+namespace Maestro\Core\Vcs\Exception;
 
 use Exception;
 

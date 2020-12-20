@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Core\Inventory;
+namespace Maestro\Core\Inventory;
 
 use DTL\Invoke\Invoke;
-use Maestro2\Core\Exception\RuntimeException;
+use Maestro\Core\Exception\RuntimeException;
 
 final class MainNode
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
 use Exception;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Task\Exception\TaskError;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Task\Exception\TaskError;
 use Symfony\Component\Yaml\Yaml;
 use Webmozart\Assert\Assert;
 

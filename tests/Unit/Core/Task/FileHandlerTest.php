@@ -1,11 +1,11 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Exception\TaskError;
-use Maestro2\Core\Task\FileTask;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Exception\TaskError;
+use Maestro\Core\Task\FileTask;
 use SplFileInfo;
 
 class FileHandlerTest extends HandlerTestCase

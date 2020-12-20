@@ -1,18 +1,18 @@
 <?php
 
-namespace Maestro2;
+namespace Maestro;
 
 use Amp\Loop;
-use Maestro2\Core\Inventory\InventoryLoader;
-use Maestro2\Core\Inventory\MainNode;
-use Maestro2\Core\Exception\RuntimeException;
-use Maestro2\Core\Pipeline\NullPipeline;
-use Maestro2\Core\Pipeline\Pipeline;
-use Maestro2\Core\Queue\Enqueuer;
-use Maestro2\Core\Queue\Worker;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\TaskContext;
-use Maestro2\Util\ClassNameFromFile;
+use Maestro\Core\Inventory\InventoryLoader;
+use Maestro\Core\Inventory\MainNode;
+use Maestro\Core\Exception\RuntimeException;
+use Maestro\Core\Pipeline\NullPipeline;
+use Maestro\Core\Pipeline\Pipeline;
+use Maestro\Core\Queue\Enqueuer;
+use Maestro\Core\Queue\Worker;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\TaskContext;
+use Maestro\Util\ClassNameFromFile;
 use Throwable;
 use function Amp\call;
 

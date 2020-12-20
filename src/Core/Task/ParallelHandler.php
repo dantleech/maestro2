@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro2\Core\Queue\Enqueuer;
-use Maestro2\Core\Report\TaskReportPublisher;
+use Maestro\Core\Queue\Enqueuer;
+use Maestro\Core\Report\TaskReportPublisher;
 use Throwable;
 use function Amp\Promise\any;
 use function Amp\call;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
 use Amp\Success;
-use Maestro2\Core\Task\ClosureTask;
-use Maestro2\Core\Task\ConditionalTask;
-use Maestro2\Core\Task\Context;
+use Maestro\Core\Task\ClosureTask;
+use Maestro\Core\Task\ConditionalTask;
+use Maestro\Core\Task\Context;
 
 class ConditionalHandlerTest extends HandlerTestCase
 {

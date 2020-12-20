@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Core\Inventory\Exception;
+namespace Maestro\Core\Inventory\Exception;
 
-use Maestro2\Core\Exception\RuntimeException;
+use Maestro\Core\Exception\RuntimeException;
 
 class VariableNotFound extends RuntimeException
 {

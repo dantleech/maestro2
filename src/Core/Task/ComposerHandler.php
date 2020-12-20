@@ -1,13 +1,13 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\PhpFact;
-use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Queue\Enqueuer;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\PhpFact;
+use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Process\ProcessRunner;
+use Maestro\Core\Queue\Enqueuer;
 use Symfony\Component\Process\ExecutableFinder;
 use Webmozart\PathUtil\Path;
 use stdClass;

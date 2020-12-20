@@ -12,13 +12,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Maestro2\\": "src/"
+            "Maestro\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Maestro2\\Examples\\Pipeline\\": "example/pipeline/",
-            "Maestro2\\Tests\\": "tests/"
+            "Maestro\\Examples\\Pipeline\\": "example/pipeline/",
+            "Maestro\\Tests\\": "tests/"
         }
     },
     "extra": {

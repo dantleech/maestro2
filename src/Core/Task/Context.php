@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
-use Maestro2\Core\Fact\Fact;
-use Maestro2\Core\Task\Exception\FactNotFound;
-use Maestro2\Core\Task\Exception\ResultNotSet;
+use Maestro\Core\Fact\Fact;
+use Maestro\Core\Task\Exception\FactNotFound;
+use Maestro\Core\Task\Exception\ResultNotSet;
 
 /**
  * @template R

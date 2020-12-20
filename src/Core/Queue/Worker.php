@@ -1,12 +1,12 @@
 <?php
 
-namespace Maestro2\Core\Queue;
+namespace Maestro\Core\Queue;
 
 use Amp\Promise;
 use Amp\Success;
-use Maestro2\Core\Task\HandlerFactory;
-use Maestro2\Core\Task\TaskContext;
-use Maestro2\Core\Task\TaskUtil;
+use Maestro\Core\Task\HandlerFactory;
+use Maestro\Core\Task\TaskContext;
+use Maestro\Core\Task\TaskUtil;
 use Psr\Log\LoggerInterface;
 use Stringable;
 use Throwable;

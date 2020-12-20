@@ -1,18 +1,18 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\HttpClient\TestHttpClientInterceptor;
-use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Process\TestProcessRunner;
-use Maestro2\Core\Report\ReportManager;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\HandlerFactory;
-use Maestro2\Core\Task\Task;
-use Maestro2\Tests\IntegrationTestCase;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\HttpClient\TestHttpClientInterceptor;
+use Maestro\Core\Process\ProcessRunner;
+use Maestro\Core\Process\TestProcessRunner;
+use Maestro\Core\Report\ReportManager;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\HandlerFactory;
+use Maestro\Core\Task\Task;
+use Maestro\Tests\IntegrationTestCase;
 use Phpactor\Container\Container;
 use function Amp\Promise\wait;
 

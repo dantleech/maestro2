@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Rector\Task;
+namespace Maestro\Rector\Task;
 
-use Maestro2\Core\Task\Task;
+use Maestro\Core\Task\Task;
 
 class RectorInstallTask implements Task
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Process\ProcessResult;
-use Maestro2\Core\Task\Exception\TaskError;
-use Maestro2\Core\Task\GitCommitTask;
+use Maestro\Core\Process\ProcessResult;
+use Maestro\Core\Task\Exception\TaskError;
+use Maestro\Core\Task\GitCommitTask;
 
 class GitCommitHandlerTest extends HandlerTestCase
 {

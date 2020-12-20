@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Composer\Task;
+namespace Maestro\Tests\Unit\Composer\Task;
 
-use Maestro2\Composer\Fact\ComposerJsonFact;
-use Maestro2\Composer\Task\ComposerJsonFactTask;
-use Maestro2\Tests\Unit\Core\Task\HandlerTestCase;
+use Maestro\Composer\Fact\ComposerJsonFact;
+use Maestro\Composer\Task\ComposerJsonFactTask;
+use Maestro\Tests\Unit\Core\Task\HandlerTestCase;
 
 class ComposerJsonFactHandlerTest extends HandlerTestCase
 {

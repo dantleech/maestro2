@@ -1,15 +1,15 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Task\ClosureTask;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Exception\SequentialTaskError;
-use Maestro2\Core\Task\Exception\TaskError;
-use Maestro2\Core\Task\SequentialTask;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Task\ClosureTask;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Exception\SequentialTaskError;
+use Maestro\Core\Task\Exception\TaskError;
+use Maestro\Core\Task\SequentialTask;
 use RuntimeException;
 
 class SequentialHandlerTest extends HandlerTestCase

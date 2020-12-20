@@ -1,13 +1,13 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro2\Core\Exception\RuntimeException;
-use Maestro2\Core\Fact\Fact;
-use Maestro2\Core\Queue\Enqueuer;
-use Maestro2\Core\Report\TaskReportPublisher;
-use Maestro2\Core\Task\Exception\SequentialTaskError;
+use Maestro\Core\Exception\RuntimeException;
+use Maestro\Core\Fact\Fact;
+use Maestro\Core\Queue\Enqueuer;
+use Maestro\Core\Report\TaskReportPublisher;
+use Maestro\Core\Task\Exception\SequentialTaskError;
 use Throwable;
 use function Amp\call;
 

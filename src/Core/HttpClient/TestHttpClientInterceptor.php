@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\HttpClient;
+namespace Maestro\Core\HttpClient;
 
 use Amp\ByteStream\InMemoryStream;
 use Amp\CancellationToken;

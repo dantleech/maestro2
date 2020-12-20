@@ -1,11 +1,11 @@
 <?php
 
-namespace Maestro2\Core\Process;
+namespace Maestro\Core\Process;
 
 use Amp\Promise;
 use Amp\Success;
-use Maestro2\Core\Exception\RuntimeException as Maestro2RuntimeException;
-use Maestro2\Core\Process\Exception\ProcessFailure;
+use Maestro\Core\Exception\RuntimeException as MaestroRuntimeException;
+use Maestro\Core\Process\Exception\ProcessFailure;
 use function Amp\call;
 
 class TestProcessRunner implements ProcessRunner
@@ -33,7 +33,7 @@ class TestProcessRunner implements ProcessRunner
             }
         }
 
-        throw new Maestro2RuntimeException(sprintf(
+        throw new MaestroRuntimeException(sprintf(
             'Could not find test expectation for process "%s"',
             join(' ', $args)
         ));

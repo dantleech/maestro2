@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Task\YamlTask;
+use Maestro\Core\Task\YamlTask;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlHandlerTest extends HandlerTestCase

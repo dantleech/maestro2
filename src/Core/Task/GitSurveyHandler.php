@@ -1,15 +1,15 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Generator;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Report\ReportTablePublisher;
-use Maestro2\Core\Vcs\Repository;
-use Maestro2\Core\Vcs\RepositoryFactory;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Report\ReportTablePublisher;
+use Maestro\Core\Vcs\Repository;
+use Maestro\Core\Vcs\RepositoryFactory;
 use function Amp\call;
 
 class GitSurveyHandler implements Handler

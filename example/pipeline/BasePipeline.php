@@ -1,22 +1,22 @@
 <?php
 
-namespace Maestro2\Examples\Pipeline;
+namespace Maestro\Examples\Pipeline;
 
-use Maestro2\Composer\Task\ComposerJsonFactTask;
-use Maestro2\Core\Inventory\MainNode;
-use Maestro2\Core\Inventory\RepositoryNode;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Pipeline\Pipeline;
-use Maestro2\Core\Task\ComposerTask;
-use Maestro2\Core\Task\FactTask;
-use Maestro2\Core\Task\FileTask;
-use Maestro2\Core\Task\GitRepositoryTask;
-use Maestro2\Core\Task\NullTask;
-use Maestro2\Core\Task\ParallelTask;
-use Maestro2\Core\Task\SequentialTask;
-use Maestro2\Core\Task\Task;
-use Maestro2\Rector\Task\RectorInstallTask;
+use Maestro\Composer\Task\ComposerJsonFactTask;
+use Maestro\Core\Inventory\MainNode;
+use Maestro\Core\Inventory\RepositoryNode;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Pipeline\Pipeline;
+use Maestro\Core\Task\ComposerTask;
+use Maestro\Core\Task\FactTask;
+use Maestro\Core\Task\FileTask;
+use Maestro\Core\Task\GitRepositoryTask;
+use Maestro\Core\Task\NullTask;
+use Maestro\Core\Task\ParallelTask;
+use Maestro\Core\Task\SequentialTask;
+use Maestro\Core\Task\Task;
+use Maestro\Rector\Task\RectorInstallTask;
 
 class BasePipeline implements Pipeline
 {

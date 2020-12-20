@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Core\Inventory;
+namespace Maestro\Core\Inventory;
 
-use Maestro2\Core\Exception\RuntimeException;
+use Maestro\Core\Exception\RuntimeException;
 
 class Vars
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Closure;
-use Maestro2\Core\Process\ProcessResult;
+use Maestro\Core\Process\ProcessResult;
 use Stringable;
 use function Clue\Arguments\split;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Tests;
+namespace Maestro\Tests;
 
-use Maestro2\Composer\Extension\ComposerExtension;
-use Maestro2\Core\Extension\CoreExtension;
-use Maestro2\Core\Extension\TestExtension;
+use Maestro\Composer\Extension\ComposerExtension;
+use Maestro\Core\Extension\CoreExtension;
+use Maestro\Core\Extension\TestExtension;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Container\Container;
 use Phpactor\Container\PhpactorContainer;

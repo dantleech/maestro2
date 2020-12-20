@@ -1,15 +1,15 @@
 <?php
 
-namespace Maestro2\Core\Extension;
+namespace Maestro\Core\Extension;
 
 use Amp\Http\Client\HttpClient;
 use Amp\Http\Client\HttpClientBuilder;
-use Maestro2\Core\HttpClient\LoggingHttpClientInterceptor;
-use Maestro2\Core\Process\AmpProcessRunner;
-use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Queue\Queue;
-use Maestro2\Core\Vcs\RepositoryFactory;
-use Maestro2\Git\GitRepositoryFactory;
+use Maestro\Core\HttpClient\LoggingHttpClientInterceptor;
+use Maestro\Core\Process\AmpProcessRunner;
+use Maestro\Core\Process\ProcessRunner;
+use Maestro\Core\Queue\Queue;
+use Maestro\Core\Vcs\RepositoryFactory;
+use Maestro\Git\GitRepositoryFactory;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;

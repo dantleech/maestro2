@@ -1,13 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-use Maestro2\Composer\Extension\ComposerExtension;
-use Maestro2\Core\Config\ConfigLoader;
-use Maestro2\Core\Extension\Command\ReplCommand;
-use Maestro2\Core\Extension\Command\RunCommand;
-use Maestro2\Core\Extension\CoreExtension;
-use Maestro2\Core\Extension\RealExtension;
-use Maestro2\Rector\Extension\RectorExtension;
+use Maestro\Composer\Extension\ComposerExtension;
+use Maestro\Core\Config\ConfigLoader;
+use Maestro\Core\Extension\Command\ReplCommand;
+use Maestro\Core\Extension\Command\RunCommand;
+use Maestro\Core\Extension\CoreExtension;
+use Maestro\Core\Extension\RealExtension;
+use Maestro\Rector\Extension\RectorExtension;
 use Phpactor\ConfigLoader\ConfigLoaderBuilder;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Console\ConsoleExtension;

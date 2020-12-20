@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Composer;
+namespace Maestro\Composer;
 
-use Maestro2\Composer\Exception\ComposerJsonNotFound;
-use Maestro2\Core\Exception\RuntimeException;
+use Maestro\Composer\Exception\ComposerJsonNotFound;
+use Maestro\Core\Exception\RuntimeException;
 use stdClass;
 use function json_decode;
 

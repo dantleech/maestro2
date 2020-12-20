@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Tests\Util;
+namespace Maestro\Tests\Util;
 
 use Symfony\Component\Process\Process;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
-use Maestro2\Core\Task\Exception\HandlerNotFound;
+use Maestro\Core\Task\Exception\HandlerNotFound;
 
 class HandlerFactory
 {

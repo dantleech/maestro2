@@ -1,13 +1,13 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Process\Exception\ProcessFailure;
-use Maestro2\Core\Process\ProcessResult;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Exception\TaskError;
-use Maestro2\Core\Task\ProcessTask;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Process\Exception\ProcessFailure;
+use Maestro\Core\Process\ProcessResult;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Exception\TaskError;
+use Maestro\Core\Task\ProcessTask;
 
 class ProcessHandlerTest extends HandlerTestCase
 {

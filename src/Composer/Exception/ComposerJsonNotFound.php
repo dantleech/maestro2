@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Composer\Exception;
+namespace Maestro\Composer\Exception;
 
-use Maestro2\Core\Exception\RuntimeException;
+use Maestro\Core\Exception\RuntimeException;
 
 class ComposerJsonNotFound extends RuntimeException
 {

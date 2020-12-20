@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Process\ProcessResult;
-use Maestro2\Core\Task\GitDiffTask;
+use Maestro\Core\Process\ProcessResult;
+use Maestro\Core\Task\GitDiffTask;
 
 class GitDiffHandlerTest extends HandlerTestCase
 {

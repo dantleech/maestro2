@@ -1,11 +1,11 @@
 <?php
 
-namespace Maestro2\Rector\Extension;
+namespace Maestro\Rector\Extension;
 
-use Maestro2\Core\Extension\CoreExtension;
-use Maestro2\Core\Queue\Queue;
-use Maestro2\Rector\Task\RectorComposerUpgradeHandler;
-use Maestro2\Rector\Task\RectorInstallHandler;
+use Maestro\Core\Extension\CoreExtension;
+use Maestro\Core\Queue\Queue;
+use Maestro\Rector\Task\RectorComposerUpgradeHandler;
+use Maestro\Rector\Task\RectorInstallHandler;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;

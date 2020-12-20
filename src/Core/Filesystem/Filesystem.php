@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Filesystem;
+namespace Maestro\Core\Filesystem;
 
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Webmozart\PathUtil\Path;

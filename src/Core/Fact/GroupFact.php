@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Fact;
+namespace Maestro\Core\Fact;
 
 class GroupFact implements Fact
 {

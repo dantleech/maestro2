@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Core\Inventory;
+namespace Maestro\Core\Inventory;
 
 use DTL\Invoke\Invoke;
 use Exception;
-use Maestro2\Core\Inventory\Exception\CouldNotLoadConfig;
+use Maestro\Core\Inventory\Exception\CouldNotLoadConfig;
 use function json_decode;
 
 class InventoryLoader

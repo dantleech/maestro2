@@ -1,20 +1,19 @@
 <?php
 
-namespace Maestro2\Examples\Pipeline;
+namespace Maestro\Examples\Pipeline;
 
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Inventory\MainNode;
-use Maestro2\Core\Pipeline\Pipeline;
-use Maestro2\Core\Task\NullTask;
-use Maestro2\Core\Task\SequentialTask;
-use Maestro2\Core\Task\Task;
+use Maestro\Core\Inventory\MainNode;
+use Maestro\Core\Pipeline\Pipeline;
+use Maestro\Core\Task\NullTask;
+use Maestro\Core\Task\SequentialTask;
+use Maestro\Core\Task\Task;
 
 class EmptyPipeline implements Pipeline
 {
     public function build(MainNode $mainNode): Task
     {
         return new SequentialTask([
-            new GroupFact('my-reporting-group'),
+            new GroupFact
             new NullTask()
         ]);
     }

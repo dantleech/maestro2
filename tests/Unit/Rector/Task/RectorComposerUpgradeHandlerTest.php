@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Rector\Task;
+namespace Maestro\Tests\Unit\Rector\Task;
 
-use Maestro2\Rector\Task\RectorComposerUpgradeTask;
-use Maestro2\Tests\Unit\Core\Task\HandlerTestCase;
-use Maestro2\Tests\Util\ProcessUtil;
+use Maestro\Rector\Task\RectorComposerUpgradeTask;
+use Maestro\Tests\Unit\Core\Task\HandlerTestCase;
+use Maestro\Tests\Util\ProcessUtil;
 
 class RectorComposerUpgradeHandlerTest extends HandlerTestCase
 {

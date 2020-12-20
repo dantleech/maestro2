@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Http\Client\HttpClient;
 use Amp\Http\Client\Request;
@@ -8,9 +8,9 @@ use Amp\Http\Client\Response;
 use Amp\Promise;
 use Generator;
 use JsonException;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Report\ReportTablePublisher;
-use Maestro2\Core\Task\Exception\TaskError;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Report\ReportTablePublisher;
+use Maestro\Core\Task\Exception\TaskError;
 use Webmozart\Assert\Assert;
 use function Amp\call;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Composer\Extension;
+namespace Maestro\Composer\Extension;
 
-use Maestro2\Composer\Task\ComposerJsonFactHandler;
-use Maestro2\Core\Extension\CoreExtension;
-use Maestro2\Core\Filesystem\Filesystem;
+use Maestro\Composer\Task\ComposerJsonFactHandler;
+use Maestro\Core\Extension\CoreExtension;
+use Maestro\Core\Filesystem\Filesystem;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;

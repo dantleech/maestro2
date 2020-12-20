@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Composer\Task;
+namespace Maestro\Composer\Task;
 
-use Maestro2\Core\Task\Task;
+use Maestro\Core\Task\Task;
 use Stringable;
 
 class ComposerJsonFactTask implements Task, Stringable

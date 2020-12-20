@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Task\ReplaceLineTask;
+use Maestro\Core\Task\ReplaceLineTask;
 
 class ReplaceLineHandlerTest extends HandlerTestCase
 {

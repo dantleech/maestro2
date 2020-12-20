@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Composer\Fact;
+namespace Maestro\Composer\Fact;
 
-use Maestro2\Core\Fact\Fact;
+use Maestro\Core\Fact\Fact;
 
 class ComposerJsonFact implements Fact
 {

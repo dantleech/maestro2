@@ -1,14 +1,14 @@
 <?php
 
-namespace Maestro2\Core\Report;
+namespace Maestro\Core\Report;
 
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Task;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Task;
 use RuntimeException;
 use Stringable;
 use Throwable;
-use Maestro2\Core\Report\Table;
+use Maestro\Core\Report\Table;
 
 class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublisher, ReportTablePublisher
 {

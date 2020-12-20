@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Core\Report\Publisher;
+namespace Maestro\Core\Report\Publisher;
 
-use Maestro2\Core\Report\Report;
-use Maestro2\Core\Report\ReportPublisher;
+use Maestro\Core\Report\Report;
+use Maestro\Core\Report\ReportPublisher;
 
 class NullPublisher implements ReportPublisher
 {

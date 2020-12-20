@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Task\TemplateTask;
+use Maestro\Core\Task\TemplateTask;
 use SplFileInfo;
 
 class TemplateHandlerTest extends HandlerTestCase

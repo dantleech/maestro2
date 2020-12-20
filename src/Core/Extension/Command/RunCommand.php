@@ -1,12 +1,12 @@
 <?php
 
-namespace Maestro2\Core\Extension\Command;
+namespace Maestro\Core\Extension\Command;
 
 use Amp\Loop;
-use Maestro2\Core\Report\Report;
-use Maestro2\Core\Report\ReportProvider;
-use Maestro2\Core\Report\Table;
-use Maestro2\Maestro;
+use Maestro\Core\Report\Report;
+use Maestro\Core\Report\ReportProvider;
+use Maestro\Core\Report\Table;
+use Maestro\Maestro;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table as SymfonyTable;
 use Symfony\Component\Console\Input\InputArgument;

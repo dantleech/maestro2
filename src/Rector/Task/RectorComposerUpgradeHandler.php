@@ -1,22 +1,22 @@
 <?php
 
-namespace Maestro2\Rector\Task;
+namespace Maestro\Rector\Task;
 
 use Amp\Promise;
-use Maestro2\Composer\Fact\ComposerJsonFact;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\PhpFact;
-use Maestro2\Core\Queue\Enqueuer;
-use Maestro2\Core\Task\ComposerTask;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\GitCommitTask;
-use Maestro2\Core\Task\Handler;
-use Maestro2\Core\Task\ProcessTask;
-use Maestro2\Core\Task\SequentialTask;
-use Maestro2\Core\Task\Task;
-use Maestro2\Core\Task\TaskContext;
-use Maestro2\Core\Task\TemplateTask;
-use Maestro2\Rector\Fact\RectorInstallFact;
+use Maestro\Composer\Fact\ComposerJsonFact;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\PhpFact;
+use Maestro\Core\Queue\Enqueuer;
+use Maestro\Core\Task\ComposerTask;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\GitCommitTask;
+use Maestro\Core\Task\Handler;
+use Maestro\Core\Task\ProcessTask;
+use Maestro\Core\Task\SequentialTask;
+use Maestro\Core\Task\Task;
+use Maestro\Core\Task\TaskContext;
+use Maestro\Core\Task\TemplateTask;
+use Maestro\Rector\Fact\RectorInstallFact;
 use function Amp\call;
 
 class RectorComposerUpgradeHandler implements Handler
@@ -70,7 +70,7 @@ class RectorComposerUpgradeHandler implements Handler
                         ),
                         new GitCommitTask(
                             paths: $autoloadPaths,
-                            message: 'Automated Rector upgrade by Maestro2',
+                            message: 'Automated Rector upgrade by Maestro',
                         ),
                     ]),
                     $context

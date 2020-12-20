@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Core\Pipeline;
+namespace Maestro\Core\Pipeline;
 
-use Maestro2\Core\Inventory\MainNode;
-use Maestro2\Core\Task\NullTask;
-use Maestro2\Core\Task\Task;
+use Maestro\Core\Inventory\MainNode;
+use Maestro\Core\Task\NullTask;
+use Maestro\Core\Task\Task;
 
 class NullPipeline implements Pipeline
 {

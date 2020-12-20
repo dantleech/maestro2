@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Vcs;
+namespace Maestro\Core\Vcs;
 
 class TestRepositoryFactory implements RepositoryFactory
 {

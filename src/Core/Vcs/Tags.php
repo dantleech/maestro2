@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Vcs;
+namespace Maestro\Core\Vcs;
 
 use ArrayIterator;
 use Countable;

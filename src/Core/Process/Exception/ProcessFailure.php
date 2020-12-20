@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Core\Process\Exception;
+namespace Maestro\Core\Process\Exception;
 
-use Maestro2\Core\Exception\RuntimeException;
-use Maestro2\Core\Process\ProcessResult;
+use Maestro\Core\Exception\RuntimeException;
+use Maestro\Core\Process\ProcessResult;
 
 class ProcessFailure extends RuntimeException
 {

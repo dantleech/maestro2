@@ -1,13 +1,13 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Core\Task;
 
 use Amp\Failure;
 use Amp\Promise;
 use Amp\Success;
-use Maestro2\Core\Task\ClosureTask;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\ParallelTask;
+use Maestro\Core\Task\ClosureTask;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\ParallelTask;
 use RuntimeException;
 
 class ParallelHandlerTest extends HandlerTestCase

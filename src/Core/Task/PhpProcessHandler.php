@@ -1,11 +1,11 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Fact\PhpFact;
-use Maestro2\Core\Queue\Enqueuer;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Fact\PhpFact;
+use Maestro\Core\Queue\Enqueuer;
 use function Amp\call;
 
 class PhpProcessHandler implements Handler

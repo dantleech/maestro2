@@ -1,12 +1,12 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Core\Inventory;
+namespace Maestro\Tests\Unit\Core\Inventory;
 
 use Closure;
 use Generator;
-use Maestro2\Core\Inventory\InventoryLoader;
-use Maestro2\Core\Inventory\MainNode;
-use Maestro2\Tests\IntegrationTestCase;
+use Maestro\Core\Inventory\InventoryLoader;
+use Maestro\Core\Inventory\MainNode;
+use Maestro\Tests\IntegrationTestCase;
 
 class InventoryLoaderTest extends IntegrationTestCase
 {

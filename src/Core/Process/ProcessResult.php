@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Process;
+namespace Maestro\Core\Process;
 
 use function Clue\Arguments\split;
 

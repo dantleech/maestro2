@@ -1,13 +1,13 @@
 <?php
 
-namespace Maestro2\Core\Process;
+namespace Maestro\Core\Process;
 
 use Amp\ByteStream\LineReader;
 use Amp\Deferred;
 use Amp\Process\Process;
 use Amp\Process\ProcessInputStream;
 use Amp\Promise;
-use Maestro2\Core\Process\Exception\ProcessFailure;
+use Maestro\Core\Process\Exception\ProcessFailure;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
 use function Amp\asyncCall;

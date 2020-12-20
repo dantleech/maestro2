@@ -1,11 +1,11 @@
 <?php
 
-namespace Maestro2\Tests\Unit\Git;
+namespace Maestro\Tests\Unit\Git;
 
-use Maestro2\Core\Process\AmpProcessRunner;
-use Maestro2\Core\Vcs\Tags;
-use Maestro2\Git\GitRepository;
-use Maestro2\Tests\IntegrationTestCase;
+use Maestro\Core\Process\AmpProcessRunner;
+use Maestro\Core\Vcs\Tags;
+use Maestro\Git\GitRepository;
+use Maestro\Tests\IntegrationTestCase;
 use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\Process\Process;

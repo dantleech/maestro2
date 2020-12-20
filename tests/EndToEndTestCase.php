@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Tests;
+namespace Maestro\Tests;
 
 class EndToEndTestCase extends IntegrationTestCase
 {

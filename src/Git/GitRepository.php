@@ -1,17 +1,17 @@
 <?php
 
-namespace Maestro2\Git;
+namespace Maestro\Git;
 
 use Amp\Promise;
 use Amp\Success;
 use Generator;
-use Maestro2\Core\Process\ProcessResult;
-use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Vcs\Exception\CheckoutError;
-use Maestro2\Core\Vcs\Repository;
-use Maestro2\Core\Vcs\Tag;
-use Maestro2\Core\Vcs\Tags;
-use Maestro2\Git\Exception\GitException;
+use Maestro\Core\Process\ProcessResult;
+use Maestro\Core\Process\ProcessRunner;
+use Maestro\Core\Vcs\Exception\CheckoutError;
+use Maestro\Core\Vcs\Repository;
+use Maestro\Core\Vcs\Tag;
+use Maestro\Core\Vcs\Tags;
+use Maestro\Git\Exception\GitException;
 use Psr\Log\LoggerInterface;
 use function Amp\call;
 

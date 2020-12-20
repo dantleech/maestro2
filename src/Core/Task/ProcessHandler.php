@@ -1,19 +1,19 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Closure;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Process\Exception\ProcessFailure;
-use Maestro2\Core\Process\ProcessResult;
-use Maestro2\Core\Process\ProcessRunner;
-use Maestro2\Core\Report\Publisher\NullPublisher;
-use Maestro2\Core\Report\Report;
-use Maestro2\Core\Report\ReportPublisher;
-use Maestro2\Core\Task\Exception\TaskError;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\GroupFact;
+use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Process\Exception\ProcessFailure;
+use Maestro\Core\Process\ProcessResult;
+use Maestro\Core\Process\ProcessRunner;
+use Maestro\Core\Report\Publisher\NullPublisher;
+use Maestro\Core\Report\Report;
+use Maestro\Core\Report\ReportPublisher;
+use Maestro\Core\Task\Exception\TaskError;
 use function Amp\call;
 
 class ProcessHandler implements Handler

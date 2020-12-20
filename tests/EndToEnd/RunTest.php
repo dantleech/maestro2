@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Tests\EndToEnd;
+namespace Maestro\Tests\EndToEnd;
 
-use Maestro2\Tests\IntegrationTestCase;
+use Maestro\Tests\IntegrationTestCase;
 use Symfony\Component\Process\Process;
 
 class RunTest extends IntegrationTestCase

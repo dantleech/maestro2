@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Inventory;
+namespace Maestro\Core\Inventory;
 
 class RepositoryNode
 {

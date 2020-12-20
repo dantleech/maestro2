@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Report;
+namespace Maestro\Core\Report;
 
 interface ReportTablePublisher
 {

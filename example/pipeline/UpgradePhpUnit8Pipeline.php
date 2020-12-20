@@ -1,21 +1,21 @@
 <?php
 
-namespace Maestro2\Examples\Pipeline;
+namespace Maestro\Examples\Pipeline;
 
-use Maestro2\Composer\Task\ComposerJsonFactHandler;
-use Maestro2\Composer\Task\ComposerJsonFactTask;
-use Maestro2\Core\Inventory\MainNode;
-use Maestro2\Core\Inventory\RepositoryNode;
-use Maestro2\Core\Pipeline\Pipeline;
-use Maestro2\Core\Task\ComposerTask;
-use Maestro2\Core\Task\FileTask;
-use Maestro2\Core\Task\GitCommitTask;
-use Maestro2\Core\Task\NullTask;
-use Maestro2\Core\Task\ProcessTask;
-use Maestro2\Core\Task\SequentialTask;
-use Maestro2\Core\Task\Task;
-use Maestro2\Core\Task\YamlTask;
-use Maestro2\Rector\Task\RectorComposerUpgradeTask;
+use Maestro\Composer\Task\ComposerJsonFactHandler;
+use Maestro\Composer\Task\ComposerJsonFactTask;
+use Maestro\Core\Inventory\MainNode;
+use Maestro\Core\Inventory\RepositoryNode;
+use Maestro\Core\Pipeline\Pipeline;
+use Maestro\Core\Task\ComposerTask;
+use Maestro\Core\Task\FileTask;
+use Maestro\Core\Task\GitCommitTask;
+use Maestro\Core\Task\NullTask;
+use Maestro\Core\Task\ProcessTask;
+use Maestro\Core\Task\SequentialTask;
+use Maestro\Core\Task\Task;
+use Maestro\Core\Task\YamlTask;
+use Maestro\Rector\Task\RectorComposerUpgradeTask;
 
 class UpgradePhpUnit8Pipeline extends BasePipeline
 {

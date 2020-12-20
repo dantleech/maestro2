@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Extension\Logger;
+namespace Maestro\Core\Extension\Logger;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;

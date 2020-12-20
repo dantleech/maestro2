@@ -1,12 +1,12 @@
 <?php
 
-namespace Maestro2\Core\Report;
+namespace Maestro\Core\Report;
 
 use ArrayIterator;
 use Iterator;
 use IteratorAggregate;
 use Countable;
-use Maestro2\Core\Exception\RuntimeException;
+use Maestro\Core\Exception\RuntimeException;
 
 /**
  * @implements IteratorAggregate<Report>

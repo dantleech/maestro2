@@ -1,17 +1,17 @@
 <?php
 
-namespace Maestro2\Rector\Task;
+namespace Maestro\Rector\Task;
 
 use Amp\Promise;
-use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Queue\Enqueuer;
-use Maestro2\Core\Task\ComposerTask;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Exception\TaskError;
-use Maestro2\Core\Task\Handler;
-use Maestro2\Core\Task\Task;
-use Maestro2\Core\Task\TaskContext;
-use Maestro2\Rector\Fact\RectorInstallFact;
+use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Queue\Enqueuer;
+use Maestro\Core\Task\ComposerTask;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Exception\TaskError;
+use Maestro\Core\Task\Handler;
+use Maestro\Core\Task\Task;
+use Maestro\Core\Task\TaskContext;
+use Maestro\Rector\Fact\RectorInstallFact;
 use function Amp\call;
 
 class RectorInstallHandler implements Handler

@@ -1,11 +1,11 @@
 <?php
 
-namespace Maestro2\Core\Queue;
+namespace Maestro\Core\Queue;
 
 use Amp\Promise;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\HandlerFactory;
-use Maestro2\Core\Task\TaskContext;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\HandlerFactory;
+use Maestro\Core\Task\TaskContext;
 use Psr\Container\ContainerInterface;
 use Throwable;
 use Webmozart\Assert\Assert;

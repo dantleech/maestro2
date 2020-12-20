@@ -1,10 +1,10 @@
 <?php
 
-namespace Maestro2\Core\Queue;
+namespace Maestro\Core\Queue;
 
 use Amp\Promise;
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\TaskContext;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\TaskContext;
 
 interface Enqueuer
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Core\Report;
+namespace Maestro\Core\Report;
 
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Task;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Task;
 use Throwable;
 
 interface TaskReportPublisher

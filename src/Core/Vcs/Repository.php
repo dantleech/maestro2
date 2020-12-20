@@ -1,9 +1,9 @@
 <?php
 
-namespace Maestro2\Core\Vcs;
+namespace Maestro\Core\Vcs;
 
 use Amp\Promise;
-use Maestro2\Core\Vcs\Exception\CheckoutError;
+use Maestro\Core\Vcs\Exception\CheckoutError;
 
 interface Repository
 {

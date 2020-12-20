@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Inventory\Exception;
+namespace Maestro\Core\Inventory\Exception;
 
 use Exception;
 use RuntimeException;

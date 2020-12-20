@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
 class ParallelTask implements Task
 {

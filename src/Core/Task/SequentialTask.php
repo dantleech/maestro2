@@ -1,8 +1,8 @@
 <?php
 
-namespace Maestro2\Core\Task;
+namespace Maestro\Core\Task;
 
-use Maestro2\Core\Fact\Fact;
+use Maestro\Core\Fact\Fact;
 
 class SequentialTask implements Task
 {
