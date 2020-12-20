@@ -21,7 +21,7 @@ class Maestro
     public function __construct(
         private InventoryLoader $loader,
         private Worker $worker,
-        private Enqueuer $enqueuer
+        private Enqueuer $enqueuer,
     ) {
     }
 
@@ -30,8 +30,13 @@ class Maestro
         ?array $repos = []
     ): void {
         $pipeline = $this->resolvePipeline($pipeline);
+
+        Loop::repeat(1000, function () {
+            $this->worker->updateStatus();
+        });
+
         Loop::run(function () use ($pipeline, $repos) {
-            return call(function (MainNode $inventory) use ($pipeline, $repos) {
+            yield call(function (MainNode $inventory) use ($pipeline, $repos) {
                 $context = $this->enqueuer->enqueue(
                     TaskContext::create(
                         $pipeline->build(
@@ -43,6 +48,7 @@ class Maestro
                 yield $this->worker->start();
                 yield $context;
             }, $this->loader->load());
+            Loop::stop();
         });
     }
 

@@ -26,29 +26,27 @@ class Worker
         private HandlerFactory $handlerFactory
     ) {
     }
+    
+    public function updateStatus(): void
+    {
+        $this->logger->debug(sprintf(
+            'Running %s tasks: "%s", memory %sb',
+            count($this->running),
+            implode('", "', array_map(function (TaskContext $task) {
+                return TaskUtil::describeShortName($task->task());
+            }, array_filter(
+                $this->running,
+                fn (TaskContext $task) => $task->task() instanceof Stringable
+            ))),
+            number_format(memory_get_usage(true))
+        ));
+    }
 
     public function start(): Promise
     {
         return call(function () {
             $promises = [];
             $id = 0;
-
-            asyncCall(function () {
-                while ($this->isRunning) {
-                    $this->logger->debug(sprintf(
-                        'Running %s tasks: "%s", memory %sb',
-                        count($this->running),
-                        implode('", "', array_map(function (TaskContext $task) {
-                            return TaskUtil::describeShortName($task->task());
-                        }, array_filter(
-                            $this->running,
-                            fn (TaskContext $task) => $task->task() instanceof Stringable
-                        ))),
-                        number_format(memory_get_usage(true))
-                    ));
-                    yield delay(1000);
-                }
-            });
 
             while (true) {
                 $task = $this->dequeuer->dequeue();
