@@ -13,7 +13,6 @@ use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportPublisher;
 use Maestro2\Core\Util\PermissionUtil;
 use Twig\Environment;
-use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 use Webmozart\PathUtil\Path;
@@ -25,27 +24,9 @@ class TemplateHandler implements Handler
     public function __construct(
         private Filesystem $filesystem,
         private Environment $twig,
-        private ArrayLoader $arrayLoader,
         ?ReportPublisher $publisher = null
     ) {
         $this->publisher = $publisher ?: new NullPublisher();
-    }
-
-    public static function createForBasePath(string $basePath): self
-    {
-        return (static function (string $basePath, ArrayLoader $arrayLoader) {
-            return new self(
-                new Filesystem($basePath),
-                new Environment(
-                    new ChainLoader([
-                        $arrayLoader,
-                        new FilesystemLoader($basePath),
-                    ]),
-                    ['strict_variables' => true ]
-                ),
-                $arrayLoader
-            );
-        })($basePath, new ArrayLoader());
     }
 
     public function taskFqn(): string
@@ -68,10 +49,6 @@ class TemplateHandler implements Handler
 
                 $filesystem->createDirectory($dir, 0744);
             })(dirname($task->target()), $task->mode());
-
-            if (Path::isAbsolute($task->template())) {
-                $this->arrayLoader->setTemplate($task->template(), file_get_contents($task->template()));
-            }
 
             $filesystem->putContents(
                 $task->target(),

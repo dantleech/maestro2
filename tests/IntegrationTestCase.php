@@ -2,6 +2,7 @@
 
 namespace Maestro2\Tests;
 
+use Maestro2\Composer\Extension\ComposerExtension;
 use Maestro2\Core\Extension\CoreExtension;
 use Maestro2\Core\Extension\TestExtension;
 use PHPUnit\Framework\TestCase;
@@ -21,7 +22,11 @@ class IntegrationTestCase extends TestCase
         return PhpactorContainer::fromExtensions([
             CoreExtension::class,
             TestExtension::class,
+            ComposerExtension::class,
         ], array_merge([
+            CoreExtension::PARAM_TEMPLATE_PATH => $this->workspace()->path('templates'),
+            CoreExtension::PARAM_WORKSPACE_PATH => $this->workspace()->path('workspace'),
+            CoreExtension::PARAM_WORKING_DIRECTORY => $this->workspace()->path(),
         ], $config));
     }
 

@@ -38,6 +38,14 @@ class Reports implements IteratorAggregate, Countable
         ));
     }
 
+    public function matchingTitle(string $pattern): self
+    {
+        return new self(array_filter(
+            $this->reports,
+            fn (Report $report) => preg_match('{' . $pattern . '}', $report->title())
+        ));
+    }
+
     public function warns(): self
     {
         return new self(array_filter(

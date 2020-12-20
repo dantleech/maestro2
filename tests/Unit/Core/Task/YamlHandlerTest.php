@@ -2,30 +2,14 @@
 
 namespace Maestro2\Tests\Unit\Core\Task;
 
-use Maestro2\Core\Task\Context;
-use Maestro2\Core\Task\Handler;
-use Maestro2\Core\Task\YamlHandler;
 use Maestro2\Core\Task\YamlTask;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlHandlerTest extends HandlerTestCase
 {
-    protected function defaultContext(): Context
-    {
-        return Context::create([], [
-        ]);
-    }
-
-    protected function createHandler(): Handler
-    {
-        return new YamlHandler(
-            $this->filesystem(),
-        );
-    }
-
     public function testMergesArrayIntoYaml(): void
     {
-        $this->workspace()->put('yaml.yml', Yaml::dump([
+        $this->filesystem()->putContents('yaml.yml', Yaml::dump([
             'foobar' => 'barfoo',
             'barfoo' => 'foobar',
         ]));
@@ -40,12 +24,12 @@ class YamlHandlerTest extends HandlerTestCase
             'foobar' => 'barfoo',
             'barfoo' => 'foobar',
             'barbar' => 'booboo',
-        ], Yaml::parse($this->workspace()->getContents('yaml.yml'), true));
+        ], Yaml::parse($this->filesystem()->getContents('yaml.yml'), true));
     }
 
     public function testFilterByClosure(): void
     {
-        $this->workspace()->put('yaml.yml', Yaml::dump([
+        $this->filesystem()->putContents('yaml.yml', Yaml::dump([
             'foobar' => 'barfoo',
         ]));
         $this->runTask(new YamlTask(
@@ -61,7 +45,7 @@ class YamlHandlerTest extends HandlerTestCase
 
         self::assertEquals([
             'barbar' => 'booboo',
-        ], Yaml::parse($this->workspace()->getContents('yaml.yml'), true));
+        ], Yaml::parse($this->filesystem()->getContents('yaml.yml'), true));
     }
 
     public function testFilterReturnsNonObject(): void
@@ -73,7 +57,7 @@ class YamlHandlerTest extends HandlerTestCase
             }
         ));
 
-        self::assertNull(Yaml::parse($this->workspace()->getContents('yaml.yml'), true));
+        self::assertNull(Yaml::parse($this->filesystem()->getContents('yaml.yml'), true));
     }
 
     public function testCreatesIfNotExists(): void
@@ -83,6 +67,6 @@ class YamlHandlerTest extends HandlerTestCase
             data: [],
         ));
 
-        self::assertEquals('{  }', $this->workspace()->getContents('yaml.yml'));
+        self::assertEquals('{  }', $this->filesystem()->getContents('yaml.yml'));
     }
 }

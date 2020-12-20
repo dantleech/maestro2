@@ -7,12 +7,12 @@ use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Extension\Command\RunCommand;
 use Maestro2\Core\Extension\Logger\ConsoleLogger;
 use Maestro2\Core\Filesystem\Filesystem;
-use Maestro2\Core\Process\AmpProcessRunner;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
 use Maestro2\Core\Queue\Worker;
 use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CatHandler;
+use Maestro2\Core\Task\ClosureHandler;
 use Maestro2\Core\Task\GitSurveyHandler;
 use Maestro2\Core\Task\PhpProcessHandler;
 use Maestro2\Core\Task\ComposerHandler;
@@ -33,7 +33,6 @@ use Maestro2\Core\Task\SequentialHandler;
 use Maestro2\Core\Task\TemplateHandler;
 use Maestro2\Core\Task\YamlHandler;
 use Maestro2\Core\Vcs\RepositoryFactory;
-use Maestro2\Git\GitRepositoryFactory;
 use Maestro2\Maestro;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
@@ -119,13 +118,12 @@ class CoreExtension implements Extension
                 new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FileHandler($container->get(Filesystem::class), $container->get(LoggerInterface::class)),
                 new GitRepositoryHandler($container->get(Queue::class)),
-                new ProcessHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class)),
+                new ProcessHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new PhpProcessHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
                 new TemplateHandler(
                     $container->get(Filesystem::class),
                     $container->get(Environment::class),
-                    $container->get(ArrayLoader::class),
                     $container->get(ReportManager::class)
                 ),
                 new JsonMergeHandler($container->get(Filesystem::class), ),
@@ -140,6 +138,7 @@ class CoreExtension implements Extension
                 new FactHandler(),
                 new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new CatHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
+                new ClosureHandler(),
                 new GitSurveyHandler($container->get(Filesystem::class), $container->get(RepositoryFactory::class), $container->get(ReportManager::class)),
             ], (static function (array $taggedServices) use ($container) {
                 return array_map(static function ($serviceId) use ($container): Handler {
@@ -154,13 +153,6 @@ class CoreExtension implements Extension
                     return $handler;
                 }, array_keys($taggedServices));
             })($container->getServiceIdsForTag(self::TAG_TASK_HANDLER))));
-        });
-
-        $container->register(ProcessRunner::class, function (Container $container) {
-            return new AmpProcessRunner(
-                $container->get(LoggerInterface::class),
-                $container->getParameter(self::PARAM_CONCURRENCY)
-            );
         });
 
         $container->register(LoggerInterface::class, function (Container $container) {
@@ -199,13 +191,6 @@ class CoreExtension implements Extension
         $container->register(Filesystem::class, function (Container $container) {
             return new Filesystem(
                 $this->resolvePath($container, self::PARAM_WORKSPACE_PATH)
-            );
-        });
-
-        $container->register(RepositoryFactory::class, function (Container $container) {
-            return new GitRepositoryFactory(
-                $container->get(ProcessRunner::class),
-                $container->get(LoggerInterface::class)
             );
         });
     }

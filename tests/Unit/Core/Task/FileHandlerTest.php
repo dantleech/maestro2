@@ -5,28 +5,18 @@ namespace Maestro2\Tests\Unit\Core\Task;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Exception\TaskError;
-use Maestro2\Core\Task\FileHandler;
 use Maestro2\Core\Task\FileTask;
-use Maestro2\Core\Task\Handler;
-use Psr\Log\NullLogger;
 use SplFileInfo;
 
 class FileHandlerTest extends HandlerTestCase
 {
-    protected function defaultContext(): Context
-    {
-        return Context::create([], [
-            new CwdFact('/')
-        ]);
-    }
-
     public function testCreatesDirectory(): void
     {
         $this->runTask(new FileTask(
             path: 'foobar/directory',
             type: 'directory',
         ));
-        self::assertFileExists($this->workspace()->path('foobar/directory'));
+        self::assertFileExists($this->filesystem()->localPath('foobar/directory'));
     }
 
     public function testCreatesDirectoryInCwd(): void
@@ -37,37 +27,37 @@ class FileHandlerTest extends HandlerTestCase
         ), Context::create([], [
             new CwdFact('foobar')
         ]));
-        self::assertFileExists($this->workspace()->path('barfoo/directory'));
+        self::assertFileExists($this->filesystem()->localPath('barfoo/directory'));
     }
 
     public function testIgnoresExistingDirectory(): void
     {
-        $this->workspace()->mkdir('foobar/directory');
+        $this->filesystem()->createDirectory('foobar/directory');
         $this->runTask(new FileTask(
             path: 'foobar/directory',
             type: 'directory',
         ));
-        self::assertFileExists($this->workspace()->path('foobar/directory'));
+        self::assertFileExists($this->filesystem()->localPath('foobar/directory'));
     }
 
     public function testRemovesDirectoryIfExistingIsFalse(): void
     {
-        $this->workspace()->mkdir('foobar/directory');
-        self::assertFileExists($this->workspace()->path('foobar/directory'));
+        $this->filesystem()->createDirectory('foobar/directory');
+        self::assertFileExists($this->filesystem()->localPath('foobar/directory'));
         $this->runTask(new FileTask(
             path: 'foobar/directory',
             type: 'directory',
             exists: false
         ));
-        self::assertFileDoesNotExist($this->workspace()->path('foobar/directory'));
+        self::assertFileDoesNotExist($this->filesystem()->localPath('foobar/directory'));
     }
 
     public function testExceptionWhenFirectoryIsAFile(): void
     {
         $this->expectException(TaskError::class);
         $this->expectExceptionMessage('to be a directory');
-        $this->workspace()->put('foobar/directory', 'file!');
-        self::assertFileExists($this->workspace()->path('foobar/directory'));
+        $this->filesystem()->putContents('foobar/directory', 'file!');
+        self::assertFileExists($this->filesystem()->localPath('foobar/directory'));
         $this->runTask(new FileTask(
             path: 'foobar/directory',
             type: 'directory',
@@ -82,7 +72,7 @@ class FileHandlerTest extends HandlerTestCase
             type: 'file',
         ));
 
-        self::assertFileExists($this->workspace()->path('file'));
+        self::assertFileExists($this->filesystem()->localPath('file'));
     }
 
     public function testCreatesFileWithContent(): void
@@ -93,8 +83,8 @@ class FileHandlerTest extends HandlerTestCase
             content: 'Hello World',
         ));
 
-        self::assertFileExists($this->workspace()->path('file'));
-        self::assertEquals('Hello World', $this->workspace()->getContents('file'));
+        self::assertFileExists($this->filesystem()->localPath('file'));
+        self::assertEquals('Hello World', $this->filesystem()->getContents('file'));
     }
 
     public function testExceptionIfContentProvidedAndTypeIsDirectory(): void
@@ -115,7 +105,7 @@ class FileHandlerTest extends HandlerTestCase
             type: 'file',
         ));
 
-        self::assertFileExists($this->workspace()->path('barfoo/foobar/file'));
+        self::assertFileExists($this->filesystem()->localPath('barfoo/foobar/file'));
     }
 
     public function testCreatesFileWithPermission(): void
@@ -125,15 +115,7 @@ class FileHandlerTest extends HandlerTestCase
             type: 'file',
             mode: 0777
         ));
-        $info = new SplFileInfo($this->workspace()->path('README.md'));
-        self::assertEquals('0777', substr(sprintf('%o', fileperms($this->workspace()->path('README.md'))), -4));
-    }
-
-    protected function createHandler(): Handler
-    {
-        return new FileHandler(
-            $this->filesystem(),
-            new NullLogger()
-        );
+        $info = new SplFileInfo($this->filesystem()->localPath('README.md'));
+        self::assertEquals('0777', substr(sprintf('%o', fileperms($this->filesystem()->localPath('README.md'))), -4));
     }
 }

@@ -5,46 +5,15 @@ namespace Maestro2\Tests\Unit\Core\Task;
 use Amp\Promise;
 use Amp\Success;
 use Maestro2\Core\Fact\CwdFact;
-use Maestro2\Core\Fact\GroupFact;
-use Maestro2\Core\Queue\TestEnqueuer;
-use Maestro2\Core\Report\ReportManager;
-use Maestro2\Core\Task\ClosureHandler;
 use Maestro2\Core\Task\ClosureTask;
 use Maestro2\Core\Task\Context;
 use Maestro2\Core\Task\Exception\SequentialTaskError;
 use Maestro2\Core\Task\Exception\TaskError;
-use Maestro2\Core\Task\Handler;
-use Maestro2\Core\Task\HandlerFactory;
 use Maestro2\Core\Task\SequentialTask;
-use Maestro2\Core\Task\SequentialHandler;
 use RuntimeException;
 
 class SequentialHandlerTest extends HandlerTestCase
 {
-    const GROUP = 'foo';
-
-    private ReportManager $reportManager;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->reportManager = new ReportManager();
-    }
-
-    protected function defaultContext(): Context
-    {
-        return Context::fromFacts(new GroupFact(self::GROUP));
-    }
-
-    protected function createHandler(): Handler
-    {
-        return new SequentialHandler(new TestEnqueuer(
-            new HandlerFactory([
-                new ClosureHandler()
-            ]),
-        ), $this->reportManager);
-    }
-
     public function testRunsTasksSequentially(): void
     {
         self::assertEquals(3, $this->runTask(new SequentialTask([
@@ -84,7 +53,7 @@ class SequentialHandlerTest extends HandlerTestCase
         self::assertNotNull($error, 'Exception was thrown');
         self::assertInstanceOf(SequentialTaskError::class, $error, 'Correct error type thrown');
 
-        self::assertCount(1, $this->reportManager->group(self::GROUP)->reports()->fails(), 'Published failure report');
+        self::assertCount(1, $this->reportManager()->group(self::EX_GROUP)->reports()->fails(), 'Published failure report');
     }
 
     public function testDoesNotPublishReportForSequentialTaskErrors(): void
@@ -100,7 +69,7 @@ class SequentialHandlerTest extends HandlerTestCase
 
         self::assertInstanceOf(SequentialTaskError::class, $error, 'Correct error type thrown');
 
-        self::assertCount(0, $this->reportManager->groups()->reports()->fails(), 'Did not publish failure report');
+        self::assertCount(0, $this->reportManager()->groups()->reports()->fails(), 'Did not publish failure report');
     }
 
     public function testAssimilatesFactsAndContinues(): void

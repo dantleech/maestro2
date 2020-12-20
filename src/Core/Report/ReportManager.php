@@ -46,6 +46,11 @@ class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublis
         return new ReportGroup($name, $this->reports[$name]);
     }
 
+    public function reports(): Reports
+    {
+        return $this->groups()->reports();
+    }
+
     /**
      * {@inheritDoc}
      */
