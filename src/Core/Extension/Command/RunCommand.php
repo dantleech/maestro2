@@ -3,7 +3,6 @@
 namespace Maestro2\Core\Extension\Command;
 
 use Amp\Loop;
-use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Report\Report;
 use Maestro2\Core\Report\ReportProvider;
 use Maestro2\Core\Report\Table;
@@ -146,7 +145,8 @@ class RunCommand extends Command
     private function suggestPipelineCreation(OutputInterface $output): void
     {
         $pipeline = file_get_contents(__DIR__ . '/../../../../example/pipeline/EmptyPipeline.php');
-        $output->writeln(<<<EOT
+        $output->writeln(
+            <<<EOT
 You must specify the path to a pipeline file, for example:
 
 # pipeline/MyPipeline.php

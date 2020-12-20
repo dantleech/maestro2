@@ -3,7 +3,6 @@
 namespace Maestro2;
 
 use Amp\Loop;
-use Amp\Promise;
 use Maestro2\Core\Inventory\InventoryLoader;
 use Maestro2\Core\Inventory\MainNode;
 use Maestro2\Core\Exception\RuntimeException;
