@@ -73,6 +73,9 @@ jobs:
                 uses: "ramsey/composer-install@v1"
                 with:
                     composer-options: "--no-scripts"
+            -
+                name: "Run Maestro"
+                run: "bin/maestro run example/pipeline/BasePipeline.php"
 
             -
                 name: "Run PHPUnit"
