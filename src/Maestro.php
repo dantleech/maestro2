@@ -36,8 +36,8 @@ class Maestro
         });
 
         Loop::run(function () use ($pipeline, $repos, $pollId) {
-            yield call(function (MainNode $inventory) use ($pipeline, $repos) {
-                $context = $this->enqueuer->enqueue(
+            yield call(function (MainNode $inventory) use ($pipeline, $repos, $pollId) {
+                $this->enqueuer->enqueue(
                     TaskContext::create(
                         $pipeline->build(
                             $repos ? $inventory->withSelectedRepos($repos) : $inventory
@@ -46,9 +46,8 @@ class Maestro
                     )
                 );
                 yield $this->worker->start();
-                yield $context;
+                Loop::cancel($pollId);
             }, $this->loader->load());
-            Loop::cancel($pollId);
         });
     }
 
