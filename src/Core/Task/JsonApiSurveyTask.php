@@ -3,8 +3,9 @@
 namespace Maestro2\Core\Task;
 
 use Closure;
+use Stringable;
 
-class JsonApiSurveyTask implements Task
+class JsonApiSurveyTask implements Task, Stringable
 {
     /**
      * @param Closure(array<array-key,mixed>):array<string,mixed> $extract
@@ -36,5 +37,13 @@ class JsonApiSurveyTask implements Task
     public function url(): string
     {
         return $this->url;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        return sprintf('Performing survey on JSON resource at %s', $this->url());
     }
 }
