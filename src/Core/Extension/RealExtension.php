@@ -2,6 +2,9 @@
 
 namespace Maestro2\Core\Extension;
 
+use Amp\Http\Client\HttpClient;
+use Amp\Http\Client\HttpClientBuilder;
+use Maestro2\Core\HttpClient\LoggingHttpClientInterceptor;
 use Maestro2\Core\Process\AmpProcessRunner;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Queue\Queue;
@@ -44,6 +47,12 @@ class RealExtension implements Extension
                 $container->get(ProcessRunner::class),
                 $container->get(LoggerInterface::class)
             );
+        });
+
+        $container->register(HttpClient::class, function (Container $container) {
+            $builder = new HttpClientBuilder();
+            $builder = $builder->intercept(new LoggingHttpClientInterceptor($container->get(LoggerInterface::class)));
+            return $builder->build();
         });
     }
 

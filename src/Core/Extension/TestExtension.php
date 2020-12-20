@@ -2,6 +2,9 @@
 
 namespace Maestro2\Core\Extension;
 
+use Amp\Http\Client\HttpClient;
+use Amp\Http\Client\HttpClientBuilder;
+use Maestro2\Core\HttpClient\TestHttpClientInterceptor;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Queue\Queue;
@@ -38,6 +41,16 @@ class TestExtension implements Extension
 
         $container->register(RepositoryFactory::class, function (Container $container) {
             return new TestRepositoryFactory();
+        });
+
+        $container->register(HttpClient::class, function (Container $container) {
+            $builder = new HttpClientBuilder();
+            $builder = $builder->intercept($container->get(TestHttpClientInterceptor::class));
+            return $builder->build();
+        });
+
+        $container->register(TestHttpClientInterceptor::class, function (Container $container) {
+            return new TestHttpClientInterceptor();
         });
     }
 

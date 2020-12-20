@@ -54,7 +54,7 @@ class GitSurveyHandler implements Handler
             $group,
             [
                 'tag' => $latestTag?->name() ?: '<none>',
-                'then' => sprintf('+ %s', $nbCommitsAhead),
+                '+' => sprintf('+%s', $nbCommitsAhead),
                 'message' => $message,
             ]
         );

@@ -10,7 +10,8 @@
             "php-cs-fixer",
             "phpstan",
             "phpunit"
-        ]
+        ],
+        "defaultBranch": "master"
     },
     "repositories": [
         {
@@ -29,7 +30,10 @@
         },
         {
             "name": "phpactor",
-            "url": "git@github.com:phpactor/phpactor"
+            "url": "git@github.com:phpactor/phpactor",
+            "vars": {
+                "defaultBranch": "develop"
+            }
         },
         {
             "name": "text-document",

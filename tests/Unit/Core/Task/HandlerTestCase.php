@@ -5,6 +5,7 @@ namespace Maestro2\Tests\Unit\Core\Task;
 use Maestro2\Core\Fact\CwdFact;
 use Maestro2\Core\Fact\GroupFact;
 use Maestro2\Core\Filesystem\Filesystem;
+use Maestro2\Core\HttpClient\TestHttpClientInterceptor;
 use Maestro2\Core\Process\ProcessRunner;
 use Maestro2\Core\Process\TestProcessRunner;
 use Maestro2\Core\Report\ReportManager;
@@ -57,5 +58,10 @@ abstract class HandlerTestCase extends IntegrationTestCase
     protected function processRunner(): TestProcessRunner
     {
         return $this->container->get(ProcessRunner::class);
+    }
+
+    protected function httpClient(): TestHttpClientInterceptor
+    {
+        return $this->container->get(TestHttpClientInterceptor::class);
     }
 }

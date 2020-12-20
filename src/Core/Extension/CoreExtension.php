@@ -2,6 +2,7 @@
 
 namespace Maestro2\Core\Extension;
 
+use Amp\Http\Client\HttpClient;
 use Maestro2\Core\Inventory\InventoryLoader;
 use Maestro2\Core\Exception\RuntimeException;
 use Maestro2\Core\Extension\Command\RunCommand;
@@ -14,6 +15,7 @@ use Maestro2\Core\Report\ReportManager;
 use Maestro2\Core\Task\CatHandler;
 use Maestro2\Core\Task\ClosureHandler;
 use Maestro2\Core\Task\GitSurveyHandler;
+use Maestro2\Core\Task\JsonApiSurveyHandler;
 use Maestro2\Core\Task\PhpProcessHandler;
 use Maestro2\Core\Task\ComposerHandler;
 use Maestro2\Core\Task\ConditionalHandler;
@@ -140,6 +142,7 @@ class CoreExtension implements Extension
                 new CatHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
                 new ClosureHandler(),
                 new GitSurveyHandler($container->get(Filesystem::class), $container->get(RepositoryFactory::class), $container->get(ReportManager::class)),
+                new JsonApiSurveyHandler($container->get(HttpClient::class), $container->get(ReportManager::class)),
             ], (static function (array $taggedServices) use ($container) {
                 return array_map(static function ($serviceId) use ($container): Handler {
                     $handler = $container->get($serviceId);
