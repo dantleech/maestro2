@@ -33,10 +33,10 @@ class Maestro
 
 
         Loop::run(function () use ($pipeline, $repos) {
-            $pollId = Loop::repeat(1000, function () {
-                $this->worker->updateStatus();
-            });
-            yield call(function (MainNode $inventory) use ($pipeline, $repos, $pollId) {
+            yield call(function (MainNode $inventory) use ($pipeline, $repos) {
+                $pollId = Loop::repeat(1000, function () {
+                    $this->worker->updateStatus();
+                });
                 $this->enqueuer->enqueue(
                     TaskContext::create(
                         $pipeline->build(
@@ -45,8 +45,14 @@ class Maestro
                         Context::create()
                     )
                 );
-                yield $this->worker->start();
-                Loop::cancel($pollId);
+                try {
+                    yield $this->worker->start();
+                } catch (Throwable $e) {
+                    throw $e;
+                } finally {
+                    Loop::cancel($pollId);
+                }
+
             }, $this->loader->load());
         });
     }
