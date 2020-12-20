@@ -27,8 +27,9 @@ class SurveyPipeline extends BasePipeline
                 headers: [
                     'Accept' => 'application/vnd.github.v3+json',
                     'Authorization' => sprintf('Basic %s', base64_encode(sprintf(
-                        'dantleech:%s',
-                        $repository->vars()->get('secret.githubAuthToken')
+                        '%s:%s',
+                        $repository->vars()->get('secret.githubUsername'),
+                        $repository->vars()->get('secret.githubAuthToken'),
                     )))
                 ],
                 extract: function (array $data) {
@@ -41,9 +42,9 @@ class SurveyPipeline extends BasePipeline
                     }
 
                     return [
-                        'gha #' => $run['run_number'],
-                        'gha sta' => $run['status'],
-                        'gha con' => $run['conclusion'],
+                        'gha.#' => $run['run_number'],
+                        'gha.sta' => $run['status'],
+                        'gha.con' => $run['conclusion'],
                     ];
                 }
             ),
