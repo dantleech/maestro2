@@ -48,7 +48,7 @@ class RunTest extends IntegrationTestCase
 
     private static function assertSuccess(Process $process)
     {
-        self::assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
+        self::assertEquals(0, $process->getExitCode(), $process->getErrorOutput() .' : ' . $process->getOutput());
     }
 
     private static function assertFailure(Process $process, $exitCode = 127)
