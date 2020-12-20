@@ -56,7 +56,8 @@ class CoreExtension implements Extension
     public const PARAM_WORKSPACE_PATH = 'core.workspacePath';
     public const PARAM_INVENTORY = 'core.inventory';
     public const PARAM_WORKING_DIRECTORY = 'core.workingDirectory';
-    const PARAM_CONCURRENCY = 'core.concurrency';
+    public const PARAM_CONCURRENCY = 'core.concurrency';
+    public const PARAM_SECRET_PATH = 'core.secrets';
 
     /**
      * {@inheritDoc}
@@ -64,21 +65,22 @@ class CoreExtension implements Extension
     public function configure(Resolver $schema): void
     {
         $schema->setDefaults([
-            self::PARAM_INVENTORY => 'maestro-inventory.json',
+            self::PARAM_SECRET_PATH => null,
+            self::PARAM_INVENTORY => ['maestro-inventory.json'],
             self::PARAM_TEMPLATE_PATH => 'templates',
             self::PARAM_WORKSPACE_PATH => 'workspace',
             self::PARAM_WORKING_DIRECTORY => getcwd(),
             self::PARAM_CONCURRENCY => 4
         ]);
         $schema->setTypes([
-            self::PARAM_INVENTORY => 'string',
+            self::PARAM_INVENTORY => 'array',
             self::PARAM_TEMPLATE_PATH => 'string',
             self::PARAM_WORKSPACE_PATH => 'string',
             self::PARAM_CONCURRENCY => 'integer',
         ]);
         $schema->setDescriptions([
             self::PARAM_CONCURRENCY => 'Maximimum number of processes to run concurrently',
-            self::PARAM_INVENTORY => 'Path to inventory',
+            self::PARAM_INVENTORY => 'Paths to inventory files, relative to working directory',
             self::PARAM_TEMPLATE_PATH => 'Base path for all templates',
             self::PARAM_WORKSPACE_PATH => 'Path to workspace',
             self::PARAM_WORKING_DIRECTORY => 'Working directory (set internally)',
@@ -107,7 +109,10 @@ class CoreExtension implements Extension
 
         $container->register(InventoryLoader::class, function (Container $container) {
             return new InventoryLoader(
-                $this->resolvePath($container, self::PARAM_INVENTORY)
+                array_map(fn (string $path) => Path::join([
+                    (string)$container->getParameter(self::PARAM_WORKING_DIRECTORY),
+                    $path
+                ]), $container->getParameter(self::PARAM_INVENTORY))
             );
         });
 

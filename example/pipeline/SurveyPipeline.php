@@ -26,7 +26,10 @@ class SurveyPipeline extends BasePipeline
                 ),
                 headers: [
                     'Accept' => 'application/vnd.github.v3+json',
-                    'Authorization' => sprintf('Basic %s', base64_encode('dantleech:bf4bea6a4556b674c929ff04f026aee2bcbe6340')),
+                    'Authorization' => sprintf('Basic %s', base64_encode(sprintf(
+                        'dantleech:%s',
+                        $repository->vars()->get('secret.githubAuthToken')
+                    )))
                 ],
                 extract: function (array $data) {
                     $run = $data['workflow_runs'][0] ?? [];
