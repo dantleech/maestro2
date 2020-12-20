@@ -35,6 +35,7 @@ class ParallelHandlerTest extends HandlerTestCase
                 );
             }),
         ]), $this->defaultContext()));
+        self::assertCount(3, $this->reportManager()->group(self::EX_GROUP)->reports()->oks(), 'Published OK report');
     }
 
     public function testRunsTasksInParallelWhenTasksAreAssociative(): void
@@ -84,5 +85,6 @@ class ParallelHandlerTest extends HandlerTestCase
             'three' => 3,
         ])), $context);
         self::assertCount(1, $this->reportManager()->group(self::EX_GROUP)->reports()->fails(), 'Published failure report');
+        self::assertCount(2, $this->reportManager()->group(self::EX_GROUP)->reports()->oks(), 'Published OK reports');
     }
 }

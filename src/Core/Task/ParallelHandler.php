@@ -39,15 +39,16 @@ class ParallelHandler implements Handler
             $results = yield any($promises);
             assert(is_array($results));
 
+            $tasks = array_values($task->tasks());
             /** @var int $index */
             foreach ($results[0] as $index => $error) {
                 assert($error instanceof Throwable);
-                $this->publisher->taskFail(array_values($task->tasks())[$index], $context, $error);
+                $this->publisher->taskFail($tasks[$index], $context, $error);
             }
 
             /** @var Context $taskContext */
-            foreach ($results[1] as $taskContext) {
-                $this->publisher->taskOk($task, $context);
+            foreach ($results[1] as $index => $taskContext) {
+                $this->publisher->taskOk($tasks[$index], $taskContext);
                 $context = $context->merge($taskContext);
             }
 
