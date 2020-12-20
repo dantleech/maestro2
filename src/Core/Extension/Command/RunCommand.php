@@ -36,24 +36,23 @@ class RunCommand extends Command
     {
         $this->setName(self::NAME);
         $this->setDescription('Run a pipeline');
-        $this->addArgument(self::ARG_PIPELINE, InputArgument::REQUIRED, 'Pipeline name');
+        $this->addArgument(self::ARG_PIPELINE, InputArgument::OPTIONAL, 'Pipeline name');
         $this->addOption(self::OPT_REPO, null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Include this repository');
         $this->addOption(self::OPT_REPORT_LEVEL, null, InputOption::VALUE_REQUIRED, 'Report level (error, warn, info, ok)', Report::LEVEL_OK);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $pipeline = (static function (mixed $pipeline): string {
-            if (!is_string($pipeline)) {
-                throw new RuntimeException(
-                    'Invalid pipeline type'
-                );
-            }
+        $pipeline = $input->getArgument(self::ARG_PIPELINE);
 
-            return $pipeline;
-        })($input->getArgument(self::ARG_PIPELINE));
+        if (null === $pipeline) {
+            $this->suggestPipelineCreation($output);
+            return 1;
+        }
+
         $reportLevel = $input->getOption(self::OPT_REPORT_LEVEL);
         Assert::string($reportLevel, 'Report level must be a string');
+        Assert::string($pipeline, 'Pipeline must be a string');
 
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
@@ -66,12 +65,12 @@ class RunCommand extends Command
             }
         });
         $start = microtime(true);
-        Loop::run(function () use ($input, $pipeline) {
-            yield $this->maestro->run(
-                pipeline: $pipeline,
-                repos: (array)$input->getOption(self::OPT_REPO)
-            );
-        });
+
+        $this->maestro->run(
+            pipeline: $pipeline,
+            repos: (array)$input->getOption(self::OPT_REPO)
+        );
+
         $duration = microtime(true) - $start;
 
         $style = new SymfonyStyle($input, $output);
@@ -142,5 +141,18 @@ class RunCommand extends Command
         }
 
         $consoleTable->render();
+    }
+
+    private function suggestPipelineCreation(OutputInterface $output): void
+    {
+        $pipeline = file_get_contents(__DIR__ . '/../../../../example/pipeline/EmptyPipeline.php');
+        $output->writeln(<<<EOT
+You must specify the path to a pipeline file, for example:
+
+# pipeline/MyPipeline.php
+
+{$pipeline}
+EOT
+        );
     }
 }

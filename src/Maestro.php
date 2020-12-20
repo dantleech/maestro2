@@ -2,6 +2,7 @@
 
 namespace Maestro2;
 
+use Amp\Loop;
 use Amp\Promise;
 use Maestro2\Core\Inventory\InventoryLoader;
 use Maestro2\Core\Inventory\MainNode;
@@ -28,19 +29,22 @@ class Maestro
     public function run(
         string $pipeline,
         ?array $repos = []
-    ): Promise {
-        return call(function (MainNode $inventory) use ($pipeline, $repos) {
-            $context = $this->enqueuer->enqueue(
-                TaskContext::create(
-                    $this->resolvePipeline($pipeline)->build(
-                        $repos ? $inventory->withSelectedRepos($repos) : $inventory
-                    ),
-                    Context::create()
-                )
-            );
-            yield $this->worker->start();
-            yield $context;
-        }, $this->loader->load());
+    ): void {
+        $pipeline = $this->resolvePipeline($pipeline);
+        Loop::run(function () use ($pipeline, $repos) {
+            return call(function (MainNode $inventory) use ($pipeline, $repos) {
+                $context = $this->enqueuer->enqueue(
+                    TaskContext::create(
+                        $pipeline->build(
+                            $repos ? $inventory->withSelectedRepos($repos) : $inventory
+                        ),
+                        Context::create()
+                    )
+                );
+                yield $this->worker->start();
+                yield $context;
+            }, $this->loader->load());
+        });
     }
 
     private function resolvePipeline(?string $pipeline): Pipeline

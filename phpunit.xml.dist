@@ -13,6 +13,7 @@
     <testsuite name="Maestro2">
         <directory>./tests/Unit/Core</directory>
         <directory>./tests/Unit/Composer</directory>
+        <directory>./tests/EndToEnd</directory>
     </testsuite>
   </testsuites>
 </phpunit>
