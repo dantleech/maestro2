@@ -62,4 +62,9 @@ class Queue implements Enqueuer, Dequeuer
         })($this->deferred[$hash]);
         unset($this->deferred[$hash]);
     }
+
+    public function count(): int
+    {
+        return count($this->tasks);
+    }
 }

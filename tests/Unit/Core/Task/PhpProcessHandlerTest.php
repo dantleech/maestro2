@@ -6,7 +6,6 @@ use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\PhpProcessTask;
 use Maestro\Core\Process\ProcessResult;
-use PHPUnit\Framework\TestCase;
 
 class PhpProcessHandlerTest extends HandlerTestCase
 {

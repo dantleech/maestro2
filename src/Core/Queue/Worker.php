@@ -6,7 +6,6 @@ use Amp\Promise;
 use Amp\Success;
 use Maestro\Core\Task\HandlerFactory;
 use Maestro\Core\Task\TaskContext;
-use Maestro\Core\Task\TaskUtil;
 use Psr\Log\LoggerInterface;
 use Stringable;
 use Throwable;
@@ -16,6 +15,9 @@ use function Amp\delay;
 
 class Worker
 {
+    /**
+     * @var array<int,TaskContext>
+     */
     private array $running = [];
 
     private bool $isRunning = true;
@@ -30,15 +32,22 @@ class Worker
     public function updateStatus(): void
     {
         $this->logger->debug(sprintf(
-            'Running %s tasks: "%s", memory %sb',
+            'Running %s/%s, memory %sb, last task: "%s"',
             count($this->running),
-            implode('", "', array_map(function (TaskContext $task) {
-                return TaskUtil::describeShortName($task->task());
-            }, array_filter(
-                $this->running,
-                fn (TaskContext $task) => $task->task() instanceof Stringable
-            ))),
-            number_format(memory_get_usage(true))
+            $this->dequeuer->count() + count($this->running),
+            number_format(memory_get_usage(true)),
+            (function (array $tasks) {
+                if (empty($this->running)) {
+                    return '<no running tasks>';
+                }
+
+                $task = $this->running[array_key_last($this->running)];
+                if ($task->task() instanceof Stringable) {
+                    return $task->task()->__toString();
+                }
+
+                return get_class($task->task());
+            })($this->running),
         ));
     }
 

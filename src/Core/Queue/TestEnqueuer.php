@@ -35,4 +35,12 @@ final class TestEnqueuer implements Enqueuer, Dequeuer
     public function resolve(TaskContext $task, ?Context $context, ?Throwable $error = null): void
     {
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count()
+    {
+        return 0;
+    }
 }

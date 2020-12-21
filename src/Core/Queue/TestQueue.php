@@ -51,4 +51,12 @@ class TestQueue implements Enqueuer, Dequeuer
 
         return $this->enqueuer;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count()
+    {
+        return 0;
+    }
 }

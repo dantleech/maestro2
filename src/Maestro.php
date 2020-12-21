@@ -52,7 +52,6 @@ class Maestro
                 } finally {
                     Loop::cancel($pollId);
                 }
-
             }, $this->loader->load());
         });
     }
