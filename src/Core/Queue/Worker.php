@@ -32,9 +32,8 @@ class Worker
     public function updateStatus(): void
     {
         $this->logger->debug(sprintf(
-            'Running %s/%s, memory %sb, last task: "%s"',
+            'Waiting for %s tasks, memory %sb, last task: "%s"',
             count($this->running),
-            $this->dequeuer->count() + count($this->running),
             number_format(memory_get_usage(true)),
             (function (array $tasks) {
                 if (empty($this->running)) {

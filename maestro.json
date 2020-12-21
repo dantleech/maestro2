@@ -5,5 +5,5 @@
     ],
     "core.templatePath": "example/templates",
     "core.workspacePath": "var",
-    "core.concurrency": 10
+    "core.concurrency": 1
 }
