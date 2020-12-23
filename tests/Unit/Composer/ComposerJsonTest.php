@@ -2,8 +2,10 @@
 
 namespace Maestro\Tests\Unit\Composer;
 
+use Closure;
 use Generator;
 use Maestro\Composer\ComposerJson;
+use Maestro\Composer\ComposerPackages;
 use PHPUnit\Framework\TestCase;
 
 class ComposerJsonTest extends TestCase
@@ -53,6 +55,43 @@ class ComposerJsonTest extends TestCase
                 'src/',
                 'tests/',
             ]
+        ];
+    }
+
+        /**
+         * @dataProvider providePackages
+         */
+        public function testPackages(array $composer, Closure $assertion): void
+        {
+            $composer = ComposerJson::fromArray($composer);
+            $assertion($composer->packages());
+        }
+
+    /**
+     * @return Generator<mixed>
+     */
+    public function providePackages(): Generator
+    {
+        yield 'no packages' => [
+            [
+            ],
+            fn (ComposerPackages $packages) => self::assertCount(0, $packages)
+        ];
+
+        yield 'require and require-dev' => [
+            [
+                'require' => [
+                    'example/foobar' => '1.0',
+                ],
+                'require-dev' => [
+                    'example/test' => '^0.1',
+                ]
+            ],
+            function (ComposerPackages $packages) {
+                self::assertCount(2, $packages);
+                self::assertEquals('example/foobar', $packages->get('example/foobar')->name());
+                self::assertEquals('1.0', $packages->get('example/foobar')->version());
+            }
         ];
     }
 }

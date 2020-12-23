@@ -2,9 +2,10 @@
 
 namespace Maestro\Composer;
 
+use Countable;
 use Maestro\Core\Exception\RuntimeException;
 
-class ComposerPackages
+class ComposerPackages implements Countable
 {
     /**
      * @var array<string,ComposerPackage>
@@ -33,5 +34,10 @@ class ComposerPackages
         }
 
         return $this->packages[$name];
+    }
+
+    public function count(): int
+    {
+        return count($this->packages);
     }
 }

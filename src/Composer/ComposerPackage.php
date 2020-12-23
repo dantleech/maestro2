@@ -13,8 +13,8 @@ class ComposerPackage
         return $this->name;
     }
 
-    public function version(): string
+    public function version(): ComposerVersion
     {
-        return $this->version;
+        return new ComposerVersion($this->version);
     }
 }
