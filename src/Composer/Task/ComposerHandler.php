@@ -54,8 +54,9 @@ class ComposerHandler implements Handler
         );
     }
 
-    private function createJsonTask(ComposerTask $task, string $requireType): JsonMergeTask
+    private function createJsonTask(ComposerTask $task): JsonMergeTask
     {
+        $requireType = $task->dev() ? 'require-dev' : 'require';
         return new JsonMergeTask(
             path: 'composer.json',
             data: [
@@ -82,10 +83,8 @@ class ComposerHandler implements Handler
     private function updateComposerJson(Filesystem $filesystem, ComposerTask $task, Context $context, ComposerRunner $runner): Promise
     {
         return call(function () use ($filesystem, $task, $context, $runner) {
-            $requireType = $task->dev() ? 'require-dev' : 'require';
-
             if (!$filesystem->exists('composer.json')) {
-                yield $this->enqueuer->enqueue(new TaskContext($this->createJsonTask($task, $requireType), $context));
+                yield $this->enqueuer->enqueue(new TaskContext($this->createJsonTask($task), $context));
                 return;
             }
 
@@ -104,13 +103,17 @@ class ComposerHandler implements Handler
      */
     private function require(ComposerRunner $runner, ComposerTask $task): Promise
     {
-        return $runner->run(array_merge([
+        $args = array_merge([
             'require',
         ], array_map(
             fn (string $package, string $version) => sprintf('%s:%s', $package, $version),
             array_keys($task->require()),
             array_values($task->require())
-        )));
+        ));
+        if ($task->dev()) {
+            $args[] = '--dev';
+        }
+        return $runner->run($args);
     }
 
     /**
@@ -118,10 +121,15 @@ class ComposerHandler implements Handler
      */
     private function remove(ComposerRunner $runner, ComposerTask $task): Promise
     {
-        return $runner->run(array_merge(
+        $args = array_merge(
             ['remove'],
             array_values($task->remove())
-        ));
+        );
+
+        if ($task->dev()) {
+            $args[] = '--dev';
+        }
+        return $runner->run($args);
     }
 
     private function composerFact(Filesystem $filesystem): ComposerJsonFact

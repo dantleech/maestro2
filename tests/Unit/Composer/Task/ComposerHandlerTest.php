@@ -65,6 +65,22 @@ EOT
         self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
+    public function testUpdatesComposerWithDev(): void
+    {
+        $this->createComposerJson();
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer require baz/boo:^1.0 --dev', '/'));
+
+        $this->runTask(new ComposerTask(
+            require: [
+                'baz/boo' => '^1.0',
+            ],
+            dev: true,
+            composerBin: 'composer',
+        ));
+
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
+    }
+
     public function testRemoves(): void
     {
         $this->createComposerJson();
@@ -75,6 +91,21 @@ EOT
                 'barfoo/foobar',
             ],
             composerBin: 'composer',
+        ));
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
+    }
+
+    public function testRemovesWithDev(): void
+    {
+        $this->createComposerJson();
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer remove foobar/barfoo barfoo/foobar --dev', '/'));
+        $this->runTask(new ComposerTask(
+            remove: [
+                'foobar/barfoo',
+                'barfoo/foobar',
+            ],
+            composerBin: 'composer',
+            dev: true,
         ));
         self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
