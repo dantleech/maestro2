@@ -9,6 +9,7 @@ use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Process\ProcessRunner;
 use Maestro\Core\Process\TestProcessRunner;
 use Maestro\Core\Report\ReportManager;
+use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\HandlerFactory;
 use Maestro\Core\Task\Task;
@@ -18,8 +19,6 @@ use function Amp\Promise\wait;
 
 abstract class HandlerTestCase extends IntegrationTestCase
 {
-    const EX_GROUP = 'group';
-
     private Container $container;
 
     protected function setUp(): void
@@ -33,9 +32,9 @@ abstract class HandlerTestCase extends IntegrationTestCase
     protected function defaultContext(): Context
     {
         return Context::create([], [
-            new GroupFact(self::EX_GROUP),
         ], [
-            $this->container()->get(Filesystem::class)
+            $this->container->get(Filesystem::class),
+            new TaskReportPublisher($this->container->get(ReportManager::class))
         ]);
     }
 

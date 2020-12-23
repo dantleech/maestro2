@@ -14,6 +14,6 @@ class CatHandlerTest extends HandlerTestCase
             path: 'path/foobar.txt'
         ));
 
-        self::assertCount(1, $this->reportManager()->groups()->reports()->infos());
+        self::assertCount(1, $this->reportManager()->reports()->infos());
     }
 }

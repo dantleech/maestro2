@@ -2,13 +2,51 @@
 
 namespace Maestro\Core\Report;
 
+use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Task;
+use Stringable;
 use Throwable;
 
-interface TaskReportPublisher
+class TaskReportPublisher
 {
-    public function taskOk(Task $task, Context $context): void;
+    public function __construct(private ReportPublisher $publisher, private string $group = 'workspace')
+    {
+    }
 
-    public function taskFail(Task $task, Context $context, Throwable $error): void;
+    public function withGroup(string $group): self
+    {
+        return new self($this->publisher, $group);
+    }
+
+
+    public function publish(Report $report): void
+    {
+        $this->publisher->publish($this->group, $report);
+    }
+
+    public function taskOk(Task $task, Context $context): void
+    {
+        // ignore boring non-stringable tasks
+        if (!$task instanceof Stringable) {
+            return;
+        }
+
+        $this->publisher->publish(
+            $this->group,
+            Report::ok($task->__toString())
+        );
+    }
+
+    public function taskFail(Task $task, Context $context, Throwable $error): void
+    {
+        $this->publisher->publish(
+            $this->group,
+            Report::fail(
+                $task instanceof Stringable ? $task->__toString() : $task::class,
+                $error->getMessage()
+            ),
+        );
+    }
+
 }

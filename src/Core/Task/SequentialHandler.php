@@ -13,7 +13,7 @@ use function Amp\call;
 
 class SequentialHandler implements Handler
 {
-    public function __construct(private Enqueuer $taskEnqueuer, private TaskReportPublisher $reportPublisher)
+    public function __construct(private Enqueuer $taskEnqueuer)
     {
     }
 
@@ -33,10 +33,10 @@ class SequentialHandler implements Handler
                 }
                 try {
                     $context = yield $this->runTask($context, $sequentialTask);
-                    $this->reportPublisher->taskOk($sequentialTask, $context);
+                    $context->service(TaskReportPublisher::class)->taskOk($sequentialTask, $context);
                 } catch (Throwable $error) {
                     if (!$error instanceof SequentialTaskError) {
-                        $this->reportPublisher->taskFail($sequentialTask, $context, $error);
+                        $context->service(TaskReportPublisher::class)->taskFail($sequentialTask, $context, $error);
                     }
 
                     throw new SequentialTaskError(sprintf(

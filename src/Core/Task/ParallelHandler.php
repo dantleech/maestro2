@@ -12,8 +12,7 @@ use function Amp\call;
 class ParallelHandler implements Handler
 {
     public function __construct(
-        private Enqueuer $taskEnqueuer,
-        private TaskReportPublisher $publisher
+        private Enqueuer $taskEnqueuer
     ) {
     }
 
@@ -43,12 +42,12 @@ class ParallelHandler implements Handler
             /** @var int $index */
             foreach ($results[0] as $index => $error) {
                 assert($error instanceof Throwable);
-                $this->publisher->taskFail($tasks[$index], $context, $error);
+                $context->service(TaskReportPublisher::class)->taskFail($tasks[$index], $context, $error);
             }
 
             /** @var Context $taskContext */
             foreach ($results[1] as $index => $taskContext) {
-                $this->publisher->taskOk($tasks[$index], $taskContext);
+                $context->service(TaskReportPublisher::class)->taskOk($tasks[$index], $taskContext);
                 $context = $context->merge($taskContext);
             }
 

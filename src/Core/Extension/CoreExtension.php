@@ -127,10 +127,9 @@ class CoreExtension implements Extension
         $container->register(HandlerFactory::class, function (Container $container) {
             return new HandlerFactory(array_merge([
                 new SequentialHandler(
-                    $container->get(Queue::class),
-                    $container->get(ReportManager::class)
+                    $container->get(Queue::class)
                 ),
-                new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
+                new ParallelHandler($container->get(Queue::class)),
                 new GitRepositoryHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new SetDirectoryHandler($container->get(Filesystem::class)),

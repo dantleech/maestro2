@@ -10,7 +10,7 @@ use Stringable;
 use Throwable;
 use Maestro\Core\Report\Table;
 
-class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublisher, ReportTablePublisher
+class ReportManager implements ReportPublisher, ReportProvider, ReportTablePublisher
 {
     /**
      * @var array<string, array<Report>>
@@ -59,30 +59,6 @@ class ReportManager implements ReportPublisher, ReportProvider, TaskReportPublis
         return new ReportGroups(array_map(function (string $name, array $reports) {
             return new ReportGroup($name, $reports);
         }, array_keys($this->reports), $this->reports));
-    }
-
-    public function taskOk(Task $task, Context $context): void
-    {
-        // ignore boring non-stringable tasks
-        if (!$task instanceof Stringable) {
-            return;
-        }
-
-        $this->publish(
-            ($context->factOrNull(GroupFact::class)?->group()) ?: 'ungrouped',
-            Report::ok($task->__toString())
-        );
-    }
-
-    public function taskFail(Task $task, Context $context, Throwable $error): void
-    {
-        $this->publish(
-            ($context->factOrNull(GroupFact::class)?->group()) ?: 'ungrouped',
-            Report::fail(
-                $task instanceof Stringable ? $task->__toString() : $task::class,
-                $error->getMessage()
-            ),
-        );
     }
 
     public function publishTableRow(string $group, array $data): void
