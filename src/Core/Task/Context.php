@@ -14,10 +14,10 @@ final class Context
 {
     /**
      * @template T of Fact
-     * @template F of object
+     * @template F
      * @param array<string,mixed> $vars
      * @psalm-param array<class-string<T>,T> $facts
-     * @psalm-param array<class-string<F>,object> $services
+     * @psalm-param array<class-string<F>,F> $services
      * @param R $result
      */
     private function __construct(private array $vars, private array $facts, private array $services, private mixed $result = null)

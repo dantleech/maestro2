@@ -22,7 +22,6 @@ class TemplateHandler implements Handler
     private ReportPublisher $publisher;
 
     public function __construct(
-        private Filesystem $filesystem,
         private Environment $twig,
         ?ReportPublisher $publisher = null
     ) {
@@ -68,9 +67,7 @@ class TemplateHandler implements Handler
                 ))
             );
         })(
-            $this->filesystem->cd(
-                $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
-            ),
+            $context->service(Filesystem::class)
         );
 
         return new Success($context);

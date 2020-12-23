@@ -13,7 +13,7 @@ use Webmozart\Assert\Assert;
 
 class YamlHandler implements Handler
 {
-    public function __construct(private Filesystem $filesystem)
+    public function __construct()
     {
     }
 
@@ -25,9 +25,7 @@ class YamlHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof YamlTask);
-        $this->runYaml($this->filesystem->cd(
-            $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
-        ), $task);
+        $this->runYaml($context->service(Filesystem::class), $task);
 
         return new Success($context);
     }

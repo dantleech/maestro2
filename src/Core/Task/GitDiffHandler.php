@@ -13,7 +13,7 @@ use function Amp\call;
 
 class GitDiffHandler implements Handler
 {
-    public function __construct(private Filesystem $filesystem, private ProcessRunner $runner, private ReportPublisher $publisher)
+    public function __construct(private ProcessRunner $runner, private ReportPublisher $publisher)
     {
     }
 
@@ -39,8 +39,6 @@ class GitDiffHandler implements Handler
             );
 
             return $context;
-        }, $this->filesystem->cd(
-            $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
-        )->localPath());
+        }, $context->service(Filesystem::class)->localPath());
     }
 }

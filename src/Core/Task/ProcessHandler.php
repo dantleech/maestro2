@@ -35,10 +35,10 @@ class ProcessHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof ProcessTask);
-        return call(function (string $cwd, string $group) use ($task, $context) {
+        return call(function (string $group) use ($task, $context) {
             $result = yield $this->processRunner->run(
                 $task->cmd(),
-                $context->service(Filesystem::class)->localPath($cwd)
+                $context->service(Filesystem::class)->localPath()
             );
             assert($result instanceof ProcessResult);
 
@@ -66,7 +66,7 @@ class ProcessHandler implements Handler
 
                 return $context;
             })($task->after(), $result, $context)->withResult($result);
-        }, $context->factOrNull(CwdFact::class)?->cwd() ?: '/', $context->factOrNull(GroupFact::class)?->group() ?: 'process');
+        }, $context->factOrNull(GroupFact::class)?->group() ?: 'process');
     }
 
     private function formatArgs(ProcessTask $task): string

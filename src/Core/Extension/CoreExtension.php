@@ -138,14 +138,13 @@ class CoreExtension implements Extension
                 new PhpProcessHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
                 new TemplateHandler(
-                    $container->get(Filesystem::class),
                     $container->get(Environment::class),
                     $container->get(ReportManager::class)
                 ),
                 new JsonMergeHandler(),
-                new YamlHandler($container->get(Filesystem::class), ),
-                new ReplaceLineHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
-                new GitDiffHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class), $container->get(ReportManager::class)),
+                new YamlHandler(),
+                new ReplaceLineHandler($container->get(ReportManager::class)),
+                new GitDiffHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FactHandler(),
                 new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),

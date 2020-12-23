@@ -15,7 +15,7 @@ class ReplaceLineHandler implements Handler
 {
     private const NEWLINE_PATTERN = '\\r\\n|\\n|\\r';
 
-    public function __construct(private Filesystem $filesystem, private ReportPublisher $publisher)
+    public function __construct(private ReportPublisher $publisher)
     {
     }
 
@@ -29,9 +29,7 @@ class ReplaceLineHandler implements Handler
         assert($task instanceof ReplaceLineTask);
         $this->runReplaceLine(
             $task,
-            $this->filesystem->cd(
-                $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
-            ),
+            $context->service(Filesystem::class),
             $context->factOrNull(GroupFact::class)?->group() ?: 'replace-line'
         );
         
