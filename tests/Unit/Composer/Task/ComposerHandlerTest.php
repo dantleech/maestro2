@@ -40,62 +40,31 @@ EOT
 
     public function testUpdatesComposer(): void
     {
-        $this->filesystem()->putContents(
-            'composer.json',
-            <<<'EOT'
-{
-    "require": {
-        "foobar/barfoo": "^1.0"
-    }
-}
-EOT
-        );
+        $this->createComposerJson();
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer require baz/boo:^1.0', '/'));
 
         $this->runTask(new ComposerTask(
             require: [
                 'baz/boo' => '^1.0',
-            ]
+            ],
+            composerBin: 'composer',
         ));
 
-        self::assertEquals(<<<'EOT'
-{
-    "require": {
-        "foobar/barfoo": "^1.0",
-        "baz/boo": "^1.0"
-    }
-}
-EOT
-        , $this->filesystem()->getContents('composer.json'));
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
     public function testRemoves(): void
     {
-        $this->filesystem()->putContents(
-            'composer.json',
-            <<<'EOT'
-{
-    "require": {
-        "foobar/barfoo": "^1.0",
-        "baz/boo": "^1.0"
-    }
-}
-EOT
-        );
-
+        $this->createComposerJson();
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer remove foobar/barfoo barfoo/foobar', '/'));
         $this->runTask(new ComposerTask(
             remove: [
-                'foobar/barfoo'
-            ]
+                'foobar/barfoo',
+                'barfoo/foobar',
+            ],
+            composerBin: 'composer',
         ));
-
-        self::assertEquals(<<<'EOT'
-{
-    "require": {
-        "baz/boo": "^1.0"
-    }
-}
-EOT
-        , $this->filesystem()->getContents('composer.json'));
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
     public function testRequireDev(): void
@@ -138,5 +107,10 @@ EOT
         ));
 
         self::assertCount(0, $this->processRunner()->remainingExpectations());
+    }
+
+    private function createComposerJson(): void
+    {
+        $this->filesystem()->putContents('composer.json', '{}');
     }
 }

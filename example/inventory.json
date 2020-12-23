@@ -1,5 +1,6 @@
 {
     "vars": {
+        "phpBin": "php7.3",
         "composer.require": {
             "php": "^7.3"
         },

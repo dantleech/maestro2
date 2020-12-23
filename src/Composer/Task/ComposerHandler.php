@@ -7,6 +7,7 @@ use Maestro\Composer\ComposerRunner;
 use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Process\ProcessRunner;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Core\Task\Context;
@@ -39,15 +40,17 @@ class ComposerHandler implements Handler
             function (string $requireType, Filesystem $filesystem) use ($task, $context) {
                 $runner = new ComposerRunner($task, $context, $this->enqueuer);
 
-                yield $this->enqueuer->enqueue(
-                    TaskContext::create(
-                        $this->createJsonTask(
-                            $task,
-                            $requireType
-                        ),
-                        $context
-                    )
-                );
+                if (!$filesystem->exists('composer.json')) {
+                    yield $this->enqueuer->enqueue(new TaskContext($this->createJsonTask($task, $requireType), $context));
+                } else {
+                    if ($task->require()) {
+                        yield $this->require($runner, $task);
+                    }
+
+                    if ($task->remove()) {
+                        yield $this->remove($runner, $task);
+                    }
+                }
 
                 if ($task->update() === true) {
                     yield $runner->run(['update']);
@@ -80,5 +83,30 @@ class ComposerHandler implements Handler
                 return $object;
             }
         );
+    }
+
+    /**
+     * @return Promise<ProcessResult>
+     */
+    private function require(ComposerRunner $runner, ComposerTask $task): Promise
+    {
+        return $runner->run(array_merge([
+            'require',
+        ], array_map(
+            fn (string $package, string $version) => sprintf('%s:%s', $package, $version),
+            array_keys($task->require()),
+            array_values($task->require())
+        )));
+    }
+
+    /**
+     * @return Promise<ProcessResult>
+     */
+    private function remove(ComposerRunner $runner, ComposerTask $task): Promise
+    {
+        return $runner->run(array_merge(
+            ['remove'],
+            array_values($task->remove())
+        ));
     }
 }

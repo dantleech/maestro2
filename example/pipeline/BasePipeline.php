@@ -3,6 +3,7 @@
 namespace Maestro\Examples\Pipeline;
 
 use Maestro\Composer\Task\ComposerJsonFactTask;
+use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Inventory\MainNode;
 use Maestro\Core\Inventory\RepositoryNode;
 use Maestro\Core\Fact\CwdFact;
@@ -23,6 +24,7 @@ class BasePipeline implements Pipeline
     public function build(MainNode $mainNode): Task
     {
         return new SequentialTask([
+            new PhpFact($mainNode->vars()->get('phpBin')),
             new GroupFact('workspace'),
             new FileTask(
                 type: 'directory',
