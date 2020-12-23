@@ -186,7 +186,7 @@ class ComposerHandler implements Handler
         
             $packageVersion = $fact->packages()->get($name)->version();
 
-            if ($packageVersion->greaterThanThanOrEqualTo($version)) {
+            if ($packageVersion->greaterThanOrEqualTo($version)) {
                 $this->publisher->publish(
                     $context->factOrNull(GroupFact::class)?->group() ?: 'composer',
                     Report::info(sprintf(

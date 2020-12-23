@@ -2,6 +2,7 @@
 
 namespace Maestro\Examples\Pipeline;
 
+use Maestro\Composer\Fact\ComposerJsonFact;
 use Maestro\Core\Inventory\RepositoryNode;
 use Maestro\Core\Process\ProcessResult;
 use Maestro\Composer\Task\ComposerTask;
@@ -29,29 +30,43 @@ class UpgradePhpStanPipeline extends BasePipeline
                     return $this->processConfig($data);
                 },
             ),
-            new ComposerTask(
-                require: [
-                    'phpstan/phpstan' => self::VERSION,
-                ],
-                dev: true,
-                update: true,
-            ),
-            $this->phpstanTask($repository, true),
+            new ComposerTask(),
             new ConditionalTask(
                 predicate: function (Context $context) {
-                    return $context->var('phpstan-exit') !== 0;
+                    if (false === $context->fact(ComposerJsonFact::class)->packages()->has('phpstan/phpstan')) {
+                        return false;
+                    }
+
+                    return $context->fact(ComposerJsonFact::class)
+                        ->packages()->get('phpstan/phpstan')
+                        ->version()->lessThan(self::VERSION);
                 },
-                task: $this->generateBaselineTask($repository),
-            ),
-            new GitDiffTask(),
-            new GitCommitTask(
-                paths: [
-                    'composer.json',
-                    'phpstan.neon',
-                    'phpstan-baseline.neon',
-                ],
-                message: sprintf('Maestro updates PHPStan to version %s', self::VERSION)
-            ),
+                task: new SequentialTask([
+                    new ComposerTask(
+                        require: [
+                            'phpstan/phpstan' => self::VERSION,
+                        ],
+                        dev: true,
+                        update: true,
+                    ),
+                    $this->phpstanTask($repository, true),
+                    new ConditionalTask(
+                        predicate: function (Context $context) {
+                            return $context->var('phpstan-exit') !== 0;
+                        },
+                        task: $this->generateBaselineTask($repository),
+                    ),
+                    new GitDiffTask(),
+                    new GitCommitTask(
+                        paths: [
+                            'composer.json',
+                            'phpstan.neon',
+                            'phpstan-baseline.neon',
+                        ],
+                        message: sprintf('Maestro updates PHPStan to version %s', self::VERSION)
+                    ),
+                ])
+            )
         ]);
     }
 

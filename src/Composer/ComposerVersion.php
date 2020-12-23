@@ -29,7 +29,7 @@ class ComposerVersion implements Stringable
         return Comparator::greaterThan($this->version, $version);
     }
 
-    public function greaterThanThanOrEqualTo(string $version): bool
+    public function greaterThanOrEqualTo(string $version): bool
     {
         return Comparator::greaterThanOrEqualTo($this->version, $version);
     }
