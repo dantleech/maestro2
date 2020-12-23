@@ -5,7 +5,7 @@ namespace Maestro\Core\Task;
 use Amp\Promise;
 use Maestro\Core\Queue\Enqueuer;
 
-class DelegateTaskHandler implements Handler
+class DelegateHandler implements Handler
 {
     public function __construct(private Enqueuer $queue)
     {

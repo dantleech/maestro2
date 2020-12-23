@@ -8,7 +8,7 @@ use Maestro\Core\Task\Context;
 use Maestro\Core\Task\DelegateTask;
 use Maestro\Core\Task\Task;
 
-class DelegateTaskHandlerTest extends HandlerTestCase
+class DelegateHandlerTest extends HandlerTestCase
 {
     public function testDelegateTask(): void
     {

@@ -2,7 +2,7 @@
 
 namespace Maestro\Core\Task;
 
-class ChangeDirectoryTask implements Task
+class SetDirectoryTask implements Task
 {
     public function __construct(private string $path)
     {
