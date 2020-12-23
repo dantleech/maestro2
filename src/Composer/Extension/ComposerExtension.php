@@ -3,7 +3,6 @@
 namespace Maestro\Composer\Extension;
 
 use Maestro\Composer\Task\ComposerHandler;
-use Maestro\Composer\Task\ComposerJsonFactHandler;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Queue\Queue;
 use Maestro\Core\Report\ReportManager;
@@ -19,12 +18,6 @@ class ComposerExtension implements Extension
      */
     public function load(ContainerBuilder $container): void
     {
-        $container->register(ComposerJsonFactHandler::class, function (Container $container) {
-            return new ComposerJsonFactHandler();
-        }, [
-            CoreExtension::TAG_TASK_HANDLER => []
-        ]);
-
         $container->register(ComposerHandler::class, function (Container $container) {
             return new ComposerHandler(
                 $container->get(Queue::class),
