@@ -15,6 +15,7 @@ use Maestro\Core\Process\ProcessRunner;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Core\Report\Report;
 use Maestro\Core\Report\ReportPublisher;
+use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Handler;
 use Maestro\Core\Task\JsonMergeTask;
@@ -178,8 +179,7 @@ class ComposerHandler implements Handler
             $packageVersion = $fact->packages()->get($name)->version();
 
             if ($packageVersion->greaterThanOrEqualTo($version)) {
-                $this->publisher->publish(
-                    $context->factOrNull(GroupFact::class)?->group() ?: 'composer',
+                $context->service(TaskReportPublisher::class)->publish(
                     Report::info(sprintf(
                         'Package "%s" version "%s" already satisifies "%s"',
                         $name,

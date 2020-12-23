@@ -11,6 +11,7 @@ use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Report\Publisher\NullPublisher;
 use Maestro\Core\Report\Report;
 use Maestro\Core\Report\ReportPublisher;
+use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Util\PermissionUtil;
 use Twig\Environment;
 use Twig\Loader\ChainLoader;
@@ -19,13 +20,9 @@ use Webmozart\PathUtil\Path;
 
 class TemplateHandler implements Handler
 {
-    private ReportPublisher $publisher;
-
     public function __construct(
-        private Environment $twig,
-        ?ReportPublisher $publisher = null
+        private Environment $twig
     ) {
-        $this->publisher = $publisher ?: new NullPublisher();
     }
 
     public function taskFqn(): string
@@ -57,8 +54,7 @@ class TemplateHandler implements Handler
                 )
             );
             $filesystem->setMode($task->target(), $task->mode());
-            $this->publisher->publish(
-                $context->factOrNull(GroupFact::class)?->group() ?: 'template',
+            $context->service(TaskReportPublisher::class)->publish(
                 Report::ok(sprintf(
                     'Applied "%s" to "%s" (mode: %s)',
                     $task->template(),
