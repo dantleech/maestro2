@@ -55,10 +55,12 @@ EOT
     /**
      * @dataProvider provideUpdatesComposer
      */
-    public function testUpdatesComposer(ComposerTask $composerTask, string $expectedCommand): void
+    public function testUpdatesComposer(ComposerTask $composerTask, array $expectedCommands): void
     {
         $this->createComposerJson();
-        $this->processRunner()->expect(ProcessResult::ok($expectedCommand, '/'));
+        foreach ($expectedCommands as $expectedCommand) {
+            $this->processRunner()->expect(ProcessResult::ok($expectedCommand, '/'));
+        }
         $this->runTask($composerTask);
 
         $this->assertExpectedProcessesRan();
@@ -74,17 +76,20 @@ EOT
                     ],
                     composerBin: 'composer',
                 ),
-                'php3 composer require baz/boo:^1.0 --no-update'
+                ['php3 composer require baz/boo:^1.0 --no-update'],
             ],
             'require with update' => [
                 new ComposerTask(
                     require: [
                         'baz/boo' => '^1.0',
                     ],
-                    update: true,
                     composerBin: 'composer',
+                    update: true
                 ),
-                'php3 composer require baz/boo:^1.0'
+                [
+                    'php3 composer require baz/boo:^1.0 --no-update',
+                    'php3 composer update',
+                ]
             ],
             'require --dev' => [
                 new ComposerTask(
@@ -94,7 +99,7 @@ EOT
                     dev: true,
                     composerBin: 'composer',
                 ),
-                'php3 composer require baz/boo:^1.0 --dev --no-update',
+                ['php3 composer require baz/boo:^1.0 --dev --no-update',]
             ],
             'remove' => [
                 new ComposerTask(
@@ -104,7 +109,7 @@ EOT
                     ],
                     composerBin: 'composer',
                 ),
-                'php3 composer remove foobar/barfoo barfoo/foobar --no-update'
+                ['php3 composer remove foobar/barfoo barfoo/foobar --no-update']
             ],
             'remove --dev' => [
                 new ComposerTask(
@@ -115,7 +120,7 @@ EOT
                     dev: true,
                     composerBin: 'composer',
                 ),
-                'php3 composer remove foobar/barfoo barfoo/foobar --dev --no-update'
+                ['php3 composer remove foobar/barfoo barfoo/foobar --dev --no-update']
             ],
         ];
     }

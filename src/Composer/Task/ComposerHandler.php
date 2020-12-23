@@ -48,7 +48,7 @@ class ComposerHandler implements Handler
                 $runner = new ComposerRunner($task, $context, $this->enqueuer);
                 $fact = yield $this->updateComposerJson($filesystem, $task, $context, $runner);
 
-                if ($task->update() === true && 0 === count($fact->updated())) {
+                if ($task->update() === true) {
                     yield $runner->run(['update']);
                 }
 
@@ -131,9 +131,7 @@ class ComposerHandler implements Handler
                 $args[] = '--dev';
             }
 
-            if ($task->update() === false) {
-                $args[] = '--no-update';
-            }
+            $args[] = '--no-update';
 
             yield $runner->run($args);
 
@@ -155,9 +153,7 @@ class ComposerHandler implements Handler
             $args[] = '--dev';
         }
 
-        if ($task->update() === false) {
-            $args[] = '--no-update';
-        }
+        $args[] = '--no-update';
 
         return $runner->run($args);
     }
