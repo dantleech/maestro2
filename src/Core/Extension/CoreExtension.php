@@ -3,6 +3,7 @@
 namespace Maestro\Core\Extension;
 
 use Amp\Http\Client\HttpClient;
+use Maestro\Core\Extension\Context\DefaultContextFactory;
 use Maestro\Core\Inventory\InventoryLoader;
 use Maestro\Core\Exception\RuntimeException;
 use Maestro\Core\Extension\Command\RunCommand;
@@ -16,6 +17,7 @@ use Maestro\Core\Task\CatHandler;
 use Maestro\Core\Task\ChangeDirectoryHandler;
 use Maestro\Core\Task\ChangeDirectoryTask;
 use Maestro\Core\Task\ClosureHandler;
+use Maestro\Core\Task\ContextFactory;
 use Maestro\Core\Task\GitSurveyHandler;
 use Maestro\Core\Task\JsonApiSurveyHandler;
 use Maestro\Core\Task\PhpProcessHandler;
@@ -104,8 +106,13 @@ class CoreExtension implements Extension
             return new Maestro(
                 $container->get(InventoryLoader::class),
                 $container->get(Worker::class),
-                $container->get(Queue::class)
+                $container->get(Queue::class),
+                $container->get(ContextFactory::class),
             );
+        });
+
+        $container->register(ContextFactory::class, function (Container $container) {
+            return new DefaultContextFactory($container->get(Filesystem::class));
         });
 
         $container->register(InventoryLoader::class, function (Container $container) {

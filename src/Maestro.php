@@ -11,6 +11,7 @@ use Maestro\Core\Pipeline\Pipeline;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Core\Queue\Worker;
 use Maestro\Core\Task\Context;
+use Maestro\Core\Task\ContextFactory;
 use Maestro\Core\Task\TaskContext;
 use Maestro\Util\ClassNameFromFile;
 use Throwable;
@@ -43,7 +44,7 @@ class Maestro
                         $pipeline->build(
                             $repos ? $inventory->withSelectedRepos($repos) : $inventory
                         ),
-                        Context::create()
+                        $this->contextFactory->createContext()
                     )
                 );
                 try {
