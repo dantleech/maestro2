@@ -3,7 +3,9 @@
 namespace Maestro\Composer\Task;
 
 use Amp\Promise;
+use Maestro\Composer\ComposerJson;
 use Maestro\Composer\ComposerRunner;
+use Maestro\Composer\Fact\ComposerJsonFact;
 use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Filesystem\Filesystem;
@@ -37,28 +39,17 @@ class ComposerHandler implements Handler
     {
         assert($task instanceof ComposerTask);
         return call(
-            function (string $requireType, Filesystem $filesystem) use ($task, $context) {
+            function (Filesystem $filesystem) use ($task, $context) {
                 $runner = new ComposerRunner($task, $context, $this->enqueuer);
 
-                if (!$filesystem->exists('composer.json')) {
-                    yield $this->enqueuer->enqueue(new TaskContext($this->createJsonTask($task, $requireType), $context));
-                } else {
-                    if ($task->require()) {
-                        yield $this->require($runner, $task);
-                    }
-
-                    if ($task->remove()) {
-                        yield $this->remove($runner, $task);
-                    }
-                }
+                $this->updateComposerJson($filesystem, $task, $context, $runner);
 
                 if ($task->update() === true) {
                     yield $runner->run(['update']);
                 }
 
-                return $context;
+                return $context->withFact($this->composerFact($filesystem));
             },
-            $task->dev() ? 'require-dev' : 'require',
             $this->filesystem->cd($context->factOrNull(CwdFact::class)?->cwd() ?: '/')
         );
     }
@@ -86,6 +77,29 @@ class ComposerHandler implements Handler
     }
 
     /**
+     * @return Promise<void>
+     */
+    private function updateComposerJson(Filesystem $filesystem, ComposerTask $task, Context $context, ComposerRunner $runner): Promise
+    {
+        return call(function () use ($filesystem, $task, $context, $runner) {
+            $requireType = $task->dev() ? 'require-dev' : 'require';
+
+            if (!$filesystem->exists('composer.json')) {
+                yield $this->enqueuer->enqueue(new TaskContext($this->createJsonTask($task, $requireType), $context));
+                return;
+            }
+
+            if ($task->require()) {
+                yield $this->require($runner, $task);
+            }
+
+            if ($task->remove()) {
+                yield $this->remove($runner, $task);
+            }
+        });
+    }
+
+    /**
      * @return Promise<ProcessResult>
      */
     private function require(ComposerRunner $runner, ComposerTask $task): Promise
@@ -108,5 +122,16 @@ class ComposerHandler implements Handler
             ['remove'],
             array_values($task->remove())
         ));
+    }
+
+    private function composerFact(Filesystem $filesystem): ComposerJsonFact
+    {
+        $composerJson = ComposerJson::fromProjectRoot(
+            $filesystem->localPath()
+        );
+
+        return new ComposerJsonFact(
+            autoloadPaths: $composerJson->autoloadPaths()
+        );
     }
 }

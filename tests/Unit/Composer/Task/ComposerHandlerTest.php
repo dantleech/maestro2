@@ -2,6 +2,7 @@
 
 namespace Maestro\Tests\Unit\Composer\Task;
 
+use Maestro\Composer\Fact\ComposerJsonFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Process\Exception\ProcessFailure;
 use Maestro\Core\Process\ProcessResult;
@@ -18,6 +19,17 @@ class ComposerHandlerTest extends HandlerTestCase
                 phpBin: 'php3',
             ),
         ));
+    }
+
+    public function testLeavesFact(): void
+    {
+        $context = $this->runTask(new ComposerTask(
+            require: [
+                'foobar/barfoo' => '^1.0',
+            ]
+        ));
+
+        self::assertInstanceOf(ComposerJsonFact::class, $context->fact(ComposerJsonFact::class));
     }
 
     public function testCreatesComposerJsonIfItDoesNotExist(): void
