@@ -5,6 +5,7 @@ namespace Maestro\Core\Task;
 use Maestro\Core\Fact\Fact;
 use Maestro\Core\Task\Exception\FactNotFound;
 use Maestro\Core\Task\Exception\ResultNotSet;
+use Maestro\Core\Task\Exception\ServiceNotFound;
 
 /**
  * @template R
@@ -13,21 +14,28 @@ final class Context
 {
     /**
      * @template T of Fact
+     * @template F of object
      * @param array<string,mixed> $vars
      * @psalm-param array<class-string<T>,T> $facts
+     * @psalm-param array<class-string<F>,object> $services
      * @param R $result
      */
-    private function __construct(private array $vars, private array $facts, private mixed $result = null)
+    private function __construct(private array $vars, private array $facts, private array $services, private mixed $result = null)
     {
     }
 
     /**
      * @param array<string,mixed> $vars
-     * @psalm-param array<int,Fact> $facts
+     * @psalm-param list<Fact> $facts
+     * @psalm-param list<object> $services
      */
-    public static function create(array $vars = [], array $facts = []): self
+    public static function create(array $vars = [], array $facts = [], array $services = []): self
     {
-        return new self($vars, array_combine(array_map('get_class', $facts), $facts));
+        return new self(
+            $vars,
+            array_combine(array_map('get_class', $facts), $facts),
+            array_combine(array_map('get_class', $services), $services),
+        );
     }
 
     /**
@@ -75,6 +83,7 @@ final class Context
         return new self(
             array_merge($this->vars, $context->vars),
             array_merge($this->facts, $context->facts),
+            array_merge($this->services, $context->services),
         );
     }
 
@@ -82,7 +91,7 @@ final class Context
     {
         return (function (array $vars) use ($key, $value): self {
             $vars[$key] = $value;
-            return new self($vars, $this->facts);
+            return new self($vars, $this->facts, $this->services);
         })($this->vars);
     }
 
@@ -90,8 +99,16 @@ final class Context
     {
         return (function (array $facts) use ($fact): self {
             $facts[$fact::class] = $fact;
-            return new self($this->vars, $facts);
+            return new self($this->vars, $facts, $this->services);
         })($this->facts);
+    }
+
+    public function withService(object $service): self
+    {
+        return (function (array $services) use ($service): self {
+            $services[$service::class] = $service;
+            return new self($this->vars, $this->facts, $services);
+        })($this->services);
     }
 
     /**
@@ -99,7 +116,7 @@ final class Context
      */
     public function withResult(mixed $result): self
     {
-        return new self($this->vars, $this->facts, $result);
+        return new self($this->vars, $this->facts, $this->services, $result);
     }
 
     /**
@@ -115,6 +132,25 @@ final class Context
             'Fact "%s" has not been set',
             $factClass
         ));
+    }
+
+    /**
+     * @template S of object
+     *
+     * @psalm-param class-string<S> $serviceClass
+     *
+     * @return S
+     */
+    public function service(string $serviceClass): Fact
+    {
+        if (!isset($this->service[$serviceClass])) {
+            throw new ServiceNotFound(sprintf(
+                'Service "%s" has not been registered',
+                $serviceClass
+            ));
+        }
+
+        return $this->service[$serviceClass];
     }
 
     /**
