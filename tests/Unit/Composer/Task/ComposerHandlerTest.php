@@ -20,7 +20,7 @@ class ComposerHandlerTest extends HandlerTestCase
         ));
     }
 
-    public function testCreatesComposer(): void
+    public function testCreatesComposerJsonIfItDoesNotExist(): void
     {
         $this->runTask(new ComposerTask(
             require: [

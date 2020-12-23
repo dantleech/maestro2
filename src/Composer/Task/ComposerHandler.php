@@ -3,6 +3,7 @@
 namespace Maestro\Composer\Task;
 
 use Amp\Promise;
+use Maestro\Composer\ComposerRunner;
 use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Filesystem\Filesystem;
@@ -11,7 +12,6 @@ use Maestro\Core\Queue\Enqueuer;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Handler;
 use Maestro\Core\Task\JsonMergeTask;
-use Maestro\Core\Task\PhpProcessTask;
 use Maestro\Core\Task\Task;
 use Maestro\Core\Task\TaskContext;
 use Symfony\Component\Process\ExecutableFinder;
@@ -37,6 +37,8 @@ class ComposerHandler implements Handler
         assert($task instanceof ComposerTask);
         return call(
             function (string $requireType, Filesystem $filesystem) use ($task, $context) {
+                $runner = new ComposerRunner($task, $context, $this->enqueuer);
+
                 yield $this->enqueuer->enqueue(
                     TaskContext::create(
                         $this->createJsonTask(
@@ -47,15 +49,8 @@ class ComposerHandler implements Handler
                     )
                 );
 
-
                 if ($task->update() === true) {
-                    $finder = new ExecutableFinder();
-                    yield $this->enqueuer->enqueue(TaskContext::create(new PhpProcessTask(
-                        cmd: [
-                            $task->composerBin() ?: $finder->find('composer') ?: 'composer',
-                            'update',
-                        ]
-                    ), $context));
+                    yield $runner->run(['update']);
                 }
 
                 return $context;
