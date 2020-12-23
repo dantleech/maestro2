@@ -50,83 +50,72 @@ EOT
         , $this->filesystem()->getContents('composer.json'));
     }
 
-    public function testUpdatesComposer(): void
+    /**
+     * @dataProvider provideUpdatesComposer
+     */
+    public function testUpdatesComposer(ComposerTask $composerTask, string $expectedCommand): void
     {
         $this->createComposerJson();
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer require baz/boo:^1.0', '/'));
+        $this->processRunner()->expect(ProcessResult::ok($expectedCommand, '/'));
+        $this->runTask($composerTask);
 
-        $this->runTask(new ComposerTask(
-            require: [
-                'baz/boo' => '^1.0',
-            ],
-            composerBin: 'composer',
-        ));
-
-        self::assertCount(0, $this->processRunner()->remainingExpectations());
+        $this->assertExpectedProcessesRan();
     }
 
-    public function testUpdatesComposerWithDev(): void
+    public function provideUpdatesComposer(): array
     {
-        $this->createComposerJson();
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer require baz/boo:^1.0 --dev', '/'));
-
-        $this->runTask(new ComposerTask(
-            require: [
-                'baz/boo' => '^1.0',
+        return [
+            'require' => [
+                new ComposerTask(
+                    require: [
+                        'baz/boo' => '^1.0',
+                    ],
+                    composerBin: 'composer',
+                ),
+                'php3 composer require baz/boo:^1.0 --no-update'
             ],
-            dev: true,
-            composerBin: 'composer',
-        ));
-
-        self::assertCount(0, $this->processRunner()->remainingExpectations());
-    }
-
-    public function testRemoves(): void
-    {
-        $this->createComposerJson();
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer remove foobar/barfoo barfoo/foobar', '/'));
-        $this->runTask(new ComposerTask(
-            remove: [
-                'foobar/barfoo',
-                'barfoo/foobar',
+            'require with update' => [
+                new ComposerTask(
+                    require: [
+                        'baz/boo' => '^1.0',
+                    ],
+                    update: true,
+                    composerBin: 'composer',
+                ),
+                'php3 composer require baz/boo:^1.0'
             ],
-            composerBin: 'composer',
-        ));
-        self::assertCount(0, $this->processRunner()->remainingExpectations());
-    }
-
-    public function testRemovesWithDev(): void
-    {
-        $this->createComposerJson();
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer remove foobar/barfoo barfoo/foobar --dev', '/'));
-        $this->runTask(new ComposerTask(
-            remove: [
-                'foobar/barfoo',
-                'barfoo/foobar',
+            'require --dev' => [
+                new ComposerTask(
+                    require: [
+                        'baz/boo' => '^1.0',
+                    ],
+                    dev: true,
+                    composerBin: 'composer',
+                ),
+                'php3 composer require baz/boo:^1.0 --dev --no-update',
             ],
-            composerBin: 'composer',
-            dev: true,
-        ));
-        self::assertCount(0, $this->processRunner()->remainingExpectations());
-    }
-
-    public function testRequireDev(): void
-    {
-        $this->runTask(new ComposerTask(
-            dev: true,
-            require: [
-                'foobar/barfoo' => '^1.0',
-            ]
-        ));
-
-        self::assertEquals(<<<'EOT'
-{
-    "require-dev": {
-        "foobar/barfoo": "^1.0"
-    }
-}
-EOT
-        , $this->filesystem()->getContents('composer.json'));
+            'remove' => [
+                new ComposerTask(
+                    remove: [
+                        'foobar/barfoo',
+                        'barfoo/foobar',
+                    ],
+                    composerBin: 'composer',
+                ),
+                'php3 composer remove foobar/barfoo barfoo/foobar --no-update'
+            ],
+            'remove --dev' => [
+                new ComposerTask(
+                    remove: [
+                        'foobar/barfoo',
+                        'barfoo/foobar',
+                    ],
+                    dev: true,
+                    composerBin: 'composer',
+                ),
+                'php3 composer remove foobar/barfoo barfoo/foobar --dev --no-update'
+            ],
+        ];
     }
 
     public function testUpdate(): void

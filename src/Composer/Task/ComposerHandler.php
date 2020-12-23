@@ -42,9 +42,9 @@ class ComposerHandler implements Handler
             function (Filesystem $filesystem) use ($task, $context) {
                 $runner = new ComposerRunner($task, $context, $this->enqueuer);
 
-                $this->updateComposerJson($filesystem, $task, $context, $runner);
+                yield $this->updateComposerJson($filesystem, $task, $context, $runner);
 
-                if ($task->update() === true) {
+                if ((empty($task->remove()) && empty($task->require())) && $task->update() === true) {
                     yield $runner->run(['update']);
                 }
 
@@ -110,9 +110,15 @@ class ComposerHandler implements Handler
             array_keys($task->require()),
             array_values($task->require())
         ));
+
         if ($task->dev()) {
             $args[] = '--dev';
         }
+
+        if ($task->update() === false) {
+            $args[] = '--no-update';
+        }
+
         return $runner->run($args);
     }
 
@@ -129,6 +135,11 @@ class ComposerHandler implements Handler
         if ($task->dev()) {
             $args[] = '--dev';
         }
+
+        if ($task->update() === false) {
+            $args[] = '--no-update';
+        }
+
         return $runner->run($args);
     }
 

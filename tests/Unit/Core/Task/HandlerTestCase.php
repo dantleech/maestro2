@@ -6,6 +6,7 @@ use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\HttpClient\TestHttpClientInterceptor;
+use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Process\ProcessRunner;
 use Maestro\Core\Process\TestProcessRunner;
 use Maestro\Core\Report\ReportManager;
@@ -58,6 +59,22 @@ abstract class HandlerTestCase extends IntegrationTestCase
     protected function processRunner(): TestProcessRunner
     {
         return $this->container->get(ProcessRunner::class);
+    }
+
+    protected function assertExpectedProcessesRan(): void
+    {
+        $remainingProcesses = array_map(function (ProcessResult $result) {
+            return implode(' ', $result->cmd());
+        }, $this->processRunner()->remainingExpectations());
+
+        if ($remainingProcesses) {
+            self::fail(sprintf(
+                'The following processes were expected to be invoked but were not: %s',
+                implode(', ', $remainingProcesses)
+            ));
+        }
+
+        self::assertCount(0, $remainingProcesses);
     }
 
     protected function httpClient(): TestHttpClientInterceptor
