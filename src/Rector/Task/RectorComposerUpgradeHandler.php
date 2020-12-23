@@ -4,8 +4,8 @@ namespace Maestro\Rector\Task;
 
 use Amp\Promise;
 use Maestro\Composer\Fact\ComposerJsonFact;
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\PhpFact;
+use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Composer\Task\ComposerTask;
 use Maestro\Core\Task\Context;
@@ -78,7 +78,7 @@ class RectorComposerUpgradeHandler implements Handler
             },
             $context->fact(ComposerJsonFact::class)->autoloadPaths(),
             $context->fact(PhpFact::class)->phpBin(),
-            $task->path() ?: $context->fact(CwdFact::class)->cwd()
+            $context->service(Filesystem::class)->localPath()
         );
     }
 

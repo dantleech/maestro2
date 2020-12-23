@@ -3,7 +3,7 @@
 namespace Maestro\Rector\Task;
 
 use Amp\Promise;
-use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Composer\Task\ComposerTask;
 use Maestro\Core\Task\Context;
@@ -58,7 +58,7 @@ class RectorInstallHandler implements Handler
                     binPath: $binPath
                 )
             );
-        }, $task->path() ?: $context->fact(CwdFact::class)->cwd());
+        }, $context->service(Filesystem::class)->localPath($task->path()));
     }
 
     private function rectorConfigPath(string $cwd, RectorComposerUpgradeTask $task): string

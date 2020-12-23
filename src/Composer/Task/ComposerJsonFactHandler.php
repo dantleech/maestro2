@@ -6,7 +6,6 @@ use Amp\Promise;
 use Amp\Success;
 use Maestro\Composer\ComposerJson;
 use Maestro\Composer\Fact\ComposerJsonFact;
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Handler;

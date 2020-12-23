@@ -4,8 +4,6 @@ namespace Maestro\Tests\Unit\Core\Task;
 
 use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Task\GitRepositoryTask;
-use Maestro\Git\GitRepository;
-use PHPUnit\Framework\TestCase;
 
 class GitRepositoryHandlerTest extends HandlerTestCase
 {

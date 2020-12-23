@@ -3,7 +3,6 @@
 namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Queue\Enqueuer;
 use function Amp\call;
@@ -35,9 +34,10 @@ class GitRepositoryHandler implements Handler
                 $task->url(),
                 $task->path()
             ];
-            if ($task->branch()) {
+            $branch = $task->branch();
+            if (is_string($branch)) {
                 $args[] = '--branch';
-                $args[] = $task->branch();
+                $args[] = $branch;
             }
             yield $this->enqueuer->enqueue(TaskContext::create(new ProcessTask(
                 cmd: $args

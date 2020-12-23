@@ -15,7 +15,6 @@ use Maestro\Core\Queue\Worker;
 use Maestro\Core\Report\ReportManager;
 use Maestro\Core\Task\CatHandler;
 use Maestro\Core\Task\ChangeDirectoryHandler;
-use Maestro\Core\Task\ChangeDirectoryTask;
 use Maestro\Core\Task\ClosureHandler;
 use Maestro\Core\Task\ContextFactory;
 use Maestro\Core\Task\GitSurveyHandler;

@@ -3,7 +3,6 @@
 namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Process\ProcessRunner;

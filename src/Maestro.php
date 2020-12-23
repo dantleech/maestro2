@@ -10,7 +10,6 @@ use Maestro\Core\Pipeline\NullPipeline;
 use Maestro\Core\Pipeline\Pipeline;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Core\Queue\Worker;
-use Maestro\Core\Task\Context;
 use Maestro\Core\Task\ContextFactory;
 use Maestro\Core\Task\TaskContext;
 use Maestro\Util\ClassNameFromFile;

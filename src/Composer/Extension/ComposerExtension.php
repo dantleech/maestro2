@@ -5,7 +5,6 @@ namespace Maestro\Composer\Extension;
 use Maestro\Composer\Task\ComposerHandler;
 use Maestro\Composer\Task\ComposerJsonFactHandler;
 use Maestro\Core\Extension\CoreExtension;
-use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Queue\Queue;
 use Maestro\Core\Report\ReportManager;
 use Phpactor\Container\Container;

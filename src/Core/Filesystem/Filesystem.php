@@ -18,8 +18,9 @@ class Filesystem
      * Resolve the given path to the absolute filesystem path relative
      * to the current current working directory.
      */
-    public function localPath(string $cwd = '.'): string
+    public function localPath(?string $cwd = null): string
     {
+        $cwd = $cwd ?? '.';
         return $this->resolvePath($cwd);
     }
 
