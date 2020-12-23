@@ -9,6 +9,8 @@ class GitRepositoryTask implements Task, Stringable
     public function __construct(
         private string $url,
         private string $path,
+        private bool $clean = true,
+        private ?string $branch = null
     ) {
     }
 
@@ -25,5 +27,15 @@ class GitRepositoryTask implements Task, Stringable
     public function __toString(): string
     {
         return sprintf('Checking out git repository "%s"', $this->url());
+    }
+
+    public function clean(): bool
+    {
+        return $this->clean;
+    }
+
+    public function branch(): ?string
+    {
+        return $this->branch;
     }
 }

@@ -123,7 +123,7 @@ class CoreExtension implements Extension
                 ),
                 new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FileHandler($container->get(Filesystem::class), $container->get(LoggerInterface::class)),
-                new GitRepositoryHandler($container->get(Queue::class)),
+                new GitRepositoryHandler($container->get(Queue::class), $container->get(Filesystem::class)),
                 new ProcessHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new PhpProcessHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
