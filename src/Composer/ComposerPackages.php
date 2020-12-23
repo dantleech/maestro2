@@ -3,7 +3,6 @@
 namespace Maestro\Composer;
 
 use Countable;
-use DTL\Invoke\Invoke;
 use Maestro\Core\Exception\RuntimeException;
 
 class ComposerPackages implements Countable

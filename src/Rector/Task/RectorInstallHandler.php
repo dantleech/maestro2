@@ -37,7 +37,7 @@ class RectorInstallHandler implements Handler
                 TaskContext::create(
                     new ComposerTask(
                         require: [
-                            'rector/rector-prefixed' => $task->rectorVersion(),
+                            'rector/rector-prefixed' => $task->rectorVersion() ?: '*',
                         ],
                         update: true
                     ),
