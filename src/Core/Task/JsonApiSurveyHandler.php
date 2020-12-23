@@ -8,15 +8,14 @@ use Amp\Http\Client\Response;
 use Amp\Promise;
 use Generator;
 use JsonException;
-use Maestro\Core\Fact\GroupFact;
-use Maestro\Core\Report\ReportTablePublisher;
+use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Task\Exception\TaskError;
 use Webmozart\Assert\Assert;
 use function Amp\call;
 
 class JsonApiSurveyHandler implements Handler
 {
-    public function __construct(private HttpClient $httpClient, private ReportTablePublisher $publisher)
+    public function __construct(private HttpClient $httpClient)
     {
     }
 
@@ -60,8 +59,7 @@ class JsonApiSurveyHandler implements Handler
             }
             Assert::isArray($data, 'JSON API did not return an array');
             $data = $task->extract()->__invoke($data);
-            $this->publisher->publishTableRow(
-                $context->fact(GroupFact::class)->group(),
+            $context->service(TaskReportPublisher::class)->publishTableRow(
                 $data
             );
 

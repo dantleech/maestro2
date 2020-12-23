@@ -7,7 +7,6 @@ use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Inventory\MainNode;
 use Maestro\Core\Inventory\RepositoryNode;
 use Maestro\Core\Fact\CwdFact;
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Pipeline\Pipeline;
 use Maestro\Composer\Task\ComposerTask;
 use Maestro\Core\Task\SetDirectoryTask;
@@ -17,6 +16,7 @@ use Maestro\Core\Task\GitRepositoryTask;
 use Maestro\Core\Task\NullTask;
 use Maestro\Core\Task\ParallelTask;
 use Maestro\Core\Task\SequentialTask;
+use Maestro\Core\Task\SetReportingGroupTask;
 use Maestro\Core\Task\Task;
 use Maestro\Rector\Task\RectorInstallTask;
 
@@ -26,7 +26,6 @@ class BasePipeline implements Pipeline
     {
         return new SequentialTask([
             new PhpFact($mainNode->vars()->get('phpBin')),
-            new GroupFact('workspace'),
             new FileTask(
                 type: 'directory',
                 path: 'build',
@@ -39,7 +38,7 @@ class BasePipeline implements Pipeline
             ),
             new ParallelTask(array_map(function (RepositoryNode $repositoryNode) {
                 return new SequentialTask([
-                    new GroupFact($repositoryNode->name()),
+                    new SetReportingGroupTask($repositoryNode->name()),
                     new SetDirectoryTask('build'),
                     new GitRepositoryTask(
                         url: $repositoryNode->url(),

@@ -112,7 +112,10 @@ class CoreExtension implements Extension
         });
 
         $container->register(ContextFactory::class, function (Container $container) {
-            return new DefaultContextFactory($container->get(Filesystem::class));
+            return new DefaultContextFactory(
+                $container->get(Filesystem::class),
+                $container->get(ReportManager::class),
+            );
         });
 
         $container->register(InventoryLoader::class, function (Container $container) {
@@ -133,24 +136,23 @@ class CoreExtension implements Extension
                 new GitRepositoryHandler($container->get(Queue::class)),
                 new FileHandler($container->get(LoggerInterface::class)),
                 new SetDirectoryHandler($container->get(Filesystem::class)),
-                new ProcessHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
+                new ProcessHandler($container->get(ProcessRunner::class)),
                 new PhpProcessHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
                 new TemplateHandler(
-                    $container->get(Environment::class),
-                    $container->get(ReportManager::class)
+                    $container->get(Environment::class)
                 ),
                 new JsonMergeHandler(),
                 new YamlHandler(),
-                new ReplaceLineHandler($container->get(ReportManager::class)),
-                new GitDiffHandler($container->get(ProcessRunner::class), $container->get(ReportManager::class)),
-                new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class)),
+                new ReplaceLineHandler(),
+                new GitDiffHandler($container->get(ProcessRunner::class)),
+                new GitCommitHandler($container->get(Queue::class)),
                 new FactHandler(),
-                new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
-                new CatHandler($container->get(ReportManager::class)),
+                new ConditionalHandler($container->get(Queue::class)),
+                new CatHandler(),
                 new ClosureHandler(),
-                new GitSurveyHandler($container->get(RepositoryFactory::class), $container->get(ReportManager::class)),
-                new JsonApiSurveyHandler($container->get(HttpClient::class), $container->get(ReportManager::class)),
+                new GitSurveyHandler($container->get(RepositoryFactory::class)),
+                new JsonApiSurveyHandler($container->get(HttpClient::class)),
                 new DelegateHandler($container->get(Queue::class)),
             ], (static function (array $taggedServices) use ($container) {
                 return array_map(static function ($serviceId) use ($container): Handler {

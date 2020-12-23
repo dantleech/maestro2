@@ -2,13 +2,7 @@
 
 namespace Maestro\Core\Report;
 
-use Maestro\Core\Fact\GroupFact;
-use Maestro\Core\Task\Context;
-use Maestro\Core\Task\Task;
 use RuntimeException;
-use Stringable;
-use Throwable;
-use Maestro\Core\Report\Table;
 
 class ReportManager implements ReportPublisher, ReportProvider, ReportTablePublisher
 {

@@ -4,20 +4,13 @@ namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
-use Maestro\Core\Fact\CwdFact;
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Report\Report;
-use Maestro\Core\Report\ReportPublisher;
-use Maestro\Core\Task\Exception\TaskError;
+use Maestro\Core\Report\TaskReportPublisher;
 
 class ReplaceLineHandler implements Handler
 {
     private const NEWLINE_PATTERN = '\\r\\n|\\n|\\r';
-
-    public function __construct(private ReportPublisher $publisher)
-    {
-    }
 
     public function taskFqn(): string
     {
@@ -30,16 +23,16 @@ class ReplaceLineHandler implements Handler
         $this->runReplaceLine(
             $task,
             $context->service(Filesystem::class),
-            $context->factOrNull(GroupFact::class)?->group() ?: 'replace-line'
+            $context->service(TaskReportPublisher::class),
         );
         
         return new Success($context);
     }
 
-    private function runReplaceLine(ReplaceLineTask $task, Filesystem $filesystem, string $group): void
+    private function runReplaceLine(ReplaceLineTask $task, Filesystem $filesystem, TaskReportPublisher $publisher): void
     {
         if (!$filesystem->exists($task->path())) {
-            $this->publisher->publish($group, Report::warn(sprintf(
+            $publisher->publish(Report::warn(sprintf(
                 '%s - file does not exist',
                 $task->__toString()
             )));
@@ -62,8 +55,7 @@ class ReplaceLineHandler implements Handler
         
         if ($before !== $after) {
             $filesystem->putContents($task->path(), $after);
-            $this->publisher->publish(
-                $group,
+            $publisher->publish(
                 Report::ok(sprintf('Replaced line(s) in "%s"', $task->path()))
             );
         }

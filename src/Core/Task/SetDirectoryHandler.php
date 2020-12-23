@@ -5,7 +5,6 @@ namespace Maestro\Core\Task;
 use Amp\Promise;
 use Amp\Success;
 use Maestro\Core\Filesystem\Filesystem;
-use Maestro\Core\Task\SetDirectoryTask;
 
 class SetDirectoryHandler implements Handler
 {

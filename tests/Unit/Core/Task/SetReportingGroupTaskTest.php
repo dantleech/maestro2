@@ -5,7 +5,6 @@ namespace Maestro\Tests\Unit\Core\Task;
 use Maestro\Core\Report\Report;
 use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Task\SetReportingGroupTask;
-use PHPUnit\Framework\TestCase;
 
 class SetReportingGroupTaskTest extends HandlerTestCase
 {

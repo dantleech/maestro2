@@ -2,7 +2,6 @@
 
 namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\HttpClient\TestHttpClientInterceptor;
 use Maestro\Core\Process\ProcessResult;

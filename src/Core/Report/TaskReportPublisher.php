@@ -2,7 +2,6 @@
 
 namespace Maestro\Core\Report;
 
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Task;
 use Stringable;
@@ -10,7 +9,7 @@ use Throwable;
 
 class TaskReportPublisher
 {
-    public function __construct(private ReportPublisher $publisher, private string $group = 'workspace')
+    public function __construct(private ReportManager $publisher, private string $group = 'workspace')
     {
     }
 
@@ -49,4 +48,8 @@ class TaskReportPublisher
         );
     }
 
+    public function publishTableRow(array $row): void
+    {
+        $this->publisher->publishTableRow($this->group, $row);
+    }
 }

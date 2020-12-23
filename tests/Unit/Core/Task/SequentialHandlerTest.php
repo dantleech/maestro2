@@ -53,7 +53,7 @@ class SequentialHandlerTest extends HandlerTestCase
         self::assertNotNull($error, 'Exception was thrown');
         self::assertInstanceOf(SequentialTaskError::class, $error, 'Correct error type thrown');
 
-        self::assertCount(1, $this->reportManager()->group(self::EX_GROUP)->reports()->fails(), 'Published failure report');
+        self::assertCount(1, $this->reportManager()->reports()->fails(), 'Published failure report');
     }
 
     public function testDoesNotPublishReportForSequentialTaskErrors(): void
@@ -69,7 +69,7 @@ class SequentialHandlerTest extends HandlerTestCase
 
         self::assertInstanceOf(SequentialTaskError::class, $error, 'Correct error type thrown');
 
-        self::assertCount(0, $this->reportManager()->groups()->reports()->fails(), 'Did not publish failure report');
+        self::assertCount(0, $this->reportManager()->reports()->fails(), 'Did not publish failure report');
     }
 
     public function testAssimilatesFactsAndContinues(): void

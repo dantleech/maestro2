@@ -4,27 +4,20 @@ namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Closure;
-use Maestro\Core\Fact\CwdFact;
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Process\Exception\ProcessFailure;
 use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Process\ProcessRunner;
-use Maestro\Core\Report\Publisher\NullPublisher;
 use Maestro\Core\Report\Report;
-use Maestro\Core\Report\ReportPublisher;
+use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Task\Exception\TaskError;
 use function Amp\call;
 
 class ProcessHandler implements Handler
 {
-    private ReportPublisher $reportPublisher;
-
     public function __construct(
-        private ProcessRunner $processRunner,
-        ?ReportPublisher $reportPublisher = null
+        private ProcessRunner $processRunner
     ) {
-        $this->reportPublisher = $reportPublisher ?: new NullPublisher();
     }
 
     public function taskFqn(): string
@@ -35,7 +28,7 @@ class ProcessHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof ProcessTask);
-        return call(function (string $group) use ($task, $context) {
+        return call(function (TaskReportPublisher $publisher) use ($task, $context) {
             $result = yield $this->processRunner->run(
                 $task->cmd(),
                 $context->service(Filesystem::class)->localPath()
@@ -43,7 +36,7 @@ class ProcessHandler implements Handler
             assert($result instanceof ProcessResult);
 
             if (false === $result->isOk()) {
-                $this->handleFailure($task, $result, $group);
+                $this->handleFailure($task, $result, $publisher);
             }
 
             return (static function (?Closure $after, ProcessResult $result, Context $context): Context {
@@ -66,7 +59,7 @@ class ProcessHandler implements Handler
 
                 return $context;
             })($task->after(), $result, $context)->withResult($result);
-        }, $context->factOrNull(GroupFact::class)?->group() ?: 'process');
+        }, $context->service(TaskReportPublisher::class));
     }
 
     private function formatArgs(ProcessTask $task): string
@@ -74,7 +67,7 @@ class ProcessHandler implements Handler
         return implode(' ', array_map('escapeshellarg', $task->cmd()));
     }
 
-    private function handleFailure(ProcessTask $task, ProcessResult $result, string $group): void
+    private function handleFailure(ProcessTask $task, ProcessResult $result, TaskReportPublisher $publisher): void
     {
         if (false === $task->allowFailure()) {
             throw (function (ProcessFailure $failure) {
@@ -82,7 +75,7 @@ class ProcessHandler implements Handler
             })(ProcessFailure::fromResult($result, $task->cmd()));
         }
 
-        $this->reportPublisher->publish($group, Report::warn(sprintf(
+        $publisher->publish(Report::warn(sprintf(
             'Tolerated process failure: "%s" failed with "%s"',
             $this->formatArgs($task),
             $result->exitCode()

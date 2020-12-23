@@ -4,16 +4,15 @@ namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Closure;
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Core\Report\Report;
-use Maestro\Core\Report\ReportPublisher;
+use Maestro\Core\Report\TaskReportPublisher;
 use Stringable;
 use function Amp\call;
 
 class ConditionalHandler implements Handler
 {
-    public function __construct(private Enqueuer $enqueuer, private ReportPublisher $publusher)
+    public function __construct(private Enqueuer $enqueuer)
     {
     }
 
@@ -35,8 +34,7 @@ class ConditionalHandler implements Handler
                         TaskContext::create($task, $context)
                     );
                 } else {
-                    $this->publusher->publish(
-                        $context->factOrNull(GroupFact::class)?->group() ?: 'conditional',
+                    $context->service(TaskReportPublisher::class)->publish(
                         Report::info(sprintf(
                             'Did not execute task "%s" due to predicate',
                             ($task instanceof Stringable) ? $task->__toString() : $task::class

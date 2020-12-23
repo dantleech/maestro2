@@ -3,20 +3,18 @@
 namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Core\Report\Report;
-use Maestro\Core\Report\ReportPublisher;
+use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Task\Exception\TaskError;
 use function Amp\call;
 
 class GitCommitHandler implements Handler
 {
     public function __construct(
-        private Enqueuer $enqueuer,
-        private ReportPublisher $publisher
+        private Enqueuer $enqueuer
     ) {
     }
 
@@ -58,8 +56,8 @@ class GitCommitHandler implements Handler
             yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
                     cmd: array_merge(['git', 'add'], $this->filterPaths(
+                        $context->service(TaskReportPublisher::class),
                         $context->service(Filesystem::class),
-                        $context->fact(GroupFact::class)->group(),
                         $task->paths(),
                     ))
                 ), $context)
@@ -76,8 +74,7 @@ class GitCommitHandler implements Handler
             assert($result instanceof ProcessResult);
 
             if ($result->exitCode() === 0) {
-                $this->publisher->publish(
-                    $context->fact(GroupFact::class)->group(),
+                $context->service(TaskReportPublisher::class)->publish(
                     Report::warn(
                         'Git commit: no files modified, not comitting anything',
                     )
@@ -104,12 +101,11 @@ class GitCommitHandler implements Handler
      * @param list<string> $paths
      * @return list<string>
      */
-    private function filterPaths(Filesystem $filesystem, string $group, array $paths): array
+    private function filterPaths(TaskReportPublisher $publisher, Filesystem $filesystem, array $paths): array
     {
-        return array_values(array_filter($paths, function (string $path) use ($group, $filesystem) {
+        return array_values(array_filter($paths, function (string $path) use ($paths, $publisher, $filesystem) {
             if (false === $filesystem->exists($path)) {
-                $this->publisher->publish(
-                    $group,
+                $publisher->publish(
                     Report::warn(sprintf(
                         'Git commit: file/directory "%s" does not exist, ignoring',
                         $path

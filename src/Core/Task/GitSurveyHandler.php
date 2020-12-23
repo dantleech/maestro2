@@ -4,16 +4,15 @@ namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Generator;
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
-use Maestro\Core\Report\ReportTablePublisher;
+use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Vcs\Repository;
 use Maestro\Core\Vcs\RepositoryFactory;
 use function Amp\call;
 
 class GitSurveyHandler implements Handler
 {
-    public function __construct(private RepositoryFactory $repository, private ReportTablePublisher $publisher)
+    public function __construct(private RepositoryFactory $repository)
     {
     }
 
@@ -30,7 +29,7 @@ class GitSurveyHandler implements Handler
         assert($task instanceof GitSurveyTask);
         return call(function () use ($context) {
             yield from $this->survey(
-                $context->fact(GroupFact::class)->group(),
+                $context->service(TaskReportPublisher::class),
                 $this->repository->create(
                     $context->service(Filesystem::class)->localPath()
                 )
@@ -40,7 +39,7 @@ class GitSurveyHandler implements Handler
         });
     }
 
-    private function survey(string $group, Repository $repository): Generator
+    private function survey(TaskReportPublisher $publisher, Repository $repository): Generator
     {
         $headId = yield $repository->headId();
         $latestTag = (yield $repository->listTags())->mostRecent();
@@ -49,10 +48,9 @@ class GitSurveyHandler implements Handler
             $headId
         ));
         $message = yield $repository->message($headId);
-        $this->publisher->publishTableRow(
-            $group,
+        $publisher->publishTableRow(
             [
-                'tag' => $latestTag?->name() ?: '<none>',
+                'tag' => $latestTagname() ?: '<none>',
                 '+' => sprintf('+%s', $nbCommitsAhead),
                 'message' => $message,
             ]
