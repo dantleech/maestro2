@@ -13,7 +13,9 @@ class HandlerFactory
     public function handlerFor(Task $task): Handler
     {
         foreach ($this->handlers as $handler) {
-            if ($handler->taskFqn() === $task::class) {
+            assert($handler instanceof Handler);
+            $fqn = $handler->taskFqn();
+            if ($task instanceof $fqn) {
                 return $handler;
             }
         }

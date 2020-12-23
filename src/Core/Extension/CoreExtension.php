@@ -17,6 +17,7 @@ use Maestro\Core\Task\CatHandler;
 use Maestro\Core\Task\ChangeDirectoryHandler;
 use Maestro\Core\Task\ClosureHandler;
 use Maestro\Core\Task\ContextFactory;
+use Maestro\Core\Task\DelegateTaskHandler;
 use Maestro\Core\Task\GitSurveyHandler;
 use Maestro\Core\Task\JsonApiSurveyHandler;
 use Maestro\Core\Task\PhpProcessHandler;
@@ -151,6 +152,7 @@ class CoreExtension implements Extension
                 new ClosureHandler(),
                 new GitSurveyHandler($container->get(RepositoryFactory::class), $container->get(ReportManager::class)),
                 new JsonApiSurveyHandler($container->get(HttpClient::class), $container->get(ReportManager::class)),
+                new DelegateTaskHandler($container->get(Queue::class)),
             ], (static function (array $taggedServices) use ($container) {
                 return array_map(static function ($serviceId) use ($container): Handler {
                     $handler = $container->get($serviceId);
