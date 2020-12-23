@@ -13,6 +13,8 @@ use Maestro\Core\Queue\Queue;
 use Maestro\Core\Queue\Worker;
 use Maestro\Core\Report\ReportManager;
 use Maestro\Core\Task\CatHandler;
+use Maestro\Core\Task\ChangeDirectoryHandler;
+use Maestro\Core\Task\ChangeDirectoryTask;
 use Maestro\Core\Task\ClosureHandler;
 use Maestro\Core\Task\GitSurveyHandler;
 use Maestro\Core\Task\JsonApiSurveyHandler;
@@ -122,8 +124,9 @@ class CoreExtension implements Extension
                     $container->get(ReportManager::class)
                 ),
                 new ParallelHandler($container->get(Queue::class), $container->get(ReportManager::class)),
-                new FileHandler($container->get(Filesystem::class), $container->get(LoggerInterface::class)),
-                new GitRepositoryHandler($container->get(Queue::class), $container->get(Filesystem::class)),
+                new GitRepositoryHandler($container->get(Queue::class)),
+                new FileHandler($container->get(LoggerInterface::class)),
+                new ChangeDirectoryHandler($container->get(Filesystem::class)),
                 new ProcessHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new PhpProcessHandler($container->get(Queue::class)),
                 new NullTaskHandler(),
@@ -132,14 +135,14 @@ class CoreExtension implements Extension
                     $container->get(Environment::class),
                     $container->get(ReportManager::class)
                 ),
-                new JsonMergeHandler($container->get(Filesystem::class), ),
+                new JsonMergeHandler(),
                 new YamlHandler($container->get(Filesystem::class), ),
                 new ReplaceLineHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
                 new GitDiffHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class), $container->get(ReportManager::class)),
-                new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class), $container->get(Filesystem::class)),
+                new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class)),
                 new FactHandler(),
                 new ConditionalHandler($container->get(Queue::class), $container->get(ReportManager::class)),
-                new CatHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
+                new CatHandler($container->get(ReportManager::class)),
                 new ClosureHandler(),
                 new GitSurveyHandler($container->get(Filesystem::class), $container->get(RepositoryFactory::class), $container->get(ReportManager::class)),
                 new JsonApiSurveyHandler($container->get(HttpClient::class), $container->get(ReportManager::class)),

@@ -10,7 +10,7 @@ use function Amp\call;
 
 class GitRepositoryHandler implements Handler
 {
-    public function __construct(private Enqueuer $enqueuer, private Filesystem $filesystem)
+    public function __construct(private Enqueuer $enqueuer)
     {
     }
 
@@ -44,7 +44,7 @@ class GitRepositoryHandler implements Handler
             ), $context));
 
             return $context;
-        }, $this->filesystem->cd($context->fact(CwdFact::class)->cwd()));
+        }, $context->service(Filesystem::class));
     }
 
     private function handleExisting(GitRepositoryTask $task, Context $context): Promise

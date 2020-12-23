@@ -14,6 +14,10 @@ class Filesystem
         $this->fs = new SymfonyFilesystem();
     }
 
+    /**
+     * Resolve the given path to the absolute filesystem path relative
+     * to the current current working directory.
+     */
     public function localPath(string $cwd = '.'): string
     {
         return $this->resolvePath($cwd);

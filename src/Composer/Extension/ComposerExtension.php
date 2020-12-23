@@ -21,16 +21,13 @@ class ComposerExtension implements Extension
     public function load(ContainerBuilder $container): void
     {
         $container->register(ComposerJsonFactHandler::class, function (Container $container) {
-            return new ComposerJsonFactHandler(
-                $container->get(Filesystem::class)
-            );
+            return new ComposerJsonFactHandler();
         }, [
             CoreExtension::TAG_TASK_HANDLER => []
         ]);
 
         $container->register(ComposerHandler::class, function (Container $container) {
             return new ComposerHandler(
-                $container->get(Filesystem::class),
                 $container->get(Queue::class),
                 $container->get(ReportManager::class)
             );

@@ -2,7 +2,6 @@
 
 namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\HttpClient\TestHttpClientInterceptor;
@@ -34,8 +33,9 @@ abstract class HandlerTestCase extends IntegrationTestCase
     protected function defaultContext(): Context
     {
         return Context::create([], [
-            new CwdFact('/'),
             new GroupFact(self::EX_GROUP),
+        ], [
+            $this->container()->get(Filesystem::class)
         ]);
     }
 

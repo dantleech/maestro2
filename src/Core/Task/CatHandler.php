@@ -12,7 +12,7 @@ use function Amp\call;
 
 class CatHandler implements Handler
 {
-    public function __construct(private Filesystem $filesystem, private ReportPublisher $publisher)
+    public function __construct(private ReportPublisher $publisher)
     {
     }
 
@@ -32,9 +32,7 @@ class CatHandler implements Handler
                 $context->factOrNull(GroupFact::class)?->group() ?: 'workspace',
                 Report::info(
                     sprintf('Contents of "%s"', $task->path()),
-                    $this->filesystem->cd(
-                        $context->factOrNull(CwdFact::class)?->cwd() ?: '/'
-                    )->getContents($task->path())
+                    $context->service(Filesystem::class)->getContents($task->path())
                 )
             );
 

@@ -141,16 +141,16 @@ final class Context
      *
      * @return S
      */
-    public function service(string $serviceClass): Fact
+    public function service(string $serviceClass): object
     {
-        if (!isset($this->service[$serviceClass])) {
+        if (!isset($this->services[$serviceClass])) {
             throw new ServiceNotFound(sprintf(
                 'Service "%s" has not been registered',
                 $serviceClass
             ));
         }
 
-        return $this->service[$serviceClass];
+        return $this->services[$serviceClass];
     }
 
     /**

@@ -14,7 +14,7 @@ use Maestro\Core\Task\Task;
 
 class ComposerJsonFactHandler implements Handler
 {
-    public function __construct(private Filesystem $filesystem)
+    public function __construct()
     {
     }
 
@@ -29,7 +29,7 @@ class ComposerJsonFactHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         $composerJson = ComposerJson::fromProjectRoot(
-            $this->filesystem->cd($context->fact(CwdFact::class)->cwd())->localPath()
+            $context->service(Filesystem::class)->localPath()
         );
 
         return new Success($context->withFact(new ComposerJsonFact(

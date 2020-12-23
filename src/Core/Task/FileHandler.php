@@ -3,7 +3,6 @@
 namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Task\Exception\TaskError;
 use Psr\Log\LoggerInterface;
@@ -15,14 +14,10 @@ use function Amp\call;
 
 class FileHandler implements Handler
 {
-    private Filesystem $workspaceFs;
-
     public function __construct(
-        Filesystem $workspaceFs,
         private LoggerInterface $logger
     )
     {
-        $this->workspaceFs = $workspaceFs;
         $this->logger = $logger;
     }
 
@@ -45,7 +40,7 @@ class FileHandler implements Handler
             };
 
             return $context;
-        }, $this->workspaceFs->cd($context->factOrNull(CwdFact::class)?->cwd() ?: '/'));
+        }, $context->service(Filesystem::class));
     }
 
     private function handleDirectory(Filesystem $filesystem, FileTask $task): void

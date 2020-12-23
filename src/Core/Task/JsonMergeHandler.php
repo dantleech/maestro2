@@ -13,7 +13,7 @@ use stdClass;
 
 class JsonMergeHandler implements Handler
 {
-    public function __construct(private Filesystem $filesystem)
+    public function __construct()
     {
     }
 
@@ -27,7 +27,7 @@ class JsonMergeHandler implements Handler
         assert($task instanceof JsonMergeTask);
 
         $existingData = new stdClass();
-        $filesystem = $this->filesystem->cd($context->fact(CwdFact::class)->cwd());
+        $filesystem = $context->service(Filesystem::class);
 
         if ($filesystem->exists($task->path())) {
             $jsonContents = $filesystem->getContents($task->path());

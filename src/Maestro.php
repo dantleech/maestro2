@@ -22,6 +22,7 @@ class Maestro
         private InventoryLoader $loader,
         private Worker $worker,
         private Enqueuer $enqueuer,
+        private ContextFactory $contextFactory
     ) {
     }
 

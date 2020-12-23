@@ -3,7 +3,6 @@
 namespace Maestro\Core\Task;
 
 use Amp\Promise;
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Process\ProcessResult;
@@ -17,8 +16,7 @@ class GitCommitHandler implements Handler
 {
     public function __construct(
         private Enqueuer $enqueuer,
-        private ReportPublisher $publisher,
-        private Filesystem $filesystem
+        private ReportPublisher $publisher
     ) {
     }
 
@@ -60,7 +58,7 @@ class GitCommitHandler implements Handler
             yield $this->enqueuer->enqueue(
                 TaskContext::create(new ProcessTask(
                     cmd: array_merge(['git', 'add'], $this->filterPaths(
-                        $context->fact(CwdFact::class)->cwd(),
+                        $context->service(Filesystem::class),
                         $context->fact(GroupFact::class)->group(),
                         $task->paths(),
                     ))
@@ -106,10 +104,10 @@ class GitCommitHandler implements Handler
      * @param list<string> $paths
      * @return list<string>
      */
-    private function filterPaths(string $cwd, string $group, array $paths): array
+    private function filterPaths(Filesystem $filesystem, string $group, array $paths): array
     {
-        return array_values(array_filter($paths, function (string $path) use ($group, $cwd) {
-            if (false === $this->filesystem->cd($cwd)->exists($path)) {
+        return array_values(array_filter($paths, function (string $path) use ($group, $filesystem) {
+            if (false === $filesystem->exists($path)) {
                 $this->publisher->publish(
                     $group,
                     Report::warn(sprintf(

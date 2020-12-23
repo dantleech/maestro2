@@ -19,17 +19,6 @@ class FileHandlerTest extends HandlerTestCase
         self::assertFileExists($this->filesystem()->localPath('foobar/directory'));
     }
 
-    public function testCreatesDirectoryInCwd(): void
-    {
-        $this->runTask(new FileTask(
-            path: '../barfoo/directory',
-            type: 'directory',
-        ), Context::create([], [
-            new CwdFact('foobar')
-        ]));
-        self::assertFileExists($this->filesystem()->localPath('barfoo/directory'));
-    }
-
     public function testIgnoresExistingDirectory(): void
     {
         $this->filesystem()->createDirectory('foobar/directory');

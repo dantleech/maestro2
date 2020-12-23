@@ -7,7 +7,6 @@ use Maestro\Composer\ComposerJson;
 use Maestro\Composer\ComposerPackages;
 use Maestro\Composer\ComposerRunner;
 use Maestro\Composer\Fact\ComposerJsonFact;
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Filesystem\Filesystem;
@@ -29,7 +28,6 @@ use function Amp\call;
 class ComposerHandler implements Handler
 {
     public function __construct(
-        private Filesystem $filesystem,
         private Enqueuer $enqueuer,
         private ReportPublisher $publisher
     ) {
@@ -43,19 +41,16 @@ class ComposerHandler implements Handler
     public function run(Task $task, Context $context): Promise
     {
         assert($task instanceof ComposerTask);
-        return call(
-            function (Filesystem $filesystem) use ($task, $context) {
-                $runner = new ComposerRunner($task, $context, $this->enqueuer);
-                $fact = yield $this->updateComposerJson($filesystem, $task, $context, $runner);
+        return call(function (Filesystem $filesystem) use ($task, $context) {
+            $runner = new ComposerRunner($task, $context, $this->enqueuer);
+            $fact = yield $this->updateComposerJson($filesystem, $task, $context, $runner);
 
-                if ($task->update() === true) {
-                    yield $runner->run(['update']);
-                }
+            if ($task->update() === true) {
+                yield $runner->run(['update']);
+            }
 
-                return $context->withFact($fact);
-            },
-            $this->filesystem->cd($context->factOrNull(CwdFact::class)?->cwd() ?: '/')
-        );
+            return $context->withFact($fact);
+        }, $context->service(Filesystem::class));
     }
 
     private function createJsonTask(ComposerTask $task): JsonMergeTask
@@ -179,7 +174,7 @@ class ComposerHandler implements Handler
             if (!$fact->packages()->has($name)) {
                 return true;
             }
-        
+
             $packageVersion = $fact->packages()->get($name)->version();
 
             if ($packageVersion->greaterThanOrEqualTo($version)) {
@@ -194,7 +189,7 @@ class ComposerHandler implements Handler
                 );
                 return false;
             }
-        
+
             return true;
         }, ARRAY_FILTER_USE_BOTH);
     }
