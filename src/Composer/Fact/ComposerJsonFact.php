@@ -2,9 +2,7 @@
 
 namespace Maestro\Composer\Fact;
 
-use Maestro\Composer\ComposerPackage;
 use Maestro\Composer\ComposerPackages;
-use Maestro\Core\Exception\RuntimeException;
 use Maestro\Core\Fact\Fact;
 
 class ComposerJsonFact implements Fact

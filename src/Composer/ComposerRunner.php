@@ -29,7 +29,7 @@ class ComposerRunner
      */
     public function run(array $args): Promise
     {
-        return call(fn() => (yield $this->enqueuer->enqueue(TaskContext::create(new PhpProcessTask(
+        return call(fn () => (yield $this->enqueuer->enqueue(TaskContext::create(new PhpProcessTask(
             cmd: array_values(array_merge([
                 $this->bin
             ], $args))

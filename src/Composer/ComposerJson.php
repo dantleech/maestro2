@@ -69,18 +69,18 @@ final class ComposerJson
 
     public function branchAliases(): array
     {
-        if (!isset($this->object->extra->{'branch-alias'})) {
+        if (!isset($this->object['extra']['branch-alias'])) {
             return [];
         }
 
-        return (array)$this->object->extra->{'branch-alias'};
+        return (array)$this->object['extra']['branch-alias'];
     }
 
     public function packages(): ComposerPackages
     {
         $required = array_merge(
-            $this->object['require'] ?? [],
-            $this->object['require-dev'] ?? [],
+            (array)($this->object['require'] ?? []),
+            (array)($this->object['require-dev'] ?? []),
         );
         return new ComposerPackages(array_values(array_map(function (string $name, string $version) {
             return new ComposerPackage($name, $version);

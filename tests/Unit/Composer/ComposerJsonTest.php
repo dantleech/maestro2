@@ -58,14 +58,14 @@ class ComposerJsonTest extends TestCase
         ];
     }
 
-        /**
-         * @dataProvider providePackages
-         */
-        public function testPackages(array $composer, Closure $assertion): void
-        {
-            $composer = ComposerJson::fromArray($composer);
-            $assertion($composer->packages());
-        }
+    /**
+     * @dataProvider providePackages
+     */
+    public function testPackages(array $composer, Closure $assertion): void
+    {
+        $composer = ComposerJson::fromArray($composer);
+        $assertion($composer->packages());
+    }
 
     /**
      * @return Generator<mixed>
@@ -93,5 +93,25 @@ class ComposerJsonTest extends TestCase
                 self::assertEquals('1.0', $packages->get('example/foobar')->version());
             }
         ];
+    }
+
+    public function testBranchAliasNoBranchAlias(): void
+    {
+        $composer = ComposerJson::fromArray([]);
+        self::assertEquals([], $composer->branchAliases());
+    }
+
+    public function testBranchAlias(): void
+    {
+        $composer = ComposerJson::fromArray([
+            'extra' => [
+                'branch-alias' => [
+                    'dev-master' => '1.9',
+                ],
+            ],
+        ]);
+        self::assertEquals([
+            'dev-master' => '1.9',
+        ], $composer->branchAliases());
     }
 }
