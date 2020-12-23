@@ -4,7 +4,7 @@ namespace Maestro\Tests\Unit\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
-use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\Fact;
 use Maestro\Core\Task\ClosureTask;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Exception\SequentialTaskError;
@@ -78,7 +78,7 @@ class SequentialHandlerTest extends HandlerTestCase
             new ClosureTask(function (array $args, Context $context): Promise {
                 return new Success($context->withVar('count', 1));
             }),
-            new CwdFact('foobar'),
+            new TestFact('foobar'),
             new ClosureTask(function (array $args, Context $context): Promise {
                 return new Success(
                     $context->withVar('count', $context->var('count') + 1)
@@ -86,6 +86,13 @@ class SequentialHandlerTest extends HandlerTestCase
             })
         ]));
 
-        self::assertEquals('foobar', $context->fact(CwdFact::class)->cwd());
+        self::assertEquals('foobar', $context->fact(TestFact::class)->foobar);
+    }
+}
+
+class TestFact implements Fact
+{
+    public function __construct(public string $foobar)
+    {
     }
 }

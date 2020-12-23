@@ -10,6 +10,7 @@ use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Pipeline\Pipeline;
 use Maestro\Composer\Task\ComposerTask;
+use Maestro\Core\Task\ChangeDirectoryTask;
 use Maestro\Core\Task\FactTask;
 use Maestro\Core\Task\FileTask;
 use Maestro\Core\Task\GitRepositoryTask;
@@ -39,12 +40,12 @@ class BasePipeline implements Pipeline
             new ParallelTask(array_map(function (RepositoryNode $repositoryNode) {
                 return new SequentialTask([
                     new GroupFact($repositoryNode->name()),
-                    new CwdFact('build'),
+                    new ChangeDirectoryTask('build'),
                     new GitRepositoryTask(
                         url: $repositoryNode->url(),
                         path: $repositoryNode->name()
                     ),
-                    new CwdFact('build/' . $repositoryNode->name()),
+                    new ChangeDirectoryTask('build/' . $repositoryNode->name()),
                     $this->buildRepository($repositoryNode)
                 ]);
             }, $mainNode->selectedRepositories()))

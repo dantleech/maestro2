@@ -60,8 +60,6 @@ class GitRepositoryHandler implements Handler
                     ]
                 ), $context));
             }
-
         });
-
     }
 }

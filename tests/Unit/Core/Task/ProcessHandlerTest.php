@@ -2,7 +2,6 @@
 
 namespace Maestro\Tests\Unit\Core\Task;
 
-use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Process\Exception\ProcessFailure;
 use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Task\Context;
@@ -17,9 +16,7 @@ class ProcessHandlerTest extends HandlerTestCase
         $this->processRunner()->expect($expected);
         $context = $this->runTask(new ProcessTask(
             cmd: ['foobar']
-        ), Context::create([], [
-            new CwdFact('foobar')
-        ]));
+        ));
 
         $process = $context->result();
 
@@ -31,10 +28,7 @@ class ProcessHandlerTest extends HandlerTestCase
         $this->processRunner()->expect(ProcessResult::ok('foobar barfoo', '/'));
         $context = $this->runTask(new ProcessTask(
             cmd: 'foobar "barfoo"',
-        ), Context::create([], [
-            new CwdFact('foobar')
-        ]));
-
+        ));
 
         $process = $context->result();
 

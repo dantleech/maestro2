@@ -14,7 +14,7 @@ use function Amp\call;
 
 class GitSurveyHandler implements Handler
 {
-    public function __construct(private Filesystem $filesystem, private RepositoryFactory $repository, private ReportTablePublisher $publisher)
+    public function __construct(private RepositoryFactory $repository, private ReportTablePublisher $publisher)
     {
     }
 
@@ -33,7 +33,7 @@ class GitSurveyHandler implements Handler
             yield from $this->survey(
                 $context->fact(GroupFact::class)->group(),
                 $this->repository->create(
-                    $this->filesystem->localPath($context->fact(CwdFact::class)->cwd())
+                    $context->service(Filesystem::class)->localPath()
                 )
             );
 

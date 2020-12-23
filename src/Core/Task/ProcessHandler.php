@@ -21,7 +21,6 @@ class ProcessHandler implements Handler
     private ReportPublisher $reportPublisher;
 
     public function __construct(
-        private Filesystem $filesystem,
         private ProcessRunner $processRunner,
         ?ReportPublisher $reportPublisher = null
     ) {
@@ -39,7 +38,7 @@ class ProcessHandler implements Handler
         return call(function (string $cwd, string $group) use ($task, $context) {
             $result = yield $this->processRunner->run(
                 $task->cmd(),
-                $this->filesystem->localPath($cwd)
+                $context->service(Filesystem::class)->localPath($cwd)
             );
             assert($result instanceof ProcessResult);
 
