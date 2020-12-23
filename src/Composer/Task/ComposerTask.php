@@ -1,7 +1,8 @@
 <?php
 
-namespace Maestro\Core\Task;
+namespace Maestro\Composer\Task;
 
+use Maestro\Core\Task\Task;
 use Stringable;
 
 class ComposerTask implements Task, Stringable

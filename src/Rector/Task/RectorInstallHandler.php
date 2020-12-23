@@ -5,7 +5,7 @@ namespace Maestro\Rector\Task;
 use Amp\Promise;
 use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Queue\Enqueuer;
-use Maestro\Core\Task\ComposerTask;
+use Maestro\Composer\Task\ComposerTask;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Exception\TaskError;
 use Maestro\Core\Task\Handler;

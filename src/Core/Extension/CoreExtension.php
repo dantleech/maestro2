@@ -17,7 +17,6 @@ use Maestro\Core\Task\ClosureHandler;
 use Maestro\Core\Task\GitSurveyHandler;
 use Maestro\Core\Task\JsonApiSurveyHandler;
 use Maestro\Core\Task\PhpProcessHandler;
-use Maestro\Core\Task\ComposerHandler;
 use Maestro\Core\Task\ConditionalHandler;
 use Maestro\Core\Task\FactHandler;
 use Maestro\Core\Task\FileHandler;
@@ -136,10 +135,6 @@ class CoreExtension implements Extension
                 new JsonMergeHandler($container->get(Filesystem::class), ),
                 new YamlHandler($container->get(Filesystem::class), ),
                 new ReplaceLineHandler($container->get(Filesystem::class), $container->get(ReportManager::class)),
-                new ComposerHandler(
-                    $container->get(Filesystem::class),
-                    $container->get(Queue::class)
-                ),
                 new GitDiffHandler($container->get(Filesystem::class), $container->get(ProcessRunner::class), $container->get(ReportManager::class)),
                 new GitCommitHandler($container->get(Queue::class), $container->get(ReportManager::class), $container->get(Filesystem::class)),
                 new FactHandler(),

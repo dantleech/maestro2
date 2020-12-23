@@ -2,9 +2,11 @@
 
 namespace Maestro\Composer\Extension;
 
+use Maestro\Composer\Task\ComposerHandler;
 use Maestro\Composer\Task\ComposerJsonFactHandler;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\Queue\Queue;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
@@ -20,6 +22,15 @@ class ComposerExtension implements Extension
         $container->register(ComposerJsonFactHandler::class, function (Container $container) {
             return new ComposerJsonFactHandler(
                 $container->get(Filesystem::class)
+            );
+        }, [
+            CoreExtension::TAG_TASK_HANDLER => []
+        ]);
+
+        $container->register(ComposerHandler::class, function (Container $container) {
+            return new ComposerHandler(
+                $container->get(Filesystem::class),
+                $container->get(Queue::class)
             );
         }, [
             CoreExtension::TAG_TASK_HANDLER => []

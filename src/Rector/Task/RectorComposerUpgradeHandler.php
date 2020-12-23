@@ -7,7 +7,7 @@ use Maestro\Composer\Fact\ComposerJsonFact;
 use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Queue\Enqueuer;
-use Maestro\Core\Task\ComposerTask;
+use Maestro\Composer\Task\ComposerTask;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\GitCommitTask;
 use Maestro\Core\Task\Handler;

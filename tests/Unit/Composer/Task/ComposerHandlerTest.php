@@ -1,12 +1,13 @@
 <?php
 
-namespace Maestro\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Composer\Task;
 
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Process\Exception\ProcessFailure;
 use Maestro\Core\Process\ProcessResult;
-use Maestro\Core\Task\ComposerTask;
+use Maestro\Composer\Task\ComposerTask;
 use Maestro\Core\Task\Context;
+use Maestro\Tests\Unit\Core\Task\HandlerTestCase;
 
 class ComposerHandlerTest extends HandlerTestCase
 {

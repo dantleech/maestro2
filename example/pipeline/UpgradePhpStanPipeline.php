@@ -4,7 +4,7 @@ namespace Maestro\Examples\Pipeline;
 
 use Maestro\Core\Inventory\RepositoryNode;
 use Maestro\Core\Process\ProcessResult;
-use Maestro\Core\Task\ComposerTask;
+use Maestro\Composer\Task\ComposerTask;
 use Maestro\Core\Task\ConditionalTask;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\GitCommitTask;

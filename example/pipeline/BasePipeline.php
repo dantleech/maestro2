@@ -8,7 +8,7 @@ use Maestro\Core\Inventory\RepositoryNode;
 use Maestro\Core\Fact\CwdFact;
 use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Pipeline\Pipeline;
-use Maestro\Core\Task\ComposerTask;
+use Maestro\Composer\Task\ComposerTask;
 use Maestro\Core\Task\FactTask;
 use Maestro\Core\Task\FileTask;
 use Maestro\Core\Task\GitRepositoryTask;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Maestro\Core\Task;
+namespace Maestro\Composer\Task;
 
 use Amp\Promise;
 use Maestro\Core\Fact\CwdFact;
@@ -8,6 +8,12 @@ use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Process\ProcessRunner;
 use Maestro\Core\Queue\Enqueuer;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Handler;
+use Maestro\Core\Task\JsonMergeTask;
+use Maestro\Core\Task\PhpProcessTask;
+use Maestro\Core\Task\Task;
+use Maestro\Core\Task\TaskContext;
 use Symfony\Component\Process\ExecutableFinder;
 use Webmozart\PathUtil\Path;
 use stdClass;
