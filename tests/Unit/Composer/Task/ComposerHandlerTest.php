@@ -2,6 +2,7 @@
 
 namespace Maestro\Tests\Unit\Composer\Task;
 
+use Maestro\Composer\ComposerPackage;
 use Maestro\Composer\Fact\ComposerJsonFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Process\Exception\ProcessFailure;
@@ -30,6 +31,7 @@ class ComposerHandlerTest extends HandlerTestCase
         ));
 
         self::assertInstanceOf(ComposerJsonFact::class, $context->fact(ComposerJsonFact::class));
+        self::assertInstanceOf(ComposerPackage::class, $context->fact(ComposerJsonFact::class)->packages()->get('foobar/barfoo'));
     }
 
     public function testCreatesComposerJsonIfItDoesNotExist(): void

@@ -150,7 +150,8 @@ class ComposerHandler implements Handler
         );
 
         return new ComposerJsonFact(
-            autoloadPaths: $composerJson->autoloadPaths()
+            autoloadPaths: $composerJson->autoloadPaths(),
+            packages: $composerJson->packages(),
         );
     }
 }

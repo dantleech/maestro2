@@ -33,7 +33,8 @@ class ComposerJsonFactHandler implements Handler
         );
 
         return new Success($context->withFact(new ComposerJsonFact(
-            autoloadPaths: $composerJson->autoloadPaths()
+            autoloadPaths: $composerJson->autoloadPaths(),
+            packages: $composerJson->packages(),
         )));
     }
 }
