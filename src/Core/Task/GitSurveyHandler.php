@@ -50,7 +50,7 @@ class GitSurveyHandler implements Handler
         $message = yield $repository->message($headId);
         $publisher->publishTableRow(
             [
-                'tag' => $latestTagname() ?: '<none>',
+                'tag' => $latestTag?->name() ?: '<none>',
                 '+' => sprintf('+%s', $nbCommitsAhead),
                 'message' => $message,
             ]
