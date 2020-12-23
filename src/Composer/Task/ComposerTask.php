@@ -7,6 +7,9 @@ use Stringable;
 
 class ComposerTask implements Task, Stringable
 {
+    /**
+     * @param array<string,string> $require
+     */
     public function __construct(
         private array $require = [],
         private array $remove = [],
@@ -21,6 +24,9 @@ class ComposerTask implements Task, Stringable
         return $this->remove;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function require(): array
     {
         return $this->require;

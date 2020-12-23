@@ -3,6 +3,7 @@
 namespace Maestro\Composer;
 
 use Countable;
+use DTL\Invoke\Invoke;
 use Maestro\Core\Exception\RuntimeException;
 
 class ComposerPackages implements Countable
@@ -23,6 +24,15 @@ class ComposerPackages implements Countable
         ), array_values($packages));
     }
 
+    public static function fromArray(array $packageArray): self
+    {
+        return new self(array_map(
+            fn (string $name, string $version) => new ComposerPackage($name, $version),
+            array_keys($packageArray),
+            array_values($packageArray)
+        ));
+    }
+
     public function get(string $name): ComposerPackage
     {
         if (!isset($this->packages[$name])) {
@@ -34,6 +44,11 @@ class ComposerPackages implements Countable
         }
 
         return $this->packages[$name];
+    }
+
+    public function has(string $name): bool
+    {
+        return isset($this->packages[$name]);
     }
 
     public function count(): int

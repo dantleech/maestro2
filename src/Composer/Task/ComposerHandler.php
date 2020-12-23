@@ -4,14 +4,18 @@ namespace Maestro\Composer\Task;
 
 use Amp\Promise;
 use Maestro\Composer\ComposerJson;
+use Maestro\Composer\ComposerPackages;
 use Maestro\Composer\ComposerRunner;
 use Maestro\Composer\Fact\ComposerJsonFact;
 use Maestro\Core\Fact\CwdFact;
+use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Process\ProcessRunner;
 use Maestro\Core\Queue\Enqueuer;
+use Maestro\Core\Report\Report;
+use Maestro\Core\Report\ReportPublisher;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Handler;
 use Maestro\Core\Task\JsonMergeTask;
@@ -27,6 +31,7 @@ class ComposerHandler implements Handler
     public function __construct(
         private Filesystem $filesystem,
         private Enqueuer $enqueuer,
+        private ReportPublisher $publisher
     ) {
     }
 
@@ -41,14 +46,13 @@ class ComposerHandler implements Handler
         return call(
             function (Filesystem $filesystem) use ($task, $context) {
                 $runner = new ComposerRunner($task, $context, $this->enqueuer);
+                $fact = yield $this->updateComposerJson($filesystem, $task, $context, $runner);
 
-                yield $this->updateComposerJson($filesystem, $task, $context, $runner);
-
-                if ((empty($task->remove()) && empty($task->require())) && $task->update() === true) {
+                if ($task->update() === true && 0 === count($fact->updated())) {
                     yield $runner->run(['update']);
                 }
 
-                return $context->withFact($this->composerFact($filesystem));
+                return $context->withFact($fact);
             },
             $this->filesystem->cd($context->factOrNull(CwdFact::class)?->cwd() ?: '/')
         );
@@ -78,48 +82,63 @@ class ComposerHandler implements Handler
     }
 
     /**
-     * @return Promise<void>
+     * @return Promise<ComposerJsonFact>
      */
     private function updateComposerJson(Filesystem $filesystem, ComposerTask $task, Context $context, ComposerRunner $runner): Promise
     {
         return call(function () use ($filesystem, $task, $context, $runner) {
             if (!$filesystem->exists('composer.json')) {
                 yield $this->enqueuer->enqueue(new TaskContext($this->createJsonTask($task), $context));
-                return;
+                return $this->composerFact($filesystem);
             }
 
+            $fact = $this->composerFact($filesystem);
+
             if ($task->require()) {
-                yield $this->require($runner, $task);
+                $updated = yield $this->require($context, $fact, $runner, $task);
+                $fact = $fact->withUpdated(ComposerPackages::fromArray($updated));
             }
 
             if ($task->remove()) {
                 yield $this->remove($runner, $task);
             }
+
+            return $fact;
         });
     }
 
     /**
-     * @return Promise<ProcessResult>
+     * @return Promise<array<string,string>>
      */
-    private function require(ComposerRunner $runner, ComposerTask $task): Promise
+    private function require(Context $context, ComposerJsonFact $fact, ComposerRunner $runner, ComposerTask $task): Promise
     {
-        $args = array_merge([
-            'require',
-        ], array_map(
-            fn (string $package, string $version) => sprintf('%s:%s', $package, $version),
-            array_keys($task->require()),
-            array_values($task->require())
-        ));
+        return call(function () use ($context, $fact, $runner, $task) {
+            $toUpdate = $this->requiredPackages($task, $fact, $context);
 
-        if ($task->dev()) {
-            $args[] = '--dev';
-        }
+            if (empty($toUpdate)) {
+                return [];
+            }
 
-        if ($task->update() === false) {
-            $args[] = '--no-update';
-        }
+            $args = array_merge([
+                'require',
+            ], array_map(
+                fn (string $package, string $version) => sprintf('%s:%s', $package, $version),
+                array_keys($toUpdate),
+                array_values($toUpdate)
+            ));
 
-        return $runner->run($args);
+            if ($task->dev()) {
+                $args[] = '--dev';
+            }
+
+            if ($task->update() === false) {
+                $args[] = '--no-update';
+            }
+
+            yield $runner->run($args);
+
+            return $toUpdate;
+        });
     }
 
     /**
@@ -153,5 +172,34 @@ class ComposerHandler implements Handler
             autoloadPaths: $composerJson->autoloadPaths(),
             packages: $composerJson->packages(),
         );
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private function requiredPackages(ComposerTask $task, ComposerJsonFact $fact, Context $context): array
+    {
+        return array_filter($task->require(), function (string $version, string $name) use ($fact, $context): bool  {
+            if (!$fact->packages()->has($name)) {
+                return true;
+            }
+        
+            $packageVersion = $fact->packages()->get($name)->version();
+
+            if ($packageVersion->greaterThanThanOrEqualTo($version)) {
+                $this->publisher->publish(
+                    $context->factOrNull(GroupFact::class)?->group() ?: 'composer',
+                    Report::info(sprintf(
+                        'Package "%s" version "%s" already satisifies "%s"',
+                        $name,
+                        $packageVersion->__toString(),
+                        $version
+                    ))
+                );
+                return false;
+            }
+        
+            return true;
+        }, ARRAY_FILTER_USE_BOTH);
     }
 }

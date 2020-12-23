@@ -7,6 +7,8 @@ use Maestro\Composer\Task\ComposerJsonFactHandler;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Queue\Queue;
+use Maestro\Core\Report\ReportManager;
+use Maestro\Core\Report\ReportPublisher;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
@@ -30,7 +32,8 @@ class ComposerExtension implements Extension
         $container->register(ComposerHandler::class, function (Container $container) {
             return new ComposerHandler(
                 $container->get(Filesystem::class),
-                $container->get(Queue::class)
+                $container->get(Queue::class),
+                $container->get(ReportManager::class)
             );
         }, [
             CoreExtension::TAG_TASK_HANDLER => []
