@@ -5,6 +5,7 @@ namespace Maestro\Core\Inventory;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use Maestro\Core\Exception\RuntimeException;
 
 /**
  * @implements IteratorAggregate<RepositoryNode>
@@ -58,5 +59,20 @@ class RepositoryNodes implements IteratorAggregate, Countable
             $this->repositoryNodes,
             fn (RepositoryNode $r) => in_array($r->name(), $names)
         )));
+    }
+
+    public function get(string $name): RepositoryNode
+    {
+        foreach ($this->repositoryNodes as $repositoryNode) {
+            if ($repositoryNode->name() === $name) {
+                return $repositoryNode;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Could not find repository with name "%s", known repositories: "%s"',
+            $name,
+            implode('", "', $this->names())
+        ));
     }
 }

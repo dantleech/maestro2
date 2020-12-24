@@ -13,7 +13,7 @@ class InventoryLoaderTest extends IntegrationTestCase
     /**
      * @dataProvider provideInventories
      */
-    public function testLoadsInventories(array $inventories, Closure $assertion): void
+    public function testLoadsInventories(array $inventories, Closure $assertion, array $variables = []): void
     {
         $paths = [];
         foreach ($inventories as $index => $inventory) {
@@ -25,7 +25,7 @@ class InventoryLoaderTest extends IntegrationTestCase
             $paths[] = $this->workspace()->path($name);
         }
 
-        $mainNode = (new InventoryLoader($paths))->load();
+        $mainNode = (new InventoryLoader($paths))->load($variables);
         $assertion($mainNode);
     }
 
@@ -62,6 +62,88 @@ class InventoryLoaderTest extends IntegrationTestCase
                     'three' => 'four',
                 ], $node->vars()->toArray());
             }
+        ];
+
+        yield 'add extra variables when none set' => [
+            [
+                [
+                    'repositories' => [],
+                ],
+            ],
+            function (MainNode $node) {
+                self::assertEquals([
+                    'one' => 'two',
+                ], $node->vars()->toArray());
+            },
+            [
+                'one' => 'two',
+            ]
+        ];
+
+        yield 'merge extra variables' => [
+            [
+                [
+                    'repositories' => [],
+                    'vars' => [
+                        'branch' => 'barfoo',
+                    ],
+                ],
+            ],
+            function (MainNode $node) {
+                self::assertEquals([
+                    'one' => 'two',
+                    'branch' => 'barfoo',
+                ], $node->vars()->toArray());
+            },
+            [
+                'one' => 'two',
+            ]
+        ];
+
+        yield 'replace configured variables' => [
+            [
+                [
+                    'repositories' => [],
+                    'vars' => [
+                        'branch' => 'barfoo',
+                    ],
+                ],
+            ],
+            function (MainNode $node) {
+                self::assertEquals([
+                    'branch' => 'car',
+                ], $node->vars()->toArray());
+            },
+            [
+                'branch' => 'car',
+            ]
+        ];
+
+        yield 'replace repository variables' => [
+            [
+                [
+                    'repositories' => [
+                        [
+                            'name' => 'repo',
+                            'url' => 'https://www.example.com',
+                            'vars' => [
+                                'branch' => 'cat',
+                            ],
+                        ]
+                    ],
+                    'vars' => [
+                        'branch' => 'barfoo',
+                    ],
+                ],
+            ],
+            function (MainNode $node) {
+                self::assertEquals([
+                    'branch' => 'car',
+                ], $node->repositories()->get('repo')->vars()->toArray());
+            },
+            [
+                'branch' => 'car',
+            ]
         ];
     }
 }

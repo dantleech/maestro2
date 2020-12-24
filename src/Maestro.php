@@ -22,30 +22,34 @@ class Maestro
         private InventoryLoader $loader,
         private Worker $worker,
         private Enqueuer $enqueuer,
-        private ContextFactory $contextFactory
+        private ContextFactory $contextFactory,
     ) {
     }
 
     /**
      * @param list<string> $tags
      * @param list<string>|null $repos
+     * @param array<string,mixed> $variables
      */
     public function run(
         string $pipeline,
         ?array $repos = [],
-        array $tags = []
+        array $tags = [],
+        array $variables = [],
     ): void {
         $pipeline = $this->resolvePipeline($pipeline);
 
-        Loop::run(function () use ($pipeline, $repos, $tags) {
-            yield call(function (MainNode $inventory) use ($pipeline, $repos, $tags) {
-
+        Loop::run(function () use ($pipeline, $repos, $tags, $variables) {
+            yield call(function (MainNode $inventory) use ($pipeline, $repos, $tags, $variables) {
                 $pollId = Loop::repeat(1000, function () {
                     $this->worker->updateStatus();
                 });
 
                 $selectedRepos = $inventory->repositories()->forTags($tags);
-                $selectedRepos = $selectedRepos->forNames($repos);
+
+                if (null !== $repos) {
+                    $selectedRepos = $selectedRepos->forNames($repos);
+                }
 
                 try {
                     $this->enqueuer->enqueue(
@@ -60,7 +64,7 @@ class Maestro
                 } finally {
                     Loop::cancel($pollId);
                 }
-            }, $this->loader->load());
+            }, $this->loader->load($variables));
         });
     }
 

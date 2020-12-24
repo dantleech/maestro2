@@ -5,6 +5,7 @@ namespace Maestro\Core\Inventory;
 use DTL\Invoke\Invoke;
 use Exception;
 use Maestro\Core\Inventory\Exception\CouldNotLoadConfig;
+use Webmozart\Assert\Assert;
 use function json_decode;
 
 class InventoryLoader
@@ -16,18 +17,23 @@ class InventoryLoader
     {
     }
 
-    public function load(): MainNode
+    public function load(array $variables = []): MainNode
     {
-        return $this->readConfig($this->inventories);
+        return $this->readConfig($this->inventories, $variables);
     }
 
-    private function readConfig(array $paths): MainNode
+    private function readConfig(array $paths, array $variables): MainNode
     {
-        $config = array_reduce(
+        $config = array_merge([
+            'repositories' => [],
+        ], array_reduce(
             $paths,
             fn (array $initial, string $path) => array_replace_recursive($initial, $this->readFile($path)),
             []
-        );
+        ));
+
+        $config = $this->mergeVariables($config, $variables);
+
         $mainNode = Invoke::new(MainNode::class, $config);
         assert($mainNode instanceof MainNode);
 
@@ -58,5 +64,28 @@ class InventoryLoader
         }
 
         return (array)$config;
+    }
+
+    private function mergeVariables(array $config, array $variables): array
+    {
+        $config = array_merge([
+            'vars' => [],
+            'repositories' => [],
+        ], $config);
+
+        Assert::isArray($config['vars'], '"vars" must be an associative array, got "%s"');
+
+        $config['vars'] = array_merge($config['vars'], $variables);
+
+        foreach ($config['repositories'] as &$repository) {
+            Assert::isArray($repository, '"repository" must be an associative array, got "%s"');
+            $repository = array_merge([
+                'vars' => [],
+            ], $repository);
+            Assert::isArray($repository['vars'], '"vars" must be an associative array, got "%s"');
+            $repository['vars'] = array_merge($repository['vars'], $variables);
+        }
+
+        return $config;
     }
 }

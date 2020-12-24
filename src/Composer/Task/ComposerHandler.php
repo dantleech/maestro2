@@ -7,11 +7,8 @@ use Maestro\Composer\ComposerJson;
 use Maestro\Composer\ComposerPackages;
 use Maestro\Composer\ComposerRunner;
 use Maestro\Composer\Fact\ComposerJsonFact;
-use Maestro\Core\Fact\GroupFact;
-use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Process\ProcessResult;
-use Maestro\Core\Process\ProcessRunner;
 use Maestro\Core\Queue\Enqueuer;
 use Maestro\Core\Report\Report;
 use Maestro\Core\Report\ReportPublisher;
@@ -21,8 +18,6 @@ use Maestro\Core\Task\Handler;
 use Maestro\Core\Task\JsonMergeTask;
 use Maestro\Core\Task\Task;
 use Maestro\Core\Task\TaskContext;
-use Symfony\Component\Process\ExecutableFinder;
-use Webmozart\PathUtil\Path;
 use stdClass;
 use function Amp\call;
 
@@ -171,7 +166,7 @@ class ComposerHandler implements Handler
      */
     private function requiredPackages(ComposerTask $task, ComposerJsonFact $fact, Context $context): array
     {
-        return array_filter($task->require(), function (string $version, string $name) use ($fact, $context): bool  {
+        return array_filter($task->require(), function (string $version, string $name) use ($fact, $context): bool {
             if (!$fact->packages()->has($name)) {
                 return true;
             }

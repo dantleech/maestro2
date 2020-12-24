@@ -3,6 +3,7 @@
 namespace Maestro\Core\Extension\Command;
 
 use Amp\Loop;
+use Maestro\Core\Extension\Config\VariableParser;
 use Maestro\Core\Report\Report;
 use Maestro\Core\Report\ReportProvider;
 use Maestro\Core\Report\Table;
@@ -26,6 +27,7 @@ class RunCommand extends Command
     private const OPT_REPO = 'repo';
     private const OPT_REPORT_LEVEL = 'report-level';
     private const OPT_TAGS = 'tag';
+    private const OPT_VARIABLES = 'set';
 
     public function __construct(
         private Maestro $maestro,
@@ -42,13 +44,17 @@ class RunCommand extends Command
         $this->addOption(self::OPT_REPO, null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Include this repository');
         $this->addOption(self::OPT_REPORT_LEVEL, null, InputOption::VALUE_REQUIRED, 'Report level (error, warn, info, ok)', Report::LEVEL_OK);
         $this->addOption(self::OPT_TAGS, 't', InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Tag(s) to include');
+        $this->addOption(self::OPT_VARIABLES, 's', InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Specify variables');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $pipeline = Cast::stringOrNull($input->getArgument(self::ARG_PIPELINE));
         $reportLevel = Cast::string($input->getOption(self::OPT_REPORT_LEVEL));
+        $repos = Cast::arrayOfStrings($input->getOption(self::OPT_REPO));
         $tags = Cast::arrayOfStrings($input->getOption(self::OPT_TAGS));
+        $variables = Cast::listOfStrings($input->getOption(self::OPT_VARIABLES));
+        $variables = (new VariableParser())->parse($variables);
 
         if (null === $pipeline) {
             $this->suggestPipelineCreation($output);
@@ -70,8 +76,9 @@ class RunCommand extends Command
 
         $this->maestro->run(
             pipeline: $pipeline,
-            repos: (array)$input->getOption(self::OPT_REPO),
-            tags: $tags
+            repos: $repos,
+            tags: $tags,
+            variables: $variables,
         );
 
         $duration = microtime(true) - $start;

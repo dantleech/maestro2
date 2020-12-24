@@ -52,4 +52,21 @@ class Cast
 
         return $values;
     }
+
+    /**
+     * @return list<mixed>
+     */
+    public static function list(mixed $values): array
+    {
+        return array_values(self::array($values));
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function listOfStrings(mixed $values): array
+    {
+        $values = self::list($values);
+        return array_values(array_map(fn (mixed $v) => self::string($v), $values));
+    }
 }

@@ -3,8 +3,6 @@
 namespace Maestro\Tests\Unit\Core\Inventory;
 
 use Maestro\Core\Inventory\MainNode;
-use Maestro\Core\Inventory\RepositoryNode;
-use Maestro\Core\Inventory\RepositoryNodes;
 use PHPUnit\Framework\TestCase;
 
 class MainNodeTest extends TestCase

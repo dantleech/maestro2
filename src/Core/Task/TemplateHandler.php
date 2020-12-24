@@ -4,19 +4,11 @@ namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
-use Maestro\Core\Exception\RuntimeException;
-use Maestro\Core\Fact\CwdFact;
-use Maestro\Core\Fact\GroupFact;
 use Maestro\Core\Filesystem\Filesystem;
-use Maestro\Core\Report\Publisher\NullPublisher;
 use Maestro\Core\Report\Report;
-use Maestro\Core\Report\ReportPublisher;
 use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Util\PermissionUtil;
 use Twig\Environment;
-use Twig\Loader\ChainLoader;
-use Twig\Loader\FilesystemLoader;
-use Webmozart\PathUtil\Path;
 
 class TemplateHandler implements Handler
 {
