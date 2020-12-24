@@ -33,12 +33,6 @@ class RunTest extends IntegrationTestCase
         self::assertSuccess($process);
     }
 
-    public function testSetBranch(): void
-    {
-        $process = $this->maestro(sprintf('run %s --branch=my-branch', $this->exampleEmptyPipeline()));
-        self::assertSuccess($process);
-    }
-
     public function testSpecifyTags(): void
     {
         $process = $this->maestro(sprintf('run %s --tag=tag1 -ttag2', $this->exampleEmptyPipeline()));
