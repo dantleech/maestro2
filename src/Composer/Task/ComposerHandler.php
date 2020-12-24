@@ -87,7 +87,7 @@ class ComposerHandler implements Handler
 
             if ($task->require()) {
                 $updated = yield $this->require($context, $fact, $runner, $task);
-                $fact = $fact->withUpdated(ComposerPackages::fromArray($updated));
+                $fact = $fact->withUpdated(ComposerPackages::fromArray($updated, $task->dev()));
             }
 
             if ($task->remove()) {

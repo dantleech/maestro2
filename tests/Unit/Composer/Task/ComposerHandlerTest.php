@@ -22,7 +22,7 @@ class ComposerHandlerTest extends HandlerTestCase
         ));
     }
 
-    public function testLeavesFact(): void
+    public function testLeavesFactWithCreated(): void
     {
         $context = $this->runTask(new ComposerTask(
             require: [
@@ -32,6 +32,26 @@ class ComposerHandlerTest extends HandlerTestCase
 
         self::assertInstanceOf(ComposerJsonFact::class, $context->fact(ComposerJsonFact::class));
         self::assertInstanceOf(ComposerPackage::class, $context->fact(ComposerJsonFact::class)->packages()->get('foobar/barfoo'));
+        self::assertFalse($context->fact(ComposerJsonFact::class)->packages()->get('foobar/barfoo')->dev());
+    }
+
+    public function testLeavesFactFromExisting(): void
+    {
+        $this->filesystem()->putContents('composer.json', json_encode([
+            'require' => [
+                'foobar/barfoo' => '1',
+            ],
+            'require-dev' => [
+                'barfoo/foobar' => '2',
+            ],
+        ]));
+        $context = $this->runTask(new ComposerTask(
+        ));
+
+        $fact = $context->fact(ComposerJsonFact::class);
+        self::assertInstanceOf(ComposerJsonFact::class, $fact);
+        self::assertFalse($context->fact(ComposerJsonFact::class)->packages()->get('foobar/barfoo')->dev());
+        self::assertTrue($context->fact(ComposerJsonFact::class)->packages()->get('barfoo/foobar')->dev());
     }
 
     public function testCreatesComposerJsonIfItDoesNotExist(): void

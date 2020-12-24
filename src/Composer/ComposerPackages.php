@@ -23,10 +23,10 @@ class ComposerPackages implements Countable
         ), array_values($packages));
     }
 
-    public static function fromArray(array $packageArray): self
+    public static function fromArray(array $packageArray, bool $dev): self
     {
         return new self(array_map(
-            fn (string $name, string $version) => new ComposerPackage($name, $version),
+            fn (string $name, string $version) => new ComposerPackage($name, $version, $dev),
             array_keys($packageArray),
             array_values($packageArray)
         ));

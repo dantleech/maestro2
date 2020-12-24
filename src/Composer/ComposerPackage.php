@@ -4,7 +4,7 @@ namespace Maestro\Composer;
 
 class ComposerPackage
 {
-    public function __construct(private string $name, private string $version)
+    public function __construct(private string $name, private string $version, private bool $dev)
     {
     }
 
@@ -16,5 +16,10 @@ class ComposerPackage
     public function version(): ComposerVersion
     {
         return new ComposerVersion($this->version);
+    }
+
+    public function dev(): bool
+    {
+        return $this->dev;
     }
 }

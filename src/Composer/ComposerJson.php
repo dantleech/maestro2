@@ -78,17 +78,21 @@ final class ComposerJson
 
     public function packages(): ComposerPackages
     {
-        $required = array_merge(
-            (array)($this->object['require'] ?? []),
-            (array)($this->object['require-dev'] ?? []),
-        );
-        return new ComposerPackages(array_values(array_map(function (string $name, string $version) {
-            return new ComposerPackage($name, $version);
-        }, array_keys($required), array_values($required))));
+        return new ComposerPackages(array_values(array_merge(
+            $this->mapPackages((array)($this->object['require'] ?? []), false),
+            $this->mapPackages((array)($this->object['require-dev'] ?? []), true),
+        )));
     }
 
     public static function fromArray(array $array): self
     {
         return new self($array);
+    }
+
+    private function mapPackages(array $required, bool $dev): array
+    {
+        return array_values(array_map(function (string $name, string $version) use ($dev) {
+            return new ComposerPackage($name, $version, $dev);
+        }, array_keys($required), array_values($required)));
     }
 }
