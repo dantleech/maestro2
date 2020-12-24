@@ -20,9 +20,12 @@ use Webmozart\Assert\Assert;
 class RunCommand extends Command
 {
     private const NAME = 'run';
+
     private const ARG_PIPELINE = 'pipeline';
+
     private const OPT_REPO = 'repo';
     private const OPT_REPORT_LEVEL = 'report-level';
+    const OPT_BRANCH = 'branch';
 
     public function __construct(
         private Maestro $maestro,
@@ -38,20 +41,21 @@ class RunCommand extends Command
         $this->addArgument(self::ARG_PIPELINE, InputArgument::OPTIONAL, 'Pipeline name');
         $this->addOption(self::OPT_REPO, null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Include this repository');
         $this->addOption(self::OPT_REPORT_LEVEL, null, InputOption::VALUE_REQUIRED, 'Report level (error, warn, info, ok)', Report::LEVEL_OK);
+        $this->addOption(self::OPT_BRANCH, null, InputOption::VALUE_REQUIRED, 'Branch to operate on');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $pipeline = $input->getArgument(self::ARG_PIPELINE);
+        $pipeline = Cast::stringOrNull($input->getArgument(self::ARG_PIPELINE));
 
         if (null === $pipeline) {
             $this->suggestPipelineCreation($output);
             return 1;
         }
 
-        $reportLevel = $input->getOption(self::OPT_REPORT_LEVEL);
-        Assert::string($reportLevel, 'Report level must be a string');
-        Assert::string($pipeline, 'Pipeline must be a string');
+        $reportLevel = Cast::string($input->getOption(self::OPT_REPORT_LEVEL));
+        $branch = Cast::stringOrNull($input->getOption(self::OPT_BRANCH));
+        $pipeline = Cast::string($pipeline);
 
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
