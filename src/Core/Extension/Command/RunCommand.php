@@ -47,15 +47,13 @@ class RunCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $pipeline = Cast::stringOrNull($input->getArgument(self::ARG_PIPELINE));
+        $reportLevel = Cast::string($input->getOption(self::OPT_REPORT_LEVEL));
+        $branch = Cast::stringOrNull($input->getOption(self::OPT_BRANCH));
 
         if (null === $pipeline) {
             $this->suggestPipelineCreation($output);
             return 1;
         }
-
-        $reportLevel = Cast::string($input->getOption(self::OPT_REPORT_LEVEL));
-        $branch = Cast::stringOrNull($input->getOption(self::OPT_BRANCH));
-        $pipeline = Cast::string($pipeline);
 
         Loop::setErrorHandler(function (Throwable $error) use ($output) {
             $output->writeln(sprintf('<error>%s</>', $error->getMessage()));
@@ -69,6 +67,7 @@ class RunCommand extends Command
         });
 
         $start = microtime(true);
+
         $this->maestro->run(
             pipeline: $pipeline,
             repos: (array)$input->getOption(self::OPT_REPO)
