@@ -25,7 +25,8 @@ class RunCommand extends Command
 
     private const OPT_REPO = 'repo';
     private const OPT_REPORT_LEVEL = 'report-level';
-    const OPT_BRANCH = 'branch';
+    private const OPT_BRANCH = 'branch';
+    private const OPT_TAGS = 'tag';
 
     public function __construct(
         private Maestro $maestro,
@@ -42,6 +43,7 @@ class RunCommand extends Command
         $this->addOption(self::OPT_REPO, null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Include this repository');
         $this->addOption(self::OPT_REPORT_LEVEL, null, InputOption::VALUE_REQUIRED, 'Report level (error, warn, info, ok)', Report::LEVEL_OK);
         $this->addOption(self::OPT_BRANCH, null, InputOption::VALUE_REQUIRED, 'Branch to operate on');
+        $this->addOption(self::OPT_TAGS, 't', InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Tag(s) to include');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -49,6 +51,7 @@ class RunCommand extends Command
         $pipeline = Cast::stringOrNull($input->getArgument(self::ARG_PIPELINE));
         $reportLevel = Cast::string($input->getOption(self::OPT_REPORT_LEVEL));
         $branch = Cast::stringOrNull($input->getOption(self::OPT_BRANCH));
+        $tags = Cast::arrayOfStrings($input->getOption(self::OPT_TAGS));
 
         if (null === $pipeline) {
             $this->suggestPipelineCreation($output);
@@ -70,7 +73,8 @@ class RunCommand extends Command
 
         $this->maestro->run(
             pipeline: $pipeline,
-            repos: (array)$input->getOption(self::OPT_REPO)
+            repos: (array)$input->getOption(self::OPT_REPO),
+            tags: $tags
         );
 
         $duration = microtime(true) - $start;

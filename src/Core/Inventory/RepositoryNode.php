@@ -9,7 +9,7 @@ class RepositoryNode
     private MainNode $main;
     private array $vars;
 
-    public function __construct(MainNode $main, string $name, string $url, array $vars = [])
+    public function __construct(MainNode $main, string $name, string $url, array $vars = [], private array $tags = [])
     {
         $this->name = $name;
         $this->url = $url;
@@ -35,5 +35,10 @@ class RepositoryNode
     public function vars(): Vars
     {
         return $this->main()->vars()->merge(new Vars($this->vars));
+    }
+
+    public function tags(): array
+    {
+        return $this->tags;
     }
 }

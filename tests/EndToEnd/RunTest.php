@@ -39,6 +39,12 @@ class RunTest extends IntegrationTestCase
         self::assertSuccess($process);
     }
 
+    public function testSpecifyTags(): void
+    {
+        $process = $this->maestro(sprintf('run %s --tag=tag1 -ttag2', $this->exampleEmptyPipeline()));
+        self::assertSuccess($process);
+    }
+
     public function testFilterByRepository(): void
     {
         $process = $this->maestro(sprintf('run %s --repo=barfoo', $this->exampleEmptyPipeline()));

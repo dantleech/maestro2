@@ -26,23 +26,31 @@ class Maestro
     ) {
     }
 
+    /**
+     * @param list<string> $tags
+     * @param list<string>|null $repos
+     */
     public function run(
         string $pipeline,
-        ?array $repos = []
+        ?array $repos = [],
+        array $tags = []
     ): void {
         $pipeline = $this->resolvePipeline($pipeline);
 
-        Loop::run(function () use ($pipeline, $repos) {
-            yield call(function (MainNode $inventory) use ($pipeline, $repos) {
+        Loop::run(function () use ($pipeline, $repos, $tags) {
+            yield call(function (MainNode $inventory) use ($pipeline, $repos, $tags) {
+
                 $pollId = Loop::repeat(1000, function () {
                     $this->worker->updateStatus();
                 });
+
+                $selectedRepos = $inventory->repositories()->forTags($tags);
+                $selectedRepos = $selectedRepos->forNames($repos);
+
                 try {
                     $this->enqueuer->enqueue(
                         TaskContext::create(
-                            $pipeline->build(
-                                $repos ? $inventory->withSelectedRepos($repos) : $inventory
-                            ),
+                            $pipeline->build($inventory->withSelectedRepos($selectedRepos->names())),
                             $this->contextFactory->createContext()
                         )
                     );

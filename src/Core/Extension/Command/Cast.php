@@ -31,4 +31,25 @@ class Cast
     {
         return is_object($value) ? $value::class : gettype($value);
     }
+
+    /**
+     * @return list<string>
+     */
+    public static function arrayOfStrings(mixed $values): array
+    {
+        $values = self::array($values);
+        return array_values(array_map(fn (mixed $v) => self::string($v), $values));
+    }
+
+    private static function array(mixed $values): array
+    {
+        if (!is_array($values)) {
+            throw new RuntimeException(sprintf(
+                'Expected array, got "%s"',
+                self::typeName($values)
+            ));
+        }
+
+        return $values;
+    }
 }

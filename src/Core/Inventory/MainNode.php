@@ -63,12 +63,9 @@ final class MainNode
         }, $this->selectedRepositories);
     }
 
-    /**
-     * @return array<RepositoryNode>
-     */
-    public function repositories(): array
+    public function repositories(): RepositoryNodes
     {
-        return $this->repositories;
+        return new RepositoryNodes($this->repositories);
     }
 
     public function vars(): Vars
