@@ -20,11 +20,11 @@ How It Works
 Maestro is essentially a concurrent task runner which is conveniently adapted
 for working with repositories.
 
-It is your job to create a _pipline_ class. This class will be instantiated
+It is your job to create a _pipeline_ class. This class will be instantiated
 and passed the _configuration node_, and it must return a _task_. This _task_
 can be an aggregate of many tasks.
 
-Configuratoin
+Configuration
 -------------
 
 ### `maestro.json`
