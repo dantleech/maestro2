@@ -23,7 +23,8 @@
                     "psalm",
                     "phpunit"
                 ]
-            }
+            },
+            "tags": ["maestro"]
         },
         {
             "name": "worse-reflection",
