@@ -7,7 +7,6 @@ use Maestro\Core\Extension\Command\ReplCommand;
 use Maestro\Core\Extension\Command\RunCommand;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Extension\RealExtension;
-use Maestro\Rector\Extension\RectorExtension;
 use Phpactor\ConfigLoader\ConfigLoaderBuilder;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Console\ConsoleExtension;
@@ -42,7 +41,6 @@ $application = new Application('Maestro 2');
 $container = PhpactorContainer::fromExtensions([
     CoreExtension::class,
     RealExtension::class,
-    RectorExtension::class,
     ComposerExtension::class,
 ], array_merge([
     'core.workingDirectory' => $cwd,
