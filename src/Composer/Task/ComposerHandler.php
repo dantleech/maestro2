@@ -173,7 +173,7 @@ class ComposerHandler implements Handler
 
             $packageVersion = $fact->packages()->get($name)->version();
 
-            if ($packageVersion->greaterThanOrEqualTo($version)) {
+            if ($packageVersion->equalTo($version)) {
                 $context->service(TaskReportPublisher::class)->publish(
                     Report::info(sprintf(
                         'Package "%s" version "%s" already satisifies "%s"',

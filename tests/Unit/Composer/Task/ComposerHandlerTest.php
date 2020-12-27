@@ -155,7 +155,7 @@ EOT
         self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
-    public function testSkipRequireIfVersionConstraintAlreadSatisfied(): void
+    public function testSkipRequireIfVersionConstraintAlreadSatisfied1(): void
     {
         $this->filesystem()->putContents('composer.json', '{"require":{"foobar/barfoo":"^1.0"}}');
 
@@ -165,6 +165,18 @@ EOT
             ],
         ));
         self::assertCount(1, $this->reportManager()->reports()->infos());
+    }
+
+    public function testSkipRequireIfVersionConstraintAlreadSatisfied2(): void
+    {
+        $this->filesystem()->putContents('composer.json', '{"require":{"foobar/barfoo":"^1.0||^2.0"}}');
+
+        $this->runTask(new ComposerTask(
+            require: [
+                'foobar/barfoo' => '^1.0',
+            ],
+        ));
+        self::assertCount(0, $this->reportManager()->reports()->infos());
     }
 
     public function testFailure(): void
