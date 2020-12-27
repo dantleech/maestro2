@@ -32,7 +32,10 @@ class TestHttpClientInterceptor implements ApplicationInterceptor
         DelegateHttpClient $httpClient
     ): Promise {
         foreach ($this->responses as [ $responseRequest, $response ]) {
-            if ($request->getUri()->__toString() === $responseRequest->getUri()->__toString()) {
+            if (
+                $request->getUri()->__toString() === $responseRequest->getUri()->__toString() &&
+                $request->getMethod() === $responseRequest->getMethod()
+            ) {
                 return new Success($response);
             }
         }

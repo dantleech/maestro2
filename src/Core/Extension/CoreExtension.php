@@ -14,6 +14,7 @@ use Maestro\Core\Queue\Queue;
 use Maestro\Core\Queue\Worker;
 use Maestro\Core\Report\ReportManager;
 use Maestro\Core\Task\CatHandler;
+use Maestro\Core\Task\HttpRequestHandler;
 use Maestro\Core\Task\SetDirectoryHandler;
 use Maestro\Core\Task\ClosureHandler;
 use Maestro\Core\Task\ContextFactory;
@@ -152,6 +153,7 @@ class CoreExtension implements Extension
                 new CatHandler(),
                 new ClosureHandler(),
                 new GitSurveyHandler($container->get(RepositoryFactory::class)),
+                new HttpRequestHandler($container->get(HttpClient::class)),
                 new JsonApiSurveyHandler($container->get(HttpClient::class)),
                 new DelegateHandler($container->get(Queue::class)),
             ], (static function (array $taggedServices) use ($container) {
