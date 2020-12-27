@@ -72,5 +72,4 @@ class JsonApiHandler implements Handler
             return $context->withResult($data);
         });
     }
-
 }

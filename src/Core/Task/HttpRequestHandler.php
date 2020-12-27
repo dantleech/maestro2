@@ -6,9 +6,6 @@ use Amp\Http\Client\HttpClient;
 use Amp\Http\Client\Request;
 use Amp\Promise;
 use Generator;
-use JsonException;
-use Maestro\Core\Report\TaskReportPublisher;
-use Maestro\Core\Task\Exception\TaskError;
 use Webmozart\Assert\Assert;
 use function Amp\call;
 

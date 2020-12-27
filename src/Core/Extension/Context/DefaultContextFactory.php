@@ -16,8 +16,7 @@ class DefaultContextFactory implements ContextFactory
         private Filesystem $filesystem,
         private ReportManager $reportPublisher,
         private Enqueuer $enqueuer
-    )
-    {
+    ) {
     }
 
     public function createContext(): Context

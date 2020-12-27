@@ -12,8 +12,7 @@ class HttpRequestTask implements Task
         private string $method = 'GET',
         private array $headers = [],
         private ?string $body = null
-    )
-    {
+    ) {
     }
 
     public function body(): ?string

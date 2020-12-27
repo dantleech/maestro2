@@ -5,9 +5,7 @@ namespace Maestro\Tests\Unit\Core\Task;
 use Amp\ByteStream\InMemoryStream;
 use Amp\Http\Client\Request;
 use Amp\Http\Client\Response;
-use Maestro\Core\Task\Exception\TaskError;
 use Maestro\Core\Task\HttpRequestTask;
-use Maestro\Core\Task\JsonApiSurveyTask;
 
 class HttpRequestHandlerTest extends HandlerTestCase
 {
@@ -27,7 +25,7 @@ class HttpRequestHandlerTest extends HandlerTestCase
             url: 'https://www.example.com/foobar',
         ));
 
-        self::assertSame($response , $context->result());
+        self::assertSame($response, $context->result());
     }
 
     public function testMakeFullRequest(): void
@@ -47,6 +45,6 @@ class HttpRequestHandlerTest extends HandlerTestCase
             method: 'POST',
         ));
 
-        self::assertSame($response , $context->result());
+        self::assertSame($response, $context->result());
     }
 }
