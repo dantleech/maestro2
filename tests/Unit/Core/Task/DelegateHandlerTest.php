@@ -21,7 +21,7 @@ class TestDelegateTask implements DelegateTask
 {
     public function task(): Task
     {
-        return new ClosureTask(function (array $args, Context $context) {
+        return new ClosureTask(function (Context $context) {
             return new Success($context->withVar('foobar', 'barfoo'));
         });
     }

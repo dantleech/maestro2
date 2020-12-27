@@ -17,15 +17,15 @@ class SequentialHandlerTest extends HandlerTestCase
     public function testRunsTasksSequentially(): void
     {
         self::assertEquals(3, $this->runTask(new SequentialTask([
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success($context->withVar('count', 1));
             }),
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('count', $context->var('count') + 1)
                 );
             }),
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('count', $context->var('count') + 1)
                 );
@@ -37,13 +37,13 @@ class SequentialHandlerTest extends HandlerTestCase
     {
         try {
             $context = $this->runTask(new SequentialTask([
-                new ClosureTask(function (array $args, Context $context): Promise {
+                new ClosureTask(function (Context $context): Promise {
                     return new Success($context->withVar('count', 1));
                 }),
-                new ClosureTask(function (array $args, Context $context): Promise {
+                new ClosureTask(function (Context $context): Promise {
                     throw new RuntimeException('Oh dear!!');
                 }),
-                new ClosureTask(function (array $args, Context $context): Promise {
+                new ClosureTask(function (Context $context): Promise {
                     return new Success($context->withVar('count', $context->var('count') + 1));
                 }),
             ]));
@@ -60,7 +60,7 @@ class SequentialHandlerTest extends HandlerTestCase
     {
         try {
             $context = $this->runTask(new SequentialTask([
-                new ClosureTask(function (array $args, Context $context): Promise {
+                new ClosureTask(function (Context $context): Promise {
                     throw new SequentialTaskError('Oh dear!!');
                 }),
             ]));
@@ -75,11 +75,11 @@ class SequentialHandlerTest extends HandlerTestCase
     public function testAssimilatesFactsAndContinues(): void
     {
         $context = $this->runTask(new SequentialTask([
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success($context->withVar('count', 1));
             }),
             new TestFact('foobar'),
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('count', $context->var('count') + 1)
                 );

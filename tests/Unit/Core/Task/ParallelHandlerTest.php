@@ -19,17 +19,17 @@ class ParallelHandlerTest extends HandlerTestCase
             'two' => 2,
             'three' => 3,
         ])), $this->runTask(new ParallelTask([
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('one', 1)
                 );
             }),
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('two', 2)
                 );
             }),
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('three', 3)
                 );
@@ -45,17 +45,17 @@ class ParallelHandlerTest extends HandlerTestCase
             'two' => 2,
             'three' => 3,
         ])), $this->runTask(new ParallelTask([
-            'foobar' => new ClosureTask(function (array $args, Context $context): Promise {
+            'foobar' => new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('one', 1)
                 );
             }),
-            'barfoo' => new ClosureTask(function (array $args, Context $context): Promise {
+            'barfoo' => new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('two', 2)
                 );
             }),
-            'bazbar' => new ClosureTask(function (array $args, Context $context): Promise {
+            'bazbar' => new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('three', 3)
                 );
@@ -66,15 +66,15 @@ class ParallelHandlerTest extends HandlerTestCase
     public function testReportFailedTasks(): void
     {
         $context = $this->runTask(new ParallelTask([
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('one', 1)
                 );
             }),
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Failure(new RuntimeException('Oh no!'));
             }),
-            new ClosureTask(function (array $args, Context $context): Promise {
+            new ClosureTask(function (Context $context): Promise {
                 return new Success(
                     $context->withVar('three', 3)
                 );

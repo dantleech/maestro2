@@ -11,7 +11,6 @@ class ComposerTask implements Task, Stringable
      * @param array<string,string> $require
      */
     public function __construct(
-        private array $repositories = [],
         private array $require = [],
         private array $remove = [],
         private bool $update = false,

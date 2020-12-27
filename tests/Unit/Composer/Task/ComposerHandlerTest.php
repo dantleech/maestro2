@@ -155,7 +155,7 @@ EOT
         self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
-    public function testSkipRequireIfVersionConstraintAlreadSatisfied1(): void
+    public function testSkipRequireIfVersionConstraintIsTheSame(): void
     {
         $this->filesystem()->putContents('composer.json', '{"require":{"foobar/barfoo":"^1.0"}}');
 
@@ -164,19 +164,21 @@ EOT
                 'foobar/barfoo' => '^1.0',
             ],
         ));
-        self::assertCount(1, $this->reportManager()->reports()->infos());
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
-    public function testSkipRequireIfVersionConstraintAlreadSatisfied2(): void
+    public function testDoNotSkipRequireIfVersionConstraintDiffersAtAll(): void
     {
-        $this->filesystem()->putContents('composer.json', '{"require":{"foobar/barfoo":"^1.0||^2.0"}}');
+        $this->filesystem()->putContents('composer.json', '{"require":{"foobar/barfoo":"^1.0"}}');
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer require foobar/barfoo:"^1.0||^2.0" --no-update', '/'));
 
         $this->runTask(new ComposerTask(
+            composerBin: 'composer',
             require: [
-                'foobar/barfoo' => '^1.0',
+                'foobar/barfoo' => '^1.0||^2.0',
             ],
         ));
-        self::assertCount(0, $this->reportManager()->reports()->infos());
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
     public function testFailure(): void

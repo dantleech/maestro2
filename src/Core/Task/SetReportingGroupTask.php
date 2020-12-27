@@ -19,10 +19,10 @@ class SetReportingGroupTask implements DelegateTask
     public function task(): Task
     {
         return new ClosureTask(
-            closure: function (array $args, Context $context) {
-                return new Success($context->withService(
+            closure: function (Context $context) {
+                return $context->withService(
                     $context->service(TaskReportPublisher::class)->withGroup($this->group())
-                ));
+                );
             }
         );
     }

@@ -15,7 +15,7 @@ class ConditionalHandlerTest extends HandlerTestCase
             predicate: function (Context $context): bool {
                 return true;
             },
-            task: new ClosureTask(fn (array $args, Context $context) => new Success($context->withVar('foo', 'bar')))
+            task: new ClosureTask(fn (Context $context) => new Success($context->withVar('foo', 'bar')))
         ));
 
         self::assertEquals('bar', $context->var('foo'));
@@ -28,7 +28,7 @@ class ConditionalHandlerTest extends HandlerTestCase
             predicate: function (Context $context): bool {
                 return false;
             },
-            task: new ClosureTask(fn (array $args, Context $context) => new Success($context->withVar('foo', 'bar')))
+            task: new ClosureTask(fn (Context $context) => new Success($context->withVar('foo', 'bar')))
         ));
 
         self::assertNull($context->var('foo'));
