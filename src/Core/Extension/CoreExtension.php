@@ -117,6 +117,7 @@ class CoreExtension implements Extension
             return new DefaultContextFactory(
                 $container->get(Filesystem::class),
                 $container->get(ReportManager::class),
+                $container->get(Queue::class),
             );
         });
 
