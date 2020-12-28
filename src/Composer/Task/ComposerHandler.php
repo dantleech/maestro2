@@ -45,7 +45,7 @@ class ComposerHandler implements Handler
             if ($task->update() === true) {
                 yield $runner->run(array_merge(
                     ['update'],
-                    $fact->updated()->names()
+                    $fact->updated()->names(),
                 ));
             }
 
@@ -115,7 +115,7 @@ class ComposerHandler implements Handler
     {
         return call(function () use ($context, $fact, $runner, $task, $dev) {
             $packages = $dev ? $task->requireDev() : $task->require();
-            $toUpdate = $this->requiredPackages($packages, $task, $fact, $context);
+            $toUpdate = $this->requiredPackages($packages, $task, $fact, $context, $dev);
 
             if (empty($toUpdate)) {
                 return [];
@@ -172,14 +172,18 @@ class ComposerHandler implements Handler
      * @param array<string,string> $packages
      * @return array<string,string>
      */
-    private function requiredPackages(array $packages, ComposerTask $task, ComposerJsonFact $fact, Context $context): array
+    private function requiredPackages(array $packages, ComposerTask $task, ComposerJsonFact $fact, Context $context, bool $dev): array
     {
-        return array_filter($packages, function (string $version, string $name) use ($fact, $task, $context): bool {
+        return array_filter($packages, function (string $version, string $name) use ($fact, $task, $context, $dev): bool {
             if (!$fact->packages()->has($name)) {
                 return !$task->intersection();
             }
 
-            $packageVersion = $fact->packages()->get($name)->version();
+            $package = $fact->packages()->get($name);
+            if ($package->dev() !== $dev) {
+                return false;
+            }
+            $packageVersion = $package->version();
 
             if ($task->satisfactory()) {
                 $parser = new VersionParser();
