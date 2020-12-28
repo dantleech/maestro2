@@ -84,6 +84,7 @@ final class Context
             array_merge($this->vars, $context->vars),
             array_merge($this->facts, $context->facts),
             array_merge($this->services, $context->services),
+            $context->result
         );
     }
 

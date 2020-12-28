@@ -10,9 +10,20 @@ class Vars
     {
     }
 
-    public function get(string $key): mixed
+    public function getOrNull(string $key): mixed
     {
         if (!array_key_exists($key, $this->vars)) {
+            return null;
+        }
+
+        return $this->vars[$key];
+    }
+
+    public function get(string $key): mixed
+    {
+        $value = $this->getOrNull($key);
+
+        if (null === $value) {
             throw new RuntimeException(sprintf(
                 'Variable "%s" not found in scope, known variables "%s"',
                 $key,
@@ -20,7 +31,7 @@ class Vars
             ));
         }
 
-        return $this->vars[$key];
+        return $value;
     }
 
     public function toArray(): array

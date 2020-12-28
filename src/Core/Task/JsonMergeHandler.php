@@ -54,6 +54,10 @@ class JsonMergeHandler implements Handler
             $data = $filter($existingData);
         }
 
+        if ($data === $existingData) {
+            return new Success($context);
+        }
+
         $filesystem->putContents(
             $task->path(),
             json_encode(

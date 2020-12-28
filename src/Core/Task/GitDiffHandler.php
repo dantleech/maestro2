@@ -35,7 +35,7 @@ class GitDiffHandler implements Handler
                 Report::info('git diff', $result->stdOut())
             );
 
-            return $context;
+            return $context->withResult($result);
         }, $context->service(Filesystem::class)->localPath());
     }
 }
