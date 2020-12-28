@@ -166,9 +166,9 @@ class ComposerHandler implements Handler
      */
     private function requiredPackages(ComposerTask $task, ComposerJsonFact $fact, Context $context): array
     {
-        return array_filter($task->require(), function (string $version, string $name) use ($fact, $context): bool {
+        return array_filter($task->require(), function (string $version, string $name) use ($task, $fact, $context): bool {
             if (!$fact->packages()->has($name)) {
-                return true;
+                return !$task->intersection();
             }
 
             $packageVersion = $fact->packages()->get($name)->version();

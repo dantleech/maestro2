@@ -181,6 +181,22 @@ EOT
         self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
+    public function testRequireOnlyOnIntersectionOfPackages(): void
+    {
+        $this->filesystem()->putContents('composer.json', '{"require":{"foobar/barfoo":"^1.0"}}');
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer require foobar/barfoo:"^2.0" --no-update', '/'));
+
+        $this->runTask(new ComposerTask(
+            composerBin: 'composer',
+            require: [
+                'foobar/barfoo' => '^2.0',
+                'barfoo/bazbaz' => '^3.0',
+            ],
+            intersection: true
+        ));
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
+    }
+
     public function testFailure(): void
     {
         $this->expectException(ProcessFailure::class);
