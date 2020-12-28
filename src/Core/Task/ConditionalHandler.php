@@ -10,6 +10,28 @@ use Maestro\Core\Report\TaskReportPublisher;
 use Stringable;
 use function Amp\call;
 
+/**
+ * Conditionally execute a task according to the given predicate:
+ *
+ * ```php
+ * new ConditionalTask(
+ *     predicate: fn (Context $c) => true,
+ *     task: new EmptyTask()
+ * );
+ * ```
+ *
+ * The above will always run an empty task.
+ *
+ * You can customize the message:
+ *
+ * ```php
+ * new ConditionalTask(
+ *     predicate: fn (Context $c) => true,
+ *     task: new EmptyTask(),
+ *     message: 'Did nothing because it\'s Monday'
+ * );
+ * ```
+ */
 class ConditionalHandler implements Handler
 {
     public function __construct(private Enqueuer $enqueuer)
