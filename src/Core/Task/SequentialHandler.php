@@ -57,7 +57,6 @@ class SequentialHandler implements Handler
     private function runTask(Context $context, Task $task): Promise
     {
         return call(function () use ($context, $task) {
-
             return $context->merge((static function (?object $context) use ($task) {
                 if (null === $context) {
                     return null;

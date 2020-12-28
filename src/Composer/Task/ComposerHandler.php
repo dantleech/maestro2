@@ -19,7 +19,6 @@ use Maestro\Core\Task\Handler;
 use Maestro\Core\Task\JsonMergeTask;
 use Maestro\Core\Task\Task;
 use Maestro\Core\Task\TaskContext;
-use stdClass;
 use function Amp\call;
 
 class ComposerHandler implements Handler

@@ -51,7 +51,7 @@ class JsonMergeHandler implements Handler
         $data = $this->mergeData(clone $existingData, $task->data());
 
         if ($filter = $task->filter()) {
-            $data = $filter($existingData);
+            $data = $filter($data);
         }
 
         if ($data === $existingData) {
@@ -69,7 +69,7 @@ class JsonMergeHandler implements Handler
         return new Success($context);
     }
 
-    private function mergeData(stdClass $existingData, array $data): object
+    private function mergeData(stdClass $existingData, array $data): stdClass
     {
         /** @var mixed $value */
         foreach ($data as $key => $value) {
