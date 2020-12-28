@@ -3,6 +3,7 @@
 namespace Maestro\Composer\Task;
 
 use Amp\Promise;
+use Composer\Semver\VersionParser;
 use Maestro\Composer\ComposerJson;
 use Maestro\Composer\ComposerPackages;
 use Maestro\Composer\ComposerRunner;
@@ -180,6 +181,35 @@ class ComposerHandler implements Handler
             }
 
             $packageVersion = $fact->packages()->get($name)->version();
+
+            if ($task->satisfactory()) {
+                $parser = new VersionParser();
+                $packageConstraints = $parser->parseConstraints($packageVersion->version());
+                $versionConstraints = $parser->parseConstraints($version);
+
+                if ($packageConstraints->getLowerBound()->compareTo($versionConstraints->getUpperBound(), '>')) {
+                    $context->service(TaskReportPublisher::class)->publish(
+                        Report::warn(sprintf(
+                            'Existing package "%s" version "%s" is greater than target package version "%s"',
+                            $name,
+                            $packageVersion->__toString(),
+                            $version
+                        ))
+                    );
+                    return false;
+                }
+                if ($packageConstraints->getUpperBound()->compareTo($versionConstraints->getLowerBound(), '>')) {
+                    $context->service(TaskReportPublisher::class)->publish(
+                        Report::info(sprintf(
+                            'Package "%s" version "%s" already satisifies "%s"',
+                            $name,
+                            $packageVersion->__toString(),
+                            $version
+                        ))
+                    );
+                    return false;
+                }
+            }
 
             if ($packageVersion->equalTo($version)) {
                 $context->service(TaskReportPublisher::class)->publish(

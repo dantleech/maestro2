@@ -51,12 +51,27 @@ use Stringable;
  *     requireDev: [
  *         "phpstan/phpstan" => "^0.12",
  *         "phpunit/phpunit" => "^9.0",
- *         "infection/phpunit" => "^18.0"
+ *         "infection/infection" => "^18.0"
  *     ]
  * )
  * ```
  *
  * Above we update the (dev) version of these packages _only_ if they are found in `composer.json`.
+ *
+ * If you only want to update packages if they are not within the bounds of the
+ * target constriant, use the `satisfactory` option:
+ *
+ * ```php
+ * new ComposerTask(
+ *     satisfactory: true
+ *     require: [
+ *         "symfony/console" => "^5.3"
+ *     ]
+ * )
+ * ```
+ *
+ * Above, given the `symfony/console` is already required as `^5.0` we will not
+ * update it as `^5.0` includes `^5.3`
  *
  * ## Update package
  *
@@ -80,8 +95,6 @@ use Stringable;
  *     update: true
  * )
  * ```
- *
- *
  */
 class ComposerTask implements Task, Stringable
 {
@@ -93,6 +106,7 @@ class ComposerTask implements Task, Stringable
      * @param bool $intersection Only update packages if are already included in the existing `composer.json` (i.e. do not add packages)
      * @param string $composerBin Name of composer executable (will be detected automatically if omitted)
      * @param bool $update If composer update/install should be executed
+     * @param bool $satisfactory Do not update a dependency if it is already satisfied by the existing constraint
      */
     public function __construct(
         private array $require = [],
@@ -101,6 +115,7 @@ class ComposerTask implements Task, Stringable
         private bool $update = false,
         private bool $dev = false,
         private bool $intersection = false,
+        private bool $satisfactory = false,
         private ?string $composerBin = null,
     ) {
     }
@@ -159,5 +174,10 @@ class ComposerTask implements Task, Stringable
     public function intersection(): bool
     {
         return $this->intersection;
+    }
+
+    public function satisfactory(): bool
+    {
+        return $this->satisfactory;
     }
 }

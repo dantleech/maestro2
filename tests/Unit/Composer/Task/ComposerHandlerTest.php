@@ -151,6 +151,90 @@ EOT
         ];
     }
 
+    /**
+     * @dataProvider provideSatisfactory
+     */
+    public function testSatisfactoryIgnoresSatisfiedConstraints(array $existing, ComposerTask $composerTask, array $expectedCommands, ?int $warnings = null): void
+    {
+        $this->filesystem()->putContents('composer.json', json_encode($existing));
+        foreach ($expectedCommands as $expectedCommand) {
+            $this->processRunner()->expect(ProcessResult::ok($expectedCommand, '/'));
+        }
+        $this->runTask($composerTask);
+
+        $this->assertExpectedProcessesRan();
+        if (null !== $warnings) {
+            self::assertCount($warnings, $this->reportManager()->reports()->warns());
+        }
+    }
+
+    public function provideSatisfactory(): array
+    {
+        return [
+            'existing constraint convers lower constriant' => [
+                [
+                    'require' => [
+                        'baz/boo' => '^1.0',
+                    ]
+                ],
+                new ComposerTask(
+                    satisfactory: true,
+                    require: [
+                        'baz/boo' => '^1.2',
+                    ],
+                ),
+                [
+                ]
+            ],
+            'existing constraint same' => [
+                [
+                    'require' => [
+                        'baz/boo' => '^1.0',
+                    ]
+                ],
+                new ComposerTask(
+                    satisfactory: true,
+                    require: [
+                        'baz/boo' => '^1.0',
+                    ],
+                ),
+                [
+                ]
+            ],
+            'existing constraint lower' => [
+                [
+                    'require' => [
+                        'baz/boo' => '^0.9',
+                    ]
+                ],
+                new ComposerTask(
+                    satisfactory: true,
+                    require: [
+                        'baz/boo' => '^1.0',
+                    ],
+                ),
+                [
+                    'php3 /usr/local/bin/composer require baz/boo:^1.0 --no-update'
+                ]
+            ],
+            'warning if existing constraint higher' => [
+                [
+                    'require' => [
+                        'baz/boo' => '^2.1',
+                    ]
+                ],
+                new ComposerTask(
+                    satisfactory: true,
+                    require: [
+                        'baz/boo' => '^1.0',
+                    ],
+                ),
+                [
+                ],
+                1
+            ]
+        ];
+    }
     public function testUpdate(): void
     {
         $this->processRunner()->expect(ProcessResult::ok('php3 composer update', '/'));
