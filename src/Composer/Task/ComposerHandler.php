@@ -46,6 +46,7 @@ class ComposerHandler implements Handler
                 yield $runner->run(array_merge(
                     ['update'],
                     $fact->updated()->names(),
+                    $task->withAllDependencies() ? [ '--with-all-dependencies' ] : []
                 ));
             }
 

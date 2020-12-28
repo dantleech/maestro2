@@ -107,6 +107,7 @@ class ComposerTask implements Task, Stringable
      * @param string $composerBin Name of composer executable (will be detected automatically if omitted)
      * @param bool $update If composer update/install should be executed
      * @param bool $satisfactory Do not update a dependency if it is already satisfied by the existing constraint
+     * @param bool $withAllDependencies Include dependencies when performing an update (`--with-all-dependencies` flag)
      */
     public function __construct(
         private array $require = [],
@@ -116,6 +117,7 @@ class ComposerTask implements Task, Stringable
         private bool $dev = false,
         private bool $intersection = false,
         private bool $satisfactory = false,
+        private bool $withAllDependencies = false,
         private ?string $composerBin = null,
     ) {
     }
@@ -179,5 +181,10 @@ class ComposerTask implements Task, Stringable
     public function satisfactory(): bool
     {
         return $this->satisfactory;
+    }
+
+    public function withAllDependencies(): bool
+    {
+        return $this->withAllDependencies;
     }
 }

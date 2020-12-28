@@ -311,6 +311,21 @@ EOT
         self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
+    public function testUpdateWithAllDependencies(): void
+    {
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer update foobar/barfoo --with-all-dependencies', '/'));
+
+        $this->runTask(new ComposerTask(
+            composerBin: 'composer',
+            require: [
+                'foobar/barfoo' => '^2.0',
+            ],
+            update: true,
+            withAllDependencies: true
+        ));
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
+    }
+
     public function testIntersectionRespectsDevStatus(): void
     {
         $this->filesystem()->putContents('composer.json', json_encode([
