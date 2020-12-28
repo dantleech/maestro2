@@ -113,7 +113,7 @@ EOT
             ],
             'require --dev' => [
                 new ComposerTask(
-                    require: [
+                    requireDev: [
                         'baz/boo' => '^1.0',
                     ],
                     dev: true,
@@ -130,17 +130,6 @@ EOT
                     composerBin: 'composer',
                 ),
                 ['php3 composer remove foobar/barfoo barfoo/foobar --no-update']
-            ],
-            'remove --dev' => [
-                new ComposerTask(
-                    remove: [
-                        'foobar/barfoo',
-                        'barfoo/foobar',
-                    ],
-                    dev: true,
-                    composerBin: 'composer',
-                ),
-                ['php3 composer remove foobar/barfoo barfoo/foobar --dev --no-update']
             ],
         ];
     }

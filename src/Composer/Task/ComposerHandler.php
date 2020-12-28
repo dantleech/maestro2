@@ -55,24 +55,18 @@ class ComposerHandler implements Handler
 
     private function createJsonTask(ComposerTask $task): JsonMergeTask
     {
-        $requireType = $task->dev() ? 'require-dev' : 'require';
         return new JsonMergeTask(
             path: 'composer.json',
-            data: [
-                $requireType => $task->require()
-            ],
-            filter: static function (stdClass $object) use ($task, $requireType) {
-                foreach ($object->$requireType as $package => $version) {
-                    if (in_array($package, $task->remove())) {
-                        unset($object->$requireType->$package);
-                    }
+            data: (function (ComposerTask $task, array $composer) {
+                if ($task->require()) {
+                    $composer['require'] = $task->require();
                 }
-                if (is_array($object->{$requireType})) {
-                    $object->{$requireType} = (object)$object->{$requireType};
+                if ($task->requireDev()) {
+                    $composer['require-dev'] = $task->requireDev();
                 }
 
-                return $object;
-            }
+                return $composer;
+            })($task, [])
         );
     }
 
@@ -95,8 +89,12 @@ class ComposerHandler implements Handler
             }
 
             if ($task->require()) {
-                $updated = yield $this->require($context, $fact, $runner, $task);
-                $fact = $fact->withUpdated(ComposerPackages::fromArray($updated, $task->dev()));
+                $updated = yield $this->require($context, $fact, $runner, $task, false);
+                $fact = $fact->withUpdated(ComposerPackages::fromArray($updated, false));
+            }
+            if ($task->requireDev()) {
+                $updated = yield $this->require($context, $fact, $runner, $task, true);
+                $fact = $fact->withUpdated(ComposerPackages::fromArray($updated, true));
             }
 
             if ($task->remove()) {
@@ -110,10 +108,11 @@ class ComposerHandler implements Handler
     /**
      * @return Promise<array<string,string>>
      */
-    private function require(Context $context, ComposerJsonFact $fact, ComposerRunner $runner, ComposerTask $task): Promise
+    private function require(Context $context, ComposerJsonFact $fact, ComposerRunner $runner, ComposerTask $task, bool $dev): Promise
     {
-        return call(function () use ($context, $fact, $runner, $task) {
-            $toUpdate = $this->requiredPackages($task, $fact, $context);
+        return call(function () use ($context, $fact, $runner, $task, $dev) {
+            $packages = $dev ? $task->requireDev() : $task->require();
+            $toUpdate = $this->requiredPackages($packages, $task, $fact, $context);
 
             if (empty($toUpdate)) {
                 return [];
@@ -127,7 +126,7 @@ class ComposerHandler implements Handler
                 array_values($toUpdate)
             ));
 
-            if ($task->dev()) {
+            if ($dev) {
                 $args[] = '--dev';
             }
 
@@ -149,10 +148,6 @@ class ComposerHandler implements Handler
             array_values($task->remove())
         );
 
-        if ($task->dev()) {
-            $args[] = '--dev';
-        }
-
         $args[] = '--no-update';
 
         return $runner->run($args);
@@ -171,11 +166,12 @@ class ComposerHandler implements Handler
     }
 
     /**
+     * @param array<string,string> $packages
      * @return array<string,string>
      */
-    private function requiredPackages(ComposerTask $task, ComposerJsonFact $fact, Context $context): array
+    private function requiredPackages(array $packages, ComposerTask $task, ComposerJsonFact $fact, Context $context): array
     {
-        return array_filter($task->require(), function (string $version, string $name) use ($task, $fact, $context): bool {
+        return array_filter($packages, function (string $version, string $name) use ($fact, $task, $context): bool {
             if (!$fact->packages()->has($name)) {
                 return !$task->intersection();
             }

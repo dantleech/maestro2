@@ -47,9 +47,8 @@ use Stringable;
  *
  * ```php
  * new ComposerTask(
- *     dev: true,
  *     intersection: true,
- *     require: [
+ *     requireDev: [
  *         "phpstan/phpstan" => "^0.12",
  *         "phpunit/phpunit" => "^9.0",
  *         "infection/phpunit" => "^18.0"
@@ -88,6 +87,7 @@ class ComposerTask implements Task, Stringable
 {
     /**
      * @param array<string, string> $require Use composer to require packages (`package` => `version`)
+     * @param array<string, string> $requireDev Use composer to require dev packages (`package` => `version`)
      * @param list<string> $remove Use composer to remove packages
      * @param bool $dev Add requirements to `require-dev`
      * @param bool $intersection Only update packages if are already included in the existing `composer.json` (i.e. do not add packages)
@@ -96,6 +96,7 @@ class ComposerTask implements Task, Stringable
      */
     public function __construct(
         private array $require = [],
+        private array $requireDev = [],
         private array $remove = [],
         private bool $update = false,
         private bool $dev = false,
@@ -117,9 +118,12 @@ class ComposerTask implements Task, Stringable
         return $this->require;
     }
 
-    public function dev(): bool
+    /**
+     * @return array<string,string>
+     */
+    public function requireDev(): array
     {
-        return $this->dev;
+        return $this->requireDev;
     }
 
     public function update(): bool
@@ -135,12 +139,17 @@ class ComposerTask implements Task, Stringable
     public function __toString(): string
     {
         return sprintf(
-            'Updating composer: dev %s, require [%s], remove: [%s], update %s',
+            'Updating composer: require [%s], require-dev [%s], remove: [%s], update %s',
             $this->dev ? 'yes' : 'no',
             implode(', ', array_map(
                 fn (string $name, string $version) => sprintf('%s:%s', $name, $version),
                 array_keys($this->require),
                 array_values($this->require)
+            )),
+            implode(', ', array_map(
+                fn (string $name, string $version) => sprintf('%s:%s', $name, $version),
+                array_keys($this->requireDev),
+                array_values($this->requireDev)
             )),
             implode(', ', array_keys($this->remove)),
             $this->update ? 'yes' : 'no'

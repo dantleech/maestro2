@@ -48,7 +48,7 @@ class JsonMergeHandler implements Handler
 
         Assert::isInstanceOf($existingData, stdClass::class, 'JSON document must be an object');
 
-        $data = $this->mergeData($existingData, $task->data());
+        $data = $this->mergeData(clone $existingData, $task->data());
 
         if ($filter = $task->filter()) {
             $data = $filter($existingData);
