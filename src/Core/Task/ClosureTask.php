@@ -8,7 +8,7 @@ use Stringable;
 class ClosureTask implements Task, Stringable
 {
     /**
-     * @param Closure(array<mixed>,Context) $closure
+     * @param Closure(Context) $closure
      * @param list<mixed> $args
      */
     public function __construct(private Closure $closure)
@@ -16,7 +16,7 @@ class ClosureTask implements Task, Stringable
     }
 
     /**
-     * @return Closure(array<mixed>,Context)
+     * @return Closure(Context)
      */
     public function closure(): Closure
     {

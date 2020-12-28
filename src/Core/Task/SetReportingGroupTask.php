@@ -2,7 +2,6 @@
 
 namespace Maestro\Core\Task;
 
-use Amp\Success;
 use Maestro\Core\Report\TaskReportPublisher;
 
 class SetReportingGroupTask implements DelegateTask

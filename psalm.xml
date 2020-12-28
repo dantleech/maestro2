@@ -19,7 +19,6 @@
                 <file name="src/Core/Extension/TestExtension.php"/>
                 <file name="src/Core/Extension/RealExtension.php"/>
                 <file name="src/Composer/Extension/ComposerExtension.php"/>
-                <file name="src/Rector/Extension/RectorExtension.php"/>
             </errorLevel>
         </MixedArgument>
         <RedundantConditionGivenDocblockType>

@@ -6,7 +6,6 @@ use Amp\Success;
 use Maestro\Core\Exception\RuntimeException;
 use Maestro\Core\Task\ClosureTask;
 use Maestro\Core\Task\Context;
-use PHPUnit\Framework\TestCase;
 use stdClass;
 
 class ClosureHandlerTest extends HandlerTestCase
