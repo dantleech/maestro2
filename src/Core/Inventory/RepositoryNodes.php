@@ -75,4 +75,12 @@ class RepositoryNodes implements IteratorAggregate, Countable
             implode('", "', $this->names())
         ));
     }
+
+    /**
+     * @return list<RepositoryNode>
+     */
+    public function toArray(): array
+    {
+        return $this->repositoryNodes;
+    }
 }
