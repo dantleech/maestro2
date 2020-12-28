@@ -54,4 +54,12 @@ class ComposerPackages implements Countable
     {
         return count($this->packages);
     }
+
+    /**
+     * @return list<string>
+     */
+    public function names(): array
+    {
+        return array_values(array_map(fn (ComposerPackage $package) => $package->name(), $this->packages));
+    }
 }

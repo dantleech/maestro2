@@ -108,7 +108,7 @@ EOT
                 ),
                 [
                     'php3 composer require baz/boo:^1.0 --no-update',
-                    'php3 composer update',
+                    'php3 composer update baz/boo',
                 ]
             ],
             'require --dev' => [
@@ -149,6 +149,19 @@ EOT
     {
         $this->processRunner()->expect(ProcessResult::ok('php3 composer update', '/'));
         $this->runTask(new ComposerTask(
+            update: true,
+            composerBin: 'composer',
+        ));
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
+    }
+
+    public function testUpdateRequired(): void
+    {
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer update foobar/barfoo', '/'));
+        $this->runTask(new ComposerTask(
+            require: [
+                'foobar/barfoo' => '^1.0',
+            ],
             update: true,
             composerBin: 'composer',
         ));

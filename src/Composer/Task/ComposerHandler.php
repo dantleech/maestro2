@@ -40,9 +40,13 @@ class ComposerHandler implements Handler
         return call(function (Filesystem $filesystem) use ($task, $context) {
             $runner = new ComposerRunner($task, $context, $this->enqueuer);
             $fact = yield $this->updateComposerJson($filesystem, $task, $context, $runner);
+            assert($fact instanceof ComposerJsonFact);
 
             if ($task->update() === true) {
-                yield $runner->run(['update']);
+                yield $runner->run(array_merge(
+                    ['update'],
+                    $fact->updated()->names()
+                ));
             }
 
             return $context->withFact($fact);
@@ -78,12 +82,17 @@ class ComposerHandler implements Handler
     private function updateComposerJson(Filesystem $filesystem, ComposerTask $task, Context $context, ComposerRunner $runner): Promise
     {
         return call(function () use ($filesystem, $task, $context, $runner) {
+            $created = false;
             if (!$filesystem->exists('composer.json')) {
+                $created = true;
                 yield $this->enqueuer->enqueue(new TaskContext($this->createJsonTask($task), $context));
-                return $this->composerFact($filesystem);
             }
 
             $fact = $this->composerFact($filesystem);
+
+            if ($created) {
+                return $fact->withUpdated($fact->packages());
+            }
 
             if ($task->require()) {
                 $updated = yield $this->require($context, $fact, $runner, $task);

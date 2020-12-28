@@ -61,9 +61,28 @@ use Stringable;
  *
  * ## Update package
  *
- * By default the task will not update composer (i.e. intall the dependencies,
- * pass `update: true` (note that you can do this without any other
- * parameters).
+ * By default the task will _not_ update composer.
+ *
+ * To update all packages:
+ *
+ * ```php
+ * new ComposerTask(
+ *     update: true
+ * )
+ * ```
+ *
+ * To update only specific packages:
+ *
+ * ```php
+ * new ComposerTask(
+ *     require: [
+ *         'package/one' => '^1.0',
+ *     ],
+ *     update: true
+ * )
+ * ```
+ *
+ *
  */
 class ComposerTask implements Task, Stringable
 {
