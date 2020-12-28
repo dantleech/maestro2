@@ -28,16 +28,16 @@ class ConditionalHandler implements Handler
     {
         assert($task instanceof ConditionalTask);
         return call(function () use ($task, $context) {
-            return (function (Closure $predicate, Task $task) use ($context) {
+            return (function (Closure $predicate, Task $conditionalTask) use ($context, $task) {
                 if ($predicate($context)) {
                     $context = yield $this->enqueuer->enqueue(
-                        TaskContext::create($task, $context)
+                        TaskContext::create($conditionalTask, $context)
                     );
                 } else {
                     $context->service(TaskReportPublisher::class)->publish(
                         Report::info(sprintf(
-                            'Did not execute task "%s" due to predicate',
-                            ($task instanceof Stringable) ? $task->__toString() : $task::class
+                            $task->message() ?: 'Did not execute task "%s" due to predicate',
+                            ($conditionalTask instanceof Stringable) ? $conditionalTask->__toString() : $conditionalTask::class
                         ))
                     );
                 }

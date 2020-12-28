@@ -7,6 +7,7 @@ use Iterator;
 use IteratorAggregate;
 use Countable;
 use Maestro\Core\Exception\RuntimeException;
+use function array_key_first;
 
 /**
  * @implements IteratorAggregate<Report>
@@ -81,6 +82,16 @@ class Reports implements IteratorAggregate, Countable
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->reports);
+    }
+
+    public function first(): ?Report
+    {
+        $first = array_key_first($this->reports);
+        if (null === $first) {
+            return null;
+        }
+
+        return $this->reports[$first];
     }
 
     /**

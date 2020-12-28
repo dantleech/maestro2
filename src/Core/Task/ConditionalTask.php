@@ -6,7 +6,7 @@ use Closure;
 
 class ConditionalTask implements Task
 {
-    public function __construct(private Closure $predicate, private Task $task)
+    public function __construct(private Closure $predicate, private Task $task, private ?string $message = null)
     {
     }
 
@@ -21,5 +21,10 @@ class ConditionalTask implements Task
     public function task(): Task
     {
         return $this->task;
+    }
+
+    public function message(): ?string
+    {
+        return $this->message;
     }
 }
