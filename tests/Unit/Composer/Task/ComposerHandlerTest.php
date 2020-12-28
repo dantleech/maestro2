@@ -131,6 +131,23 @@ EOT
                 ),
                 ['php3 composer remove foobar/barfoo barfoo/foobar --no-update']
             ],
+            'both require and requireDev' => [
+                new ComposerTask(
+                    composerBin: 'composer',
+                    require: [
+                        'baz/boo' => '^1.0',
+                    ],
+                    requireDev: [
+                        'baz/baz' => '^1.0',
+                    ],
+                    update: true
+                ),
+                [
+                    'php3 composer require baz/boo:^1.0 --no-update',
+                    'php3 composer require baz/baz:^1.0 --dev --no-update',
+                    'php3 composer update baz/boo baz/baz ',
+                ]
+            ],
         ];
     }
 

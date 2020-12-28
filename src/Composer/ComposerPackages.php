@@ -62,4 +62,12 @@ class ComposerPackages implements Countable
     {
         return array_values(array_map(fn (ComposerPackage $package) => $package->name(), $this->packages));
     }
+
+    public function merge(ComposerPackages $packages) : self
+    {
+        return new self(array_merge(
+            array_values($this->packages),
+            array_values($packages->packages)
+        ));
+    }
 }
