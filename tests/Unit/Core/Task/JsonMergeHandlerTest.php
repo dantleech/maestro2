@@ -27,6 +27,21 @@ class JsonMergeHandlerTest extends HandlerTestCase
         ], json_decode($this->filesystem()->getContents('json.json'), true));
     }
 
+    public function testNoModificationIfDataIsTheSame(): void
+    {
+        $original = '{"two": "foobar", "one": "barfoo"}';
+        $this->filesystem()->putContents('json.json', $original);
+        $this->runTask(new JsonMergeTask(
+            path: 'json.json',
+            data: [
+                'one' => 'barfoo',
+                'two' => 'foobar',
+            ]
+        ));
+
+        self::assertEquals($original, $this->filesystem()->getContents('json.json'), true);
+    }
+
     public function testFilterByClosure(): void
     {
         $this->filesystem()->putContents('json.json', json_encode([

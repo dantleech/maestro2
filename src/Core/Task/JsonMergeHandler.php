@@ -27,8 +27,10 @@ class JsonMergeHandler implements Handler
 
         $existingData = new stdClass();
         $filesystem = $context->service(Filesystem::class);
+        $exists = false;
 
         if ($filesystem->exists($task->path())) {
+            $exists = true;
             $jsonContents = $filesystem->getContents($task->path());
 
             try {
@@ -54,7 +56,7 @@ class JsonMergeHandler implements Handler
             $data = $filter($data);
         }
 
-        if ($data === $existingData) {
+        if ($exists && json_encode($data) === json_encode($existingData)) {
             return new Success($context);
         }
 
