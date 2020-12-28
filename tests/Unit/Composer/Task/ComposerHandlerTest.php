@@ -311,6 +311,27 @@ EOT
         self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
 
+    public function testIntersectionRespectsDevStatus(): void
+    {
+        $this->filesystem()->putContents('composer.json', json_encode([
+            'require' => [
+                'foobar/barfoo' => '^1.0'
+            ],
+            'require-dev' => [
+                'barfoo/foobar' => '^2.0'
+            ],
+        ]));
+
+        $this->runTask(new ComposerTask(
+            composerBin: 'composer',
+            require: [
+                'barfoo/foobar' => '^3.0',
+            ],
+            intersection: true
+        ));
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
+    }
+
     public function testFailure(): void
     {
         $this->expectException(ProcessFailure::class);
