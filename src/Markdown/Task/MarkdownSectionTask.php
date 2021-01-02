@@ -28,10 +28,11 @@ class MarkdownSectionTask implements Task
     public function __construct(
         private string $path,
         private string $header,
-        private string $content,
-        private bool $prepend = false
-    )
-    {
+        private ?string $content = null,
+        private bool $prepend = false,
+        private ?string $template = null,
+        private array $vars = [],
+    ) {
     }
 
     public function path(): string
@@ -44,7 +45,7 @@ class MarkdownSectionTask implements Task
         return $this->header;
     }
 
-    public function content(): string
+    public function content(): ?string
     {
         return $this->content;
     }
@@ -52,5 +53,15 @@ class MarkdownSectionTask implements Task
     public function prepend(): bool
     {
         return $this->prepend;
+    }
+
+    public function template(): ?string
+    {
+        return $this->template;
+    }
+
+    public function vars(): array
+    {
+        return $this->vars;
     }
 }

@@ -6,17 +6,20 @@ use Amp\Promise;
 use League\CommonMark\Block\Element\Heading;
 use League\CommonMark\DocParser;
 use League\CommonMark\Environment;
-use League\CommonMark\Node\Node;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Exception\TaskError;
 use Maestro\Core\Task\Handler;
-use Maestro\Core\Task\S;
 use Maestro\Core\Task\Task;
+use Twig\Environment as TwigEnvironment;
 use function Amp\call;
-use Maestro\Markdown\Task\MarkdownSectionTask;
 
 class MarkdownSectionHandler implements Handler
 {
+    public function __construct(private TwigEnvironment $twig)
+    {
+    }
+
     public function taskFqn(): string
     {
         return MarkdownSectionTask::class;
@@ -68,7 +71,7 @@ class MarkdownSectionHandler implements Handler
             )->putContents($task->path(), $this->repaceContent(
                 $existing,
                 $task->header(),
-                $task->content(),
+                $this->resolveContent($context, $task),
                 $task->prepend(),
                 $replaceStart,
                 $replaceEnd
@@ -85,8 +88,7 @@ class MarkdownSectionHandler implements Handler
         bool $prepend,
         ?int $replaceStart,
         ?int $replaceEnd
-    ): string
-    {
+    ): string {
         $replaceStart = $replaceStart ?? null;
 
         $lines = $existing === '' ? [] : explode("\n", $existing);
@@ -111,14 +113,13 @@ class MarkdownSectionHandler implements Handler
 
         if (null === $replaceStart && $prepend) {
             array_unshift($newLines, $content);
-        } 
+        }
         
         if (null === $replaceStart && !$prepend) {
             $newLines[] = $content;
         }
 
         return implode("\n", $newLines);
-
     }
 
     private function readContents(Filesystem $filesystem, MarkdownSectionTask $task): string
@@ -128,5 +129,37 @@ class MarkdownSectionHandler implements Handler
         }
 
         return $filesystem->getContents($task->path());
+    }
+
+    private function resolveContent(Context $context, MarkdownSectionTask $task): string
+    {
+        $template = $task->template();
+        $content = $task->content();
+
+        if (null === $content && null === $template) {
+            return '';
+        }
+
+        if ($content && $template) {
+            throw new TaskError(sprintf(
+                'You cannot provide both `content` and `template` (got template "%s")',
+                $template
+            ));
+        }
+
+        if ($content) {
+            return $content;
+        }
+
+        if (!$template) {
+            throw new TaskError(sprintf(
+                'You have not provided `content`, you must provide a `template`'
+            ));
+        }
+
+        return $this->twig->render(
+            $template,
+            $task->vars()
+        );
     }
 }

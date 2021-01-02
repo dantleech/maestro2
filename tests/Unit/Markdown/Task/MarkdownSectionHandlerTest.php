@@ -2,9 +2,9 @@
 
 namespace Maestro\Tests\Unit\Markdown\Task;
 
+use Maestro\Core\Task\Exception\TaskError;
 use Maestro\Markdown\Task\MarkdownSectionTask;
 use Maestro\Tests\Unit\Core\Task\HandlerTestCase;
-use PHPUnit\Framework\TestCase;
 
 class MarkdownSectionHandlerTest extends HandlerTestCase
 {
@@ -32,7 +32,9 @@ EOT
 
     public function testReplaceSection(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 # Hello
 
 This is a README
@@ -84,7 +86,9 @@ EOT
 
     public function testReplaceSectionUntilNextEqualHeader(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 ## Contributing
 
 Yes
@@ -124,7 +128,9 @@ EOT
 
     public function testAppendContentIfNotMatch(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 ## Hello
 
 Yes
@@ -156,7 +162,9 @@ EOT
 
     public function testPrependContentIfNotMatch(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 ## Hello
 
 Yes
@@ -187,5 +195,53 @@ Yes
 
 EOT
         , $this->filesystem()->getContents('README.md'));
+    }
+
+    public function testRendersATemplate(): void
+    {
+        $this->workspace()->put(
+            'templates/contributing.md.twig',
+            <<<EOT
+Good day
+EOT
+        );
+
+        $context = $this->runTask(new MarkdownSectionTask(
+            path: 'README.md',
+            header: "## Contributing",
+            template: 'contributing.md.twig',
+            vars: [
+                'foo' => 'bar',
+            ]
+        ));
+
+        self::assertEquals(<<<EOT
+Good day
+EOT
+        , $this->filesystem()->getContents('README.md'));
+    }
+
+    public function testEmptyContentWhenNeitherTemplateNorContentGiven(): void
+    {
+        $context = $this->runTask(new MarkdownSectionTask(
+            path: 'README.md',
+            header: "## Contributing"
+        ));
+
+        self::assertEquals(<<<EOT
+EOT
+        , $this->filesystem()->getContents('README.md'));
+    }
+
+    public function testExceptionWhenBothContentAndTemplateProvided(): void
+    {
+        $this->expectException(TaskError::class);
+        $this->expectExceptionMessage('You cannot provide both');
+        $context = $this->runTask(new MarkdownSectionTask(
+            path: 'README.md',
+            header: "## Contributing",
+            content: 'foo',
+            template: 'bar'
+        ));
     }
 }

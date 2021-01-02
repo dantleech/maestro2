@@ -7,6 +7,7 @@ use Maestro\Core\Extension\Command\ReplCommand;
 use Maestro\Core\Extension\Command\RunCommand;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Extension\RealExtension;
+use Maestro\Markdown\Extension\MarkdownExtension;
 use Phpactor\ConfigLoader\ConfigLoaderBuilder;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Console\ConsoleExtension;
@@ -15,7 +16,6 @@ use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\ErrorHandler\ErrorHandler;
-use Twig\Extra\Markdown\MarkdownExtension;
 
 if (is_file(__DIR__ . '/../vendor/autoload.php')) {
     $autoloader = require __DIR__ . '/../vendor/autoload.php';

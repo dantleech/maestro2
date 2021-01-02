@@ -6,7 +6,6 @@ use Maestro\Composer\Extension\ComposerExtension;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Extension\TestExtension;
 use Maestro\Markdown\Extension\MarkdownExtension;
-use Maestro\Markdown\Task\MarkdownSectionHandler;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Container\Container;
 use Phpactor\Container\PhpactorContainer;
