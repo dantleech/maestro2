@@ -43,7 +43,8 @@
         "clue/arguments": "^2.1",
         "phpactor/config-loader": "^0.1.1",
         "amphp/http-client": "^4.5",
-        "composer/semver": "^3.2"
+        "composer/semver": "^3.2",
+        "league/commonmark": "^1.5"
     },
     "require-dev": {
         "phpactor/test-utils": "^1.0",

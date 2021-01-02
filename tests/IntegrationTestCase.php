@@ -5,6 +5,8 @@ namespace Maestro\Tests;
 use Maestro\Composer\Extension\ComposerExtension;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Extension\TestExtension;
+use Maestro\Markdown\Extension\MarkdownExtension;
+use Maestro\Markdown\Task\MarkdownSectionHandler;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Container\Container;
 use Phpactor\Container\PhpactorContainer;
@@ -22,6 +24,7 @@ class IntegrationTestCase extends TestCase
         return PhpactorContainer::fromExtensions([
             CoreExtension::class,
             TestExtension::class,
+            MarkdownExtension::class,
             ComposerExtension::class,
         ], array_merge([
             CoreExtension::PARAM_TEMPLATE_PATH => $this->workspace()->path('templates'),
