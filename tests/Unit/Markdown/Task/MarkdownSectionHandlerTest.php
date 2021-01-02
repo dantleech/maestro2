@@ -5,6 +5,7 @@ namespace Maestro\Tests\Unit\Markdown\Task;
 use Maestro\Core\Task\Exception\TaskError;
 use Maestro\Markdown\Task\MarkdownSectionTask;
 use Maestro\Tests\Unit\Core\Task\HandlerTestCase;
+use PHPUnit\Framework\TestCase;
 
 class MarkdownSectionHandlerTest extends HandlerTestCase
 {
@@ -32,9 +33,7 @@ EOT
 
     public function testReplaceSection(): void
     {
-        $this->filesystem()->putContents(
-            'README.md',
-            <<<EOT
+        $this->filesystem()->putContents('README.md', <<<EOT
 # Hello
 
 This is a README
@@ -47,7 +46,7 @@ Install it with your hands.
 
 Yes
 
-## Suport
+## Support
 
 No
 EOT
@@ -77,18 +76,51 @@ Install it with your hands.
 
 This is my new content
 
-## Suport
+## Support
 
 No
 EOT
         , $this->filesystem()->getContents('README.md'));
     }
 
+    public function testReplaceLastSection(): void
+    {
+        $this->filesystem()->putContents('README.md', <<<EOT
+# Hello
+
+This is a README
+
+## Support
+
+No
+EOT
+        );
+
+        $context = $this->runTask(new MarkdownSectionTask(
+            path: 'README.md',
+            header: "## Support",
+            content: <<<EOT
+## Support
+
+Foobar
+EOT
+        ));
+
+        self::assertEquals(<<<EOT
+# Hello
+
+This is a README
+
+## Support
+
+Foobar
+EOT
+        , $this->filesystem()->getContents('README.md'));
+    }
+
     public function testReplaceSectionUntilNextEqualHeader(): void
     {
-        $this->filesystem()->putContents(
-            'README.md',
-            <<<EOT
+        $this->filesystem()->putContents('README.md', <<<EOT
 ## Contributing
 
 Yes
@@ -97,7 +129,7 @@ Yes
 
 #### Studies
 
-## Suport
+## Support
 
 No
 EOT
@@ -119,7 +151,7 @@ EOT
 
 This is my new content
 
-## Suport
+## Support
 
 No
 EOT
@@ -128,9 +160,7 @@ EOT
 
     public function testAppendContentIfNotMatch(): void
     {
-        $this->filesystem()->putContents(
-            'README.md',
-            <<<EOT
+        $this->filesystem()->putContents('README.md', <<<EOT
 ## Hello
 
 Yes
@@ -162,9 +192,7 @@ EOT
 
     public function testPrependContentIfNotMatch(): void
     {
-        $this->filesystem()->putContents(
-            'README.md',
-            <<<EOT
+        $this->filesystem()->putContents('README.md', <<<EOT
 ## Hello
 
 Yes
@@ -199,9 +227,7 @@ EOT
 
     public function testRendersATemplate(): void
     {
-        $this->workspace()->put(
-            'templates/contributing.md.twig',
-            <<<EOT
+        $this->workspace()->put('templates/contributing.md.twig', <<<EOT
 Good day
 EOT
         );

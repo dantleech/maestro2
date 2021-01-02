@@ -5,6 +5,7 @@ namespace Maestro\Markdown\Extension;
 use League\CommonMark\DocParser;
 use League\CommonMark\Environment as LeagueEnvironment;
 use Maestro\Core\Extension\CoreExtension;
+use Maestro\Markdown\Task\MarkdownOrderHandler;
 use Maestro\Markdown\Task\MarkdownSectionHandler;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;

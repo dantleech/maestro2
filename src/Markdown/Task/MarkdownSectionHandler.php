@@ -64,6 +64,10 @@ class MarkdownSectionHandler implements Handler
                 $replaceStart = $childNode->getStartLine();
             }
 
+            if ($replaceStart && null === $replaceEnd) {
+                $replaceEnd = $document->getEndLine();
+            }
+
             $context->service(
                 Filesystem::class
             )->putContents($task->path(), $this->repaceContent(
