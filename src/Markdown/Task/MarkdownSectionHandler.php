@@ -16,7 +16,7 @@ use function Amp\call;
 
 class MarkdownSectionHandler implements Handler
 {
-    public function __construct(private TwigEnvironment $twig)
+    public function __construct(private TwigEnvironment $twig, private DocParser $parser)
     {
     }
 
@@ -32,13 +32,11 @@ class MarkdownSectionHandler implements Handler
     {
         assert($task instanceof MarkdownSectionTask);
         return call(function () use ($task, $context) {
-            $environment = Environment::createCommonMarkEnvironment();
-            $parser = new DocParser($environment);
             $filesystem = $context->service(Filesystem::class);
             $existing = $this->readContents($filesystem, $task);
 
-            $document = $parser->parse($existing);
-            $replaceHeader = $parser->parse($task->header())->firstChild();
+            $document = $this->parser->parse($existing);
+            $replaceHeader = $this->parser->parse($task->header())->firstChild();
             assert($replaceHeader instanceof Heading);
 
             $replaceStart = null;

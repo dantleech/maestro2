@@ -2,6 +2,8 @@
 
 namespace Maestro\Markdown\Extension;
 
+use League\CommonMark\DocParser;
+use League\CommonMark\Environment as LeagueEnvironment;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Markdown\Task\MarkdownSectionHandler;
 use Phpactor\Container\Container;
@@ -19,11 +21,17 @@ class MarkdownExtension implements Extension
     {
         $container->register(MarkdownSectionHandler::class, function (Container $container) {
             return new MarkdownSectionHandler(
-                $container->get(Environment::class)
+                $container->get(Environment::class),
+                $container->get(DocParser::class)
             );
         }, [
             CoreExtension::TAG_TASK_HANDLER => []
         ]);
+
+        $container->register(DocParser::class, function (Container $container) {
+            $environment = LeagueEnvironment::createCommonMarkEnvironment();
+            return new DocParser($environment);
+        });
     }
 
     /**
