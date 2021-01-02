@@ -47,13 +47,13 @@ class MarkdownSectionHandler implements Handler
 
                 assert($childNode instanceof Heading);
 
+                if ($childNode->getLevel() !== $replaceHeader->getLevel()) {
+                    continue;
+                }
+
                 if ($replaceStart) {
                     $replaceEnd = $childNode->getStartLine() - 1;
                     break;
-                }
-
-                if ($childNode->getLevel() !== $replaceHeader->getLevel()) {
-                    continue;
                 }
 
                 if ($childNode->getStringContent() !== $replaceHeader->getStringContent()) {
@@ -69,6 +69,7 @@ class MarkdownSectionHandler implements Handler
                 $existing,
                 $task->header(),
                 $task->content(),
+                $task->prepend(),
                 $replaceStart,
                 $replaceEnd
             ));
@@ -81,16 +82,20 @@ class MarkdownSectionHandler implements Handler
         string $existing,
         string $header,
         string $content,
+        bool $prepend,
         ?int $replaceStart,
         ?int $replaceEnd
     ): string
     {
-        $replaceStart = $replaceStart ?? 1;
-        $lines = explode("\n", $existing);
+        $replaceStart = $replaceStart ?? null;
+
+        $lines = $existing === '' ? [] : explode("\n", $existing);
         $newLines = [];
         $replacing = false;
+
         foreach ($lines as $offset => $line) {
             $lineNb = $offset + 1;
+
             if ($lineNb === $replaceStart) {
                 $newLines[] = $content;
                 $replacing = true;
@@ -104,11 +109,19 @@ class MarkdownSectionHandler implements Handler
             $newLines[] = $line;
         }
 
+        if (null === $replaceStart && $prepend) {
+            array_unshift($newLines, $content);
+        } 
+        
+        if (null === $replaceStart && !$prepend) {
+            $newLines[] = $content;
+        }
+
         return implode("\n", $newLines);
 
     }
 
-    private function readContents(Filesystem $filesystem, MarkdownSectionTask $task)
+    private function readContents(Filesystem $filesystem, MarkdownSectionTask $task): string
     {
         if (!$filesystem->exists($task->path())) {
             return '';
