@@ -46,7 +46,8 @@ class ComposerHandler implements Handler
                 yield $runner->run(array_merge(
                     ['update'],
                     $fact->updated()->names(),
-                    $task->withAllDependencies() ? [ '--with-all-dependencies' ] : []
+                    $task->withAllDependencies() ? [ '--with-all-dependencies' ] : [],
+                    $task->runScripts() ? [] : ['--no-scripts' ]
                 ));
             }
 
@@ -136,6 +137,10 @@ class ComposerHandler implements Handler
 
             $args[] = '--no-update';
 
+            if (false === $task->runScripts()) {
+                $args[] = '--no-scripts';
+            }
+
             yield $runner->run($args);
 
             return $toUpdate;
@@ -153,6 +158,10 @@ class ComposerHandler implements Handler
         );
 
         $args[] = '--no-update';
+
+        if (false === $task->runScripts()) {
+            $args[] = '--no-scripts';
+        }
 
         return $runner->run($args);
     }

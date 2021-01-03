@@ -96,7 +96,7 @@ EOT
                     ],
                     composerBin: 'composer',
                 ),
-                ['php3 composer require baz/boo:^1.0 --no-update'],
+                ['php3 composer require baz/boo:^1.0 --no-update --no-scripts'],
             ],
             'require with update' => [
                 new ComposerTask(
@@ -107,8 +107,8 @@ EOT
                     update: true
                 ),
                 [
-                    'php3 composer require baz/boo:^1.0 --no-update',
-                    'php3 composer update baz/boo',
+                    'php3 composer require baz/boo:^1.0 --no-update --no-scripts',
+                    'php3 composer update baz/boo --no-scripts',
                 ]
             ],
             'require --dev' => [
@@ -119,7 +119,7 @@ EOT
                     dev: true,
                     composerBin: 'composer',
                 ),
-                ['php3 composer require baz/boo:^1.0 --dev --no-update',]
+                ['php3 composer require baz/boo:^1.0 --dev --no-update --no-scripts',]
             ],
             'remove' => [
                 new ComposerTask(
@@ -129,7 +129,7 @@ EOT
                     ],
                     composerBin: 'composer',
                 ),
-                ['php3 composer remove foobar/barfoo barfoo/foobar --no-update']
+                ['php3 composer remove foobar/barfoo barfoo/foobar --no-update --no-scripts']
             ],
             'both require and requireDev' => [
                 new ComposerTask(
@@ -143,9 +143,9 @@ EOT
                     update: true
                 ),
                 [
-                    'php3 composer require baz/boo:^1.0 --no-update',
-                    'php3 composer require baz/baz:^1.0 --dev --no-update',
-                    'php3 composer update baz/boo baz/baz ',
+                    'php3 composer require baz/boo:^1.0 --no-update --no-scripts',
+                    'php3 composer require baz/baz:^1.0 --dev --no-update --no-scripts',
+                    'php3 composer update baz/boo baz/baz --no-scripts',
                 ]
             ],
         ];
@@ -214,7 +214,7 @@ EOT
                     ],
                 ),
                 [
-                    'php3 /usr/local/bin/composer require baz/boo:^1.0 --no-update'
+                    'php3 /usr/local/bin/composer require baz/boo:^1.0 --no-update --no-scripts'
                 ]
             ],
             'warning if existing constraint higher' => [
@@ -237,7 +237,7 @@ EOT
     }
     public function testUpdate(): void
     {
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer update', '/'));
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer update --no-scripts', '/'));
         $this->runTask(new ComposerTask(
             update: true,
             composerBin: 'composer',
@@ -247,7 +247,7 @@ EOT
 
     public function testUpdateRequired(): void
     {
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer update foobar/barfoo', '/'));
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer update foobar/barfoo --no-scripts', '/'));
         $this->runTask(new ComposerTask(
             require: [
                 'foobar/barfoo' => '^1.0',
@@ -273,7 +273,7 @@ EOT
     public function testDoNotSkipRequireIfVersionConstraintDiffersAtAll(): void
     {
         $this->filesystem()->putContents('composer.json', '{"require":{"foobar/barfoo":"^1.0"}}');
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer require foobar/barfoo:"^1.0||^2.0" --no-update', '/'));
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer require foobar/barfoo:"^1.0||^2.0" --no-update --no-scripts', '/'));
 
         $this->runTask(new ComposerTask(
             composerBin: 'composer',
@@ -294,8 +294,8 @@ EOT
                 'barfoo/foobar' => '^2.0'
             ],
         ]));
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer require foobar/barfoo:"^2.0" --no-update', '/'));
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer require barfoo/foobar:"^3.0" --dev --no-update', '/'));
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer require foobar/barfoo:"^2.0" --no-update --no-scripts', '/'));
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer require barfoo/foobar:"^3.0" --dev --no-update --no-scripts', '/'));
 
         $this->runTask(new ComposerTask(
             composerBin: 'composer',
@@ -313,7 +313,7 @@ EOT
 
     public function testUpdateWithAllDependencies(): void
     {
-        $this->processRunner()->expect(ProcessResult::ok('php3 composer update foobar/barfoo --with-all-dependencies', '/'));
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer update foobar/barfoo --with-all-dependencies --no-scripts', '/'));
 
         $this->runTask(new ComposerTask(
             composerBin: 'composer',
@@ -322,6 +322,21 @@ EOT
             ],
             update: true,
             withAllDependencies: true
+        ));
+        self::assertCount(0, $this->processRunner()->remainingExpectations());
+    }
+
+    public function testWithScripts(): void
+    {
+        $this->processRunner()->expect(ProcessResult::ok('php3 composer update foobar/barfoo', '/'));
+
+        $this->runTask(new ComposerTask(
+            composerBin: 'composer',
+            require: [
+                'foobar/barfoo' => '^2.0',
+            ],
+            update: true,
+            runScripts: true
         ));
         self::assertCount(0, $this->processRunner()->remainingExpectations());
     }
@@ -350,7 +365,7 @@ EOT
     public function testFailure(): void
     {
         $this->expectException(ProcessFailure::class);
-        $this->processRunner()->expect(ProcessResult::fail('php3 compoaaser update', '/'));
+        $this->processRunner()->expect(ProcessResult::fail('php3 compoaaser update --no-scripts', '/'));
 
         $this->runTask(new ComposerTask(
             update: true,

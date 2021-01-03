@@ -108,6 +108,7 @@ class ComposerTask implements Task, Stringable
      * @param bool $update If composer update/install should be executed
      * @param bool $satisfactory Do not update a dependency if it is already satisfied by the existing constraint
      * @param bool $withAllDependencies Include dependencies when performing an update (`--with-all-dependencies` flag)
+     * @param bool $runScripts Run composer scripts on update
      */
     public function __construct(
         private array $require = [],
@@ -119,6 +120,7 @@ class ComposerTask implements Task, Stringable
         private bool $satisfactory = false,
         private bool $withAllDependencies = false,
         private ?string $composerBin = null,
+        private bool $runScripts = false
     ) {
     }
 
@@ -186,5 +188,10 @@ class ComposerTask implements Task, Stringable
     public function withAllDependencies(): bool
     {
         return $this->withAllDependencies;
+    }
+
+    public function runScripts(): bool
+    {
+        return $this->runScripts;
     }
 }
