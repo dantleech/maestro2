@@ -35,7 +35,7 @@ class DocExtension implements Extension
             TaskDocBuilder::class,
             fn(Container $c) => new TaskDocBuilder(
                 $c->get(TaskFinder::class),
-                __DIR__ .'/../../doc/task',
+                __DIR__ .'/../../docs/task',
             )
         );
     }
