@@ -73,7 +73,7 @@ class ComposerHandler implements Handler
     }
 
     /**
-     * @return Promise<ComposerJsonFact>
+     * @return Promise<ComposerFact>
      */
     private function updateComposerJson(Filesystem $filesystem, ComposerTask $task, Context $context, ComposerRunner $runner): Promise
     {

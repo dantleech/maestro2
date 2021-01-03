@@ -38,7 +38,6 @@ use Maestro\Core\Task\ReplaceLineHandler;
 use Maestro\Core\Task\SequentialHandler;
 use Maestro\Core\Task\TemplateHandler;
 use Maestro\Core\Task\YamlHandler;
-use Maestro\Core\Vcs\RepositoryFactory;
 use Maestro\Maestro;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;

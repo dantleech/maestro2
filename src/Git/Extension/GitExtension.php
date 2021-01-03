@@ -2,10 +2,7 @@
 
 namespace Maestro\Git\Extension;
 
-use Maestro\Composer\Task\ComposerHandler;
 use Maestro\Core\Extension\CoreExtension;
-use Maestro\Core\Queue\Queue;
-use Maestro\Core\Report\ReportManager;
 use Maestro\Core\Vcs\RepositoryFactory;
 use Maestro\Git\Task\GitSurveyHandler;
 use Phpactor\Container\Container;

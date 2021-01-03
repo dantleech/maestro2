@@ -5,7 +5,6 @@ namespace Maestro\Tests\Unit\Markdown\Task;
 use Maestro\Core\Task\Exception\TaskError;
 use Maestro\Markdown\Task\MarkdownSectionTask;
 use Maestro\Tests\Unit\Core\Task\HandlerTestCase;
-use PHPUnit\Framework\TestCase;
 
 class MarkdownSectionHandlerTest extends HandlerTestCase
 {
@@ -33,7 +32,9 @@ EOT
 
     public function testReplaceSection(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 # Hello
 
 This is a README
@@ -85,7 +86,9 @@ EOT
 
     public function testReplaceLastSection(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 # Hello
 
 This is a README
@@ -120,7 +123,9 @@ EOT
 
     public function testReplaceSectionUntilNextEqualHeader(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 ## Contributing
 
 Yes
@@ -160,7 +165,9 @@ EOT
 
     public function testAppendContentIfNotMatch(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 ## Hello
 
 Yes
@@ -192,7 +199,9 @@ EOT
 
     public function testPrependContentIfNotMatch(): void
     {
-        $this->filesystem()->putContents('README.md', <<<EOT
+        $this->filesystem()->putContents(
+            'README.md',
+            <<<EOT
 ## Hello
 
 Yes
@@ -227,7 +236,9 @@ EOT
 
     public function testRendersATemplate(): void
     {
-        $this->workspace()->put('templates/contributing.md.twig', <<<EOT
+        $this->workspace()->put(
+            'templates/contributing.md.twig',
+            <<<EOT
 Good day
 EOT
         );

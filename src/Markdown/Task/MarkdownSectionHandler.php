@@ -5,7 +5,6 @@ namespace Maestro\Markdown\Task;
 use Amp\Promise;
 use League\CommonMark\Block\Element\Heading;
 use League\CommonMark\DocParser;
-use League\CommonMark\Environment;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Task\Context;
 use Maestro\Core\Task\Exception\TaskError;
