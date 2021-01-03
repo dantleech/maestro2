@@ -16,7 +16,7 @@ use Stringable;
  * - Create `composer.json` if it doesn't exist.
  * - Creates the `Maestro\Composer\Fact\ComposerJsonFact`
  *
- * ## Require / remove packages
+ * ### Require / remove packages
  *
  * The `require` package is the same as it's composer.json equivilent:
  *
@@ -73,7 +73,7 @@ use Stringable;
  * Above, given the `symfony/console` is already required as `^5.0` we will not
  * update it as `^5.0` includes `^5.3`
  *
- * ## Update package
+ * ### Update package
  *
  * By default the task will _not_ update composer.
  *

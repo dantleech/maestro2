@@ -17,6 +17,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Maestro\\Development\\": "dev/",
             "Maestro\\Examples\\Pipeline\\": "example/pipeline/",
             "Maestro\\Tests\\": "tests/"
         }
@@ -50,7 +51,9 @@
         "phpactor/test-utils": "^1.0",
         "vimeo/psalm": "^4.2",
         "phpunit/phpunit": "^9.4",
-        "friendsofphp/php-cs-fixer": "^2.17"
+        "friendsofphp/php-cs-fixer": "^2.17",
+        "symfony/finder": "^5.2",
+        "phpstan/phpdoc-parser": "^0.4.10"
     },
     "scripts": {
         "integrate": [

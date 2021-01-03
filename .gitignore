@@ -6,3 +6,5 @@
 /.maestro
 /example/secrets.json
 /var
+/build
+/doc/task
