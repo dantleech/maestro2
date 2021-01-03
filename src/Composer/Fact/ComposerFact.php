@@ -2,26 +2,22 @@
 
 namespace Maestro\Composer\Fact;
 
+use Maestro\Composer\ComposerJson;
 use Maestro\Composer\ComposerPackages;
 use Maestro\Core\Fact\Fact;
 
-class ComposerJsonFact implements Fact
+class ComposerFact implements Fact
 {
     private ComposerPackages $updated;
 
-    public function __construct(private array $autoloadPaths, private ComposerPackages $packages)
+    public function __construct(private ComposerJson $json)
     {
         $this->updated = new ComposerPackages([]);
     }
 
-    public function autoloadPaths(): array
+    public function json(): ComposerJson
     {
-        return $this->autoloadPaths;
-    }
-
-    public function packages(): ComposerPackages
-    {
-        return $this->packages;
+        return $this->json;
     }
 
     public function withUpdated(ComposerPackages $composerPackages): self

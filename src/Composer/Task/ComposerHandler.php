@@ -7,7 +7,7 @@ use Composer\Semver\VersionParser;
 use Maestro\Composer\ComposerJson;
 use Maestro\Composer\ComposerPackages;
 use Maestro\Composer\ComposerRunner;
-use Maestro\Composer\Fact\ComposerJsonFact;
+use Maestro\Composer\Fact\ComposerFact;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Process\ProcessResult;
 use Maestro\Core\Queue\Enqueuer;
@@ -40,7 +40,7 @@ class ComposerHandler implements Handler
         return call(function (Filesystem $filesystem) use ($task, $context) {
             $runner = new ComposerRunner($task, $context, $this->enqueuer);
             $fact = yield $this->updateComposerJson($filesystem, $task, $context, $runner);
-            assert($fact instanceof ComposerJsonFact);
+            assert($fact instanceof ComposerFact);
 
             if ($task->update() === true) {
                 yield $runner->run(array_merge(
@@ -87,7 +87,7 @@ class ComposerHandler implements Handler
             $fact = $this->composerFact($filesystem);
 
             if ($created) {
-                return $fact->withUpdated($fact->packages());
+                return $fact->withUpdated($fact->json()->packages());
             }
 
             $packages = new ComposerPackages([]);
@@ -113,7 +113,7 @@ class ComposerHandler implements Handler
     /**
      * @return Promise<array<string,string>>
      */
-    private function require(Context $context, ComposerJsonFact $fact, ComposerRunner $runner, ComposerTask $task, bool $dev): Promise
+    private function require(Context $context, ComposerFact $fact, ComposerRunner $runner, ComposerTask $task, bool $dev): Promise
     {
         return call(function () use ($context, $fact, $runner, $task, $dev) {
             $packages = $dev ? $task->requireDev() : $task->require();
@@ -166,15 +166,14 @@ class ComposerHandler implements Handler
         return $runner->run($args);
     }
 
-    private function composerFact(Filesystem $filesystem): ComposerJsonFact
+    private function composerFact(Filesystem $filesystem): ComposerFact
     {
         $composerJson = ComposerJson::fromProjectRoot(
             $filesystem->localPath()
         );
 
-        return new ComposerJsonFact(
-            autoloadPaths: $composerJson->autoloadPaths(),
-            packages: $composerJson->packages(),
+        return new ComposerFact(
+            json: $composerJson,
         );
     }
 
@@ -182,14 +181,14 @@ class ComposerHandler implements Handler
      * @param array<string,string> $packages
      * @return array<string,string>
      */
-    private function requiredPackages(array $packages, ComposerTask $task, ComposerJsonFact $fact, Context $context, bool $dev): array
+    private function requiredPackages(array $packages, ComposerTask $task, ComposerFact $fact, Context $context, bool $dev): array
     {
         return array_filter($packages, function (string $version, string $name) use ($fact, $task, $context, $dev): bool {
-            if (!$fact->packages()->has($name)) {
+            if (!$fact->json()->packages()->has($name)) {
                 return !$task->intersection();
             }
 
-            $package = $fact->packages()->get($name);
+            $package = $fact->json()->packages()->get($name);
             if ($package->dev() !== $dev) {
                 return false;
             }

@@ -2,7 +2,7 @@
 
 namespace Maestro\Examples\Pipeline;
 
-use Maestro\Composer\Fact\ComposerJsonFact;
+use Maestro\Composer\Fact\ComposerFact;
 use Maestro\Core\Inventory\RepositoryNode;
 use Maestro\Core\Process\ProcessResult;
 use Maestro\Composer\Task\ComposerTask;
@@ -33,11 +33,11 @@ class UpgradePhpStanPipeline extends BasePipeline
             new ComposerTask(),
             new ConditionalTask(
                 predicate: function (Context $context) {
-                    if (false === $context->fact(ComposerJsonFact::class)->packages()->has('phpstan/phpstan')) {
+                    if (false === $context->fact(ComposerFact::class)->packages()->has('phpstan/phpstan')) {
                         return false;
                     }
 
-                    return $context->fact(ComposerJsonFact::class)
+                    return $context->fact(ComposerFact::class)
                         ->packages()->get('phpstan/phpstan')
                         ->version()->lessThan(self::VERSION);
                 },

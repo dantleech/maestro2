@@ -3,7 +3,7 @@
 namespace Maestro\Tests\Unit\Composer\Task;
 
 use Maestro\Composer\ComposerPackage;
-use Maestro\Composer\Fact\ComposerJsonFact;
+use Maestro\Composer\Fact\ComposerFact;
 use Maestro\Core\Fact\PhpFact;
 use Maestro\Core\Process\Exception\ProcessFailure;
 use Maestro\Core\Process\ProcessResult;
@@ -30,9 +30,9 @@ class ComposerHandlerTest extends HandlerTestCase
             ]
         ));
 
-        self::assertInstanceOf(ComposerJsonFact::class, $context->fact(ComposerJsonFact::class));
-        self::assertInstanceOf(ComposerPackage::class, $context->fact(ComposerJsonFact::class)->packages()->get('foobar/barfoo'));
-        self::assertFalse($context->fact(ComposerJsonFact::class)->packages()->get('foobar/barfoo')->dev());
+        self::assertInstanceOf(ComposerFact::class, $context->fact(ComposerFact::class));
+        self::assertInstanceOf(ComposerPackage::class, $context->fact(ComposerFact::class)->json()->packages()->get('foobar/barfoo'));
+        self::assertFalse($context->fact(ComposerFact::class)->json()->packages()->get('foobar/barfoo')->dev());
     }
 
     public function testLeavesFactFromExisting(): void
@@ -48,10 +48,10 @@ class ComposerHandlerTest extends HandlerTestCase
         $context = $this->runTask(new ComposerTask(
         ));
 
-        $fact = $context->fact(ComposerJsonFact::class);
-        self::assertInstanceOf(ComposerJsonFact::class, $fact);
-        self::assertFalse($context->fact(ComposerJsonFact::class)->packages()->get('foobar/barfoo')->dev());
-        self::assertTrue($context->fact(ComposerJsonFact::class)->packages()->get('barfoo/foobar')->dev());
+        $fact = $context->fact(ComposerFact::class);
+        self::assertInstanceOf(ComposerFact::class, $fact);
+        self::assertFalse($context->fact(ComposerFact::class)->json()->packages()->get('foobar/barfoo')->dev());
+        self::assertTrue($context->fact(ComposerFact::class)->json()->packages()->get('barfoo/foobar')->dev());
     }
 
     public function testCreatesComposerJsonIfItDoesNotExist(): void
