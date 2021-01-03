@@ -21,7 +21,9 @@ class BuildCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $output->writeln('Generating task documentation ...');
         $this->builder->build();
+        $output->writeln('... done');
         return 0;
     }
 
