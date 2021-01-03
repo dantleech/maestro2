@@ -7,6 +7,8 @@ use Maestro\Core\Extension\Command\ReplCommand;
 use Maestro\Core\Extension\Command\RunCommand;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Extension\RealExtension;
+use Maestro\Git\Extension\GitExtension;
+use Maestro\Git\Task\GitSurveyHandler;
 use Maestro\Markdown\Extension\MarkdownExtension;
 use Phpactor\ConfigLoader\ConfigLoaderBuilder;
 use Phpactor\Container\PhpactorContainer;
@@ -44,6 +46,7 @@ $container = PhpactorContainer::fromExtensions([
     RealExtension::class,
     ComposerExtension::class,
     MarkdownExtension::class,
+    GitExtension::class,
 ], array_merge([
     'core.workingDirectory' => $cwd,
 ], $config));
@@ -52,4 +55,5 @@ $application->addCommands([
     $container->get(RunCommand::class),
 ]);
 $application->run(new ArgvInput(), $container->get(OutputInterface::class));
+
 

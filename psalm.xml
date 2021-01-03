@@ -19,6 +19,7 @@
                 <file name="src/Core/Extension/TestExtension.php"/>
                 <file name="src/Core/Extension/RealExtension.php"/>
                 <file name="src/Composer/Extension/ComposerExtension.php"/>
+                <file name="src/Git/Extension/GitExtension.php"/>
                 <file name="src/Markdown/Extension/MarkdownExtension.php"/>
             </errorLevel>
         </MixedArgument>

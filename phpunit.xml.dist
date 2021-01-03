@@ -14,6 +14,7 @@
         <directory>./tests/Unit/Core</directory>
         <directory>./tests/Unit/Composer</directory>
         <directory>./tests/Unit/Markdown</directory>
+        <directory>./tests/Unit/Git</directory>
         <directory>./tests/EndToEnd</directory>
     </testsuite>
   </testsuites>

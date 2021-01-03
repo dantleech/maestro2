@@ -20,7 +20,6 @@ use Maestro\Core\Task\SetDirectoryHandler;
 use Maestro\Core\Task\ClosureHandler;
 use Maestro\Core\Task\ContextFactory;
 use Maestro\Core\Task\DelegateHandler;
-use Maestro\Core\Task\GitSurveyHandler;
 use Maestro\Core\Task\JsonApiSurveyHandler;
 use Maestro\Core\Task\PhpProcessHandler;
 use Maestro\Core\Task\ConditionalHandler;
@@ -154,7 +153,6 @@ class CoreExtension implements Extension
                 new ConditionalHandler($container->get(Queue::class)),
                 new CatHandler(),
                 new ClosureHandler(),
-                new GitSurveyHandler($container->get(RepositoryFactory::class)),
                 new HttpRequestHandler($container->get(HttpClient::class)),
                 new JsonApiHandler($container->get(Queue::class)),
                 new JsonApiSurveyHandler($container->get(Queue::class)),

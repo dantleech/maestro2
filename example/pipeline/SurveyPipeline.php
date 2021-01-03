@@ -5,7 +5,7 @@ namespace Maestro\Examples\Pipeline;
 use Maestro\Core\Inventory\MainNode;
 use Maestro\Core\Inventory\RepositoryNode;
 use Maestro\Core\Pipeline\Pipeline;
-use Maestro\Core\Task\GitSurveyTask;
+use Maestro\Git\Task\GitSurveyTask;
 use Maestro\Core\Task\JsonApiSurveyTask;
 use Maestro\Core\Task\NullTask;
 use Maestro\Core\Task\ParallelTask;

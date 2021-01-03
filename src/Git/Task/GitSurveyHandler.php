@@ -1,14 +1,18 @@
 <?php
 
-namespace Maestro\Core\Task;
+namespace Maestro\Git\Task;
 
 use Amp\Promise;
 use Generator;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Report\TaskReportPublisher;
+use Maestro\Core\Task\Context;
+use Maestro\Core\Task\Handler;
+use Maestro\Core\Task\Task;
 use Maestro\Core\Vcs\Repository;
 use Maestro\Core\Vcs\RepositoryFactory;
 use function Amp\call;
+use Maestro\Git\Task\GitSurveyTask;
 
 class GitSurveyHandler implements Handler
 {

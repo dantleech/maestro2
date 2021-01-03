@@ -1,7 +1,8 @@
 <?php
 
-namespace Maestro\Core\Task;
+namespace Maestro\Git\Task;
 
+use Maestro\Core\Task\Task;
 use Stringable;
 
 class GitSurveyTask implements Task, Stringable

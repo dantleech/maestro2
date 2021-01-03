@@ -1,8 +1,9 @@
 <?php
 
-namespace Maestro\Tests\Unit\Core\Task;
+namespace Maestro\Tests\Unit\Git\Task;
 
-use Maestro\Core\Task\GitSurveyTask;
+use Maestro\Git\Task\GitSurveyTask;
+use Maestro\Tests\Unit\Core\Task\HandlerTestCase;
 
 class GitSurveyHandlerTest extends HandlerTestCase
 {
