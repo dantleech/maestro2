@@ -74,6 +74,11 @@ jobs:
                 with:
                     composer-options: "--no-scripts"
             -
+               name: "Setup git credentials"
+               run: |
+                   git config --global user.email "you@example.com"
+                   git config --global user.name "Your Name"
+            -
                 name: "Run Maestro"
                 run: "bin/maestro run example/pipeline/BasePipeline.php"
 
