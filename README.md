@@ -123,4 +123,4 @@ tasks sequentially or in parallel). These can be found as implementations of
 Documentation
 -------------
 
-This project is still a work-in-progress and documentation is forthcoming.
+You will be able to read the documentation [here](https://dantleech.github.io/maestro2).
