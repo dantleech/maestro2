@@ -112,4 +112,4 @@ jobs:
                 name: "Build Docs"
                 uses: ammaraskar/sphinx-action@master
                 with:
-                    docs-folder: ""
+                    docs-folder: "."
