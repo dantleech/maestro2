@@ -1,12 +1,37 @@
 name: "Pull Request Docs Check"
 on:
     pull_request:
+    push:
+        branches:
+            - 'master'
 
 jobs:
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - uses: ammaraskar/sphinx-action@master
-      with:
-        docs-folder: ""
+    docs:
+        runs-on: ubuntu-latest
+        steps:
+            - 
+                name: "Checkout"
+                uses: actions/checkout@v1
+            -
+                name: "Install PHP"
+                uses: "shivammathur/setup-php@v2"
+                with:
+                    coverage: "none"
+                    extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+                    php-version: "${{ matrix.php-version }}"
+                    tools: composer:v2
+
+            -
+                name: "Composer install"
+                uses: "ramsey/composer-install@v1"
+                with:
+                    composer-options: "--no-scripts"
+
+            -
+                name: "Generate Task Docs"
+                run: "bin/maestro-build-docs"
+            - 
+                name: "Build Docs"
+                uses: ammaraskar/sphinx-action@master
+                with:
+                    docs-folder: ""
