@@ -1,4 +1,5 @@
-name: "Pull Request Docs Check"
+name: "Docs"
+
 on:
     pull_request:
     push:
