@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ComposerTask &#8212; Maestro 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MarkdownSectionTask" href="MarkdownSectionTask.html" />
+    <link rel="prev" title="Contents" href="../contents.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="composertask">
+<h1>ComposerTask<a class="headerlink" href="#composertask" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Maestro\Composer\Task\ComposerTask</span></code></p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>require</strong> Use composer to require packages (<code class="docutils literal notranslate"><span class="pre">package</span></code> =&gt; <code class="docutils literal notranslate"><span class="pre">version</span></code>) - <code class="docutils literal notranslate"><span class="pre">array&lt;string,</span> <span class="pre">string&gt;</span></code></p></li>
+<li><p><strong>requireDev</strong> Use composer to require dev packages (<code class="docutils literal notranslate"><span class="pre">package</span></code> =&gt; <code class="docutils literal notranslate"><span class="pre">version</span></code>) - <code class="docutils literal notranslate"><span class="pre">array&lt;string,</span> <span class="pre">string&gt;</span></code></p></li>
+<li><p><strong>remove</strong> Use composer to remove packages - <code class="docutils literal notranslate"><span class="pre">list&lt;string&gt;</span></code></p></li>
+<li><p><strong>dev</strong> Add requirements to <code class="docutils literal notranslate"><span class="pre">require-dev</span></code> - <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
+<li><p><strong>intersection</strong> Only update packages if are already included in the existing <code class="docutils literal notranslate"><span class="pre">composer.json</span></code> (i.e. do not add packages) - <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
+<li><p><strong>composerBin</strong> Name of composer executable (will be detected automatically if omitted) - <code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><strong>update</strong> If composer update/install should be executed - <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
+<li><p><strong>satisfactory</strong> Do not update a dependency if it is already satisfied by the existing constraint - <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
+<li><p><strong>withAllDependencies</strong> Include dependencies when performing an update (<code class="docutils literal notranslate"><span class="pre">--with-all-dependencies</span></code> flag) - <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
+<li><p><strong>runScripts</strong> Run composer scripts on update - <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Manipulate and use Composer</p>
+<p>This task manipulates <code class="docutils literal notranslate"><span class="pre">composer.json</span></code>, uses the <code class="docutils literal notranslate"><span class="pre">composer</span></code> and provides
+package information to downstream tasks.</p>
+<ul class="simple">
+<li><p>Require and remove packages,</p></li>
+<li><p>Perform a composer update.</p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">composer.json</span></code> if it doesn’t exist.</p></li>
+<li><p>Creates the <code class="docutils literal notranslate"><span class="pre">Maestro\Composer\Fact\ComposerJsonFact</span></code></p></li>
+</ul>
+<div class="section" id="require-remove-packages">
+<h3>Require / remove packages<a class="headerlink" href="#require-remove-packages" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">require</span></code> package is the same as it’s composer.json equivilent:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ComposerTask</span><span class="p">(</span>
+    <span class="k">require</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;my-package&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;^1.0&quot;</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><em>NOTE</em>: If the package exists in <em>exactly</em> the same version the operation
+will be skipped (i.e. it is idempotent).</p>
+<p>Removal:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ComposerTask</span><span class="p">(</span>
+    <span class="nx">remove</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;my-package&quot;</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If you only wish to update existing packages (useful if you want to ensure
+that a certain version of a package is shared by all your packgaes) you can
+use the <code class="docutils literal notranslate"><span class="pre">intersection</span></code> option:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ComposerTask</span><span class="p">(</span>
+    <span class="nx">intersection</span><span class="o">:</span> <span class="k">true</span><span class="p">,</span>
+    <span class="nx">requireDev</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;phpstan/phpstan&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;^0.12&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;phpunit/phpunit&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;^9.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;infection/infection&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;^18.0&quot;</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Above we update the (dev) version of these packages <em>only</em> if they are found in <code class="docutils literal notranslate"><span class="pre">composer.json</span></code>.</p>
+<p>If you only want to update packages if they are not within the bounds of the
+target constriant, use the <code class="docutils literal notranslate"><span class="pre">satisfactory</span></code> option:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ComposerTask</span><span class="p">(</span>
+    <span class="nx">satisfactory</span><span class="o">:</span> <span class="k">true</span>
+    <span class="k">require</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;symfony/console&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;^5.3&quot;</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Above, given the <code class="docutils literal notranslate"><span class="pre">symfony/console</span></code> is already required as <code class="docutils literal notranslate"><span class="pre">^5.0</span></code> we will not
+update it as <code class="docutils literal notranslate"><span class="pre">^5.0</span></code> includes <code class="docutils literal notranslate"><span class="pre">^5.3</span></code></p>
+</div>
+<div class="section" id="update-package">
+<h3>Update package<a class="headerlink" href="#update-package" title="Permalink to this headline">¶</a></h3>
+<p>By default the task will <em>not</em> update composer.</p>
+<p>To update all packages:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ComposerTask</span><span class="p">(</span>
+    <span class="nx">update</span><span class="o">:</span> <span class="k">true</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>To update only specific packages:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ComposerTask</span><span class="p">(</span>
+    <span class="k">require</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s1">&#39;package/one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^1.0&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="nx">update</span><span class="o">:</span> <span class="k">true</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../contents.html">Maestro</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ComposerTask</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="MarkdownSectionTask.html">MarkdownSectionTask</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Maestro</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../contents.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../contents.html" title="previous chapter">Contents</a></li>
+      <li>Next: <a href="MarkdownSectionTask.html" title="next chapter">MarkdownSectionTask</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Daniel Leech.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/task/ComposerTask.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
