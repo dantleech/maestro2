@@ -30,7 +30,9 @@ $cwd = getcwd();
 $application = new Application('Maestro 2');
 $application->setDefaultCommand('build');
 $container = PhpactorContainer::fromExtensions([
-    DocExtension::class
+    DocExtension::class,
+    CoreExtension::class,
+    RealExtension::class,
 ]);
 
 $application->addCommands([

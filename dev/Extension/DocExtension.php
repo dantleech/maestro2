@@ -10,6 +10,7 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\MapResolver\Resolver;
+use Psr\Log\LoggerInterface;
 
 class DocExtension implements Extension
 {
@@ -35,6 +36,7 @@ class DocExtension implements Extension
         $container->register(
             TaskCompiler::class,
             fn(Container $c) => new TaskCompiler(
+                $c->get(LoggerInterface::class),
                 $c->get(TaskFinder::class),
                 $c->get(TaskDocBuilder::class),
                 __DIR__ .'/../../docs/task',
