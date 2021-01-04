@@ -21,7 +21,7 @@ use Stringable;
  *
  * Render a README file:
  *
- * ```
+ * ```php:task
  * new TemplateTask(
  *     template: 'README.md.twig',
  *     target: 'README.md'

@@ -4,11 +4,13 @@ namespace Maestro\Core\Task;
 
 use Amp\Promise;
 use Amp\Success;
+use Maestro\Core\Exception\RuntimeException;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Report\Report;
 use Maestro\Core\Report\TaskReportPublisher;
 use Maestro\Core\Util\PermissionUtil;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 
 class TemplateHandler implements Handler
 {
@@ -38,13 +40,18 @@ class TemplateHandler implements Handler
                 $filesystem->createDirectory($dir, 0744);
             })(dirname($task->target()), $task->mode());
 
-            $filesystem->putContents(
-                $task->target(),
-                $this->twig->render(
-                    $task->template(),
-                    $task->vars()
-                )
-            );
+            try {
+                $filesystem->putContents(
+                    $task->target(),
+                    $this->twig->render(
+                        $task->template(),
+                        $task->vars()
+                    )
+                );
+            } catch (LoaderError $error) {
+                throw new RuntimeException($error->getMessage(), 0, $error);
+            }
+
             $filesystem->setMode($task->target(), $task->mode());
             $context->service(TaskReportPublisher::class)->publish(
                 Report::ok(sprintf(

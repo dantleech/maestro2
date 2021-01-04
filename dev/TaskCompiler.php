@@ -25,17 +25,18 @@ class TaskCompiler
 
         $this->logger->info('Generating task documentation');
         foreach ($this->finder->find($path) as $taskMeta) {
-            $path = Path::join([$this->outPath, sprintf(
+            (function (string $path) use ($taskMeta) {
+                $this->logger->debug('[doc] '  . $path);
+                file_put_contents(
+                    $path,
+                    $this->taskBuilder->buildDoc($taskMeta)
+                );
+            })(Path::join([$this->outPath, sprintf(
                     '%s.md', $taskMeta->name()
-            )]);
-            $this->logger->debug('[doc] '  . $path);
-            file_put_contents(
-                $path,
-                $this->taskBuilder->buildDoc($taskMeta)
-            );
+            )]));
         }
 
-        foreach ($this->finder->find() as $taskMeta) {
+        foreach ($this->finder->find($path) as $taskMeta) {
             $this->tester->test($taskMeta);
         }
     }

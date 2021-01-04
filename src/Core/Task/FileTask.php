@@ -20,7 +20,7 @@ use Stringable;
  *
  * Remove a file:
  *
- * ```php
+ * ```php:task
  * new FileTask(
  *     path: "README.md",
  *     exists: false
@@ -29,7 +29,7 @@ use Stringable;
  *
  * Create a directory
  *
- * ```php
+ * ```php:task
  * new FileTask(
  *     path: "myDirectory",
  *     type: "directory"

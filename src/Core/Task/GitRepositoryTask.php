@@ -9,19 +9,19 @@ use Stringable;
  *
  * Use this task to establish a GIT repository in your workspace.
  *
- * ```php
+ * ```php:task
  * new GitRepositoryTask(
- *     url: $repositoryNode->url(),
- *     path: $repositoryNode->name()
+ *     url: 'http://example.com/my-repo',
+ *     path: 'my-repo'
  * );
  * ```
  *
  * Typically you will also want to change the working directory to
  * this repository so that subsequent tasks operate on it:
  *
- * ```php
+ * ```php:task
  * new SequentialTask([
- *     new GitRepositoryTask(url: $url, path: 'my-repo'),
+ *     new GitRepositoryTask(url: 'http://example.com/my-repo', path: 'my-repo'),
  *     new SetDirectoryTask('my-repo')
  * ]);
  * ```

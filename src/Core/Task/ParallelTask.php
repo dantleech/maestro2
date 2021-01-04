@@ -8,23 +8,26 @@ namespace Maestro\Core\Task;
  *
  * For example to checkout multiple repsoitories at the same time:
  *
- * ```
+ * ```php:task
  * new ParallelTask([
- *     new RepositoryTask(url: 'https://example.com/foobar/barfoo', 'barfoo'),
- *     new RepositoryTask(url: 'https://example.com/foobar/foobar', 'foobar'),
+ *     // repository 1,
+ *     // repository 2,
+ *
  * ])
  * ```
  *
  * Typically you would use this task to setup pipelines in parallel:
  *
+ * ```php:task
  * new ParallelTask([
- *     new SequenceTask(
+ *     new SequentialTask([
  *       // other tasks
- *     ),
- *     new SequenceTask(
+ *     ]),
+ *     new SequentialTask([
  *       // other tasks
- *     ),
+ *     ]),
  * ])
+ * ```
  */
 class ParallelTask implements Task
 {

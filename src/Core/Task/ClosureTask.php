@@ -11,7 +11,7 @@ use Stringable;
  * This task allows you to run an anonymous function. The function
  * accepts the `Context` and must return the `Context`.
  *
- * ```php
+ * ```php:task
  * new ClosureTask(
  *     function (Context $context) {
  *         return $context;

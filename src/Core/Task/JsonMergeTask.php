@@ -11,7 +11,7 @@ use stdClass;
  *
  * Merge data into a JSON document or apply a filter.
  *
- * ```php
+ * ```php:task
  * new JsonMergeTask(
  *     path: 'composer.json',
  *     data: [
@@ -22,12 +22,12 @@ use stdClass;
  *
  * You can also filter the object:
  *
- * ```php
+ * ```php:task
  * new JsonMergeTask(
  *     path: 'composer.json',
  *     filter: function (stdClass $object) {
  *         unset($object->{'minimum-stability'});
- *         return $ibject;
+ *         return $object;
  *     }
  * );
  * ```

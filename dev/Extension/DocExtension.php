@@ -3,6 +3,9 @@
 namespace Maestro\Development\Extension;
 
 use League\CommonMark\DocParser;
+use Maestro\Core\Queue\Queue;
+use Maestro\Core\Queue\TaskRunner;
+use Maestro\Core\Task\ContextFactory;
 use Maestro\Development\Command\BuildCommand;
 use Maestro\Development\TaskCompiler;
 use Maestro\Development\TaskDocBuilder;
@@ -56,7 +59,11 @@ class DocExtension implements Extension
 
         $container->register(
             TaskExampleTester::class,
-            fn(Container $c) => new TaskExampleTester()
+            fn(Container $c) => new TaskExampleTester(
+                $container->get(Queue::class),
+                $container->get(ContextFactory::class),
+                $container->get(LoggerInterface::class)
+            )
         );
     }
 

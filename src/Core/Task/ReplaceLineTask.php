@@ -9,13 +9,13 @@ use Stringable;
  *
  * For example, replace the Travis badge with the Github actions badge:
  *
- * ```php
+ * ```php:task
  * new ReplaceLineTask(
- *     group: $repository->name(),
+ *     group: 'my-repository',
  *     path: 'README.md',
  *     regexp: '{Build Status.*travis}',
- *     line: sprintf('![CI](https://github.com/phpactor/%s/workflows/CI/badge.svg)', $repository->name()),
- * ),
+ *     line: sprintf('![CI](https://github.com/phpactor/%s/workflows/CI/badge.svg)', 'my-repository'),
+ * );
  * ```
  */
 class ReplaceLineTask implements Task, Stringable

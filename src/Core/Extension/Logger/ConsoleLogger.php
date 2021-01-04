@@ -29,6 +29,7 @@ class ConsoleLogger extends AbstractLogger
                 LogLevel::INFO => 'fg=green',
                 LogLevel::DEBUG => 'fg=cyan',
                 LogLevel::ERROR => 'fg=red',
+                LogLevel::WARNING => 'fg=yellow',
                 default => 'fg=white',
             },
             substr($level, 0, 4),

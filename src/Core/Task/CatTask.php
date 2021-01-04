@@ -5,10 +5,16 @@ namespace Maestro\Core\Task;
 /**
  * Publish contents of text file
  *
- * This task is useful for debugging, for example, to check the contents of
- * `README.md`:
+ * This task is useful for debugging. If you have a README file in your
+ * workspace:
  *
+ * ```text:workspace/README.md
+ * Hello World
  * ```
+ *
+ * And the task:
+ *
+ * ```php:task
  * new CatTask(
  *    path: 'README.md'
  * );

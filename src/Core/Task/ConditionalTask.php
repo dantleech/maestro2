@@ -16,9 +16,9 @@ use Closure;
  *
  * You can also specify a message which will be shown:
  *
- * ```php
+ * ```php:task
  * new ConditionalTask(
- *     predicate: false,
+ *     predicate: fn () => false,
  *     task: new NullTask(),
  *     message: "Did not do nothing because false"
  * );

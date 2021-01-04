@@ -7,6 +7,7 @@ use Maestro\Core\Extension\Command\ReplCommand;
 use Maestro\Core\Extension\Command\RunCommand;
 use Maestro\Core\Extension\CoreExtension;
 use Maestro\Core\Extension\RealExtension;
+use Maestro\Core\Extension\TestExtension;
 use Maestro\Development\Command\BuildCommand;
 use Maestro\Development\Extension\DocExtension;
 use Maestro\Git\Extension\GitExtension;
@@ -31,8 +32,11 @@ $application = new Application('Maestro 2');
 $container = PhpactorContainer::fromExtensions([
     DocExtension::class,
     CoreExtension::class,
-    RealExtension::class,
+    TestExtension::class,
     MarkdownExtension::class,
+], [
+    'core.templatePath' => __DIR__ . '/../example/templates',
+    'buffer_output' => false,
 ]);
 
 $application->addCommands([

@@ -11,8 +11,8 @@ use Maestro\Core\Process\ProcessResult;
  * Similar to the `ProcessTask` but will prefix the PHP binary to the executed
  * commands.
  *
- * ```php
- * new PhpProcess('./vendor/bin/phpunit')
+ * ```php:task
+ * new PhpProcessTask('./vendor/bin/phpunit')
  * ```
  *
  * Is equivilent to running

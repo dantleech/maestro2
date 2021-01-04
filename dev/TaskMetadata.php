@@ -6,13 +6,15 @@ final class TaskMetadata
 {
     /**
      * @param TaskParameter[] $parameters
+     * @param TaskExample[] $examples
      */
     public function __construct(
         private string $name,
         private string $shortDescription,
         private string $namespacedName,
         private string $documentation,
-        private array $parameters
+        private array $parameters,
+        private array $examples
     )
     {
     }
@@ -43,5 +45,13 @@ final class TaskMetadata
     public function shortDescription(): string
     {
         return $this->shortDescription;
+    }
+
+    /**
+     * @return TaskExample[]
+     */
+    public function examples(): array
+    {
+        return $this->examples;
     }
 }

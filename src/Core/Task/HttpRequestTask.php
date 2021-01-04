@@ -8,7 +8,7 @@ namespace Maestro\Core\Task;
  * Use this task to send a HTTP request. The response will be made available
  * in the next task.
  *
- * ```
+ * ```php:task
  * new HttpRequestTask(
  *     url: 'https://www.example.com/do/something',
  *     method: 'POST',
@@ -18,12 +18,12 @@ namespace Maestro\Core\Task;
  *
  * You can access the results in the subsequent task:
  *
- * ```
- * new SequenceTask([
+ * ```php:task
+ * new SequentialTask([
  *     new HttpRequestTask(
  *         url: 'https://www.example.com/do/something'
  *     ),
- *     new ClosureTask(
+ *     new Maestro\Core\Task\ClosureTask(
  *         closure: function (Context $context) {
  *             $response = $context->result();
  *             // do something

@@ -10,7 +10,7 @@ use Stringable;
  * Run `git commit` with a specific set of paths in the current workspace
  * directory.
  *
- * ```php
+ * ```php:task
  * new GitCommitTask(
  *     paths: [ 'src' ],
  *     message: 'Upgraded PHPUnit',

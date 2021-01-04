@@ -9,8 +9,8 @@ use Stringable;
  *
  * Use this task to display the GIT diff for inspection.
  *
- * ```php
- * new GitDiff();
+ * ```php:task
+ * new GitDiffTask();
  * ```
  */
 class GitDiffTask implements Task, Stringable

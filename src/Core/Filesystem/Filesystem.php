@@ -2,6 +2,7 @@
 
 namespace Maestro\Core\Filesystem;
 
+use Maestro\Core\Exception\RuntimeException;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Webmozart\PathUtil\Path;
 
@@ -77,6 +78,13 @@ class Filesystem
 
     public function getContents(string $path): string
     {
+        if (!file_exists($this->resolvePath($path))) {
+            throw new RuntimeException(sprintf(
+                'File "%s" does not exist',
+                $path
+            ));
+        }
+
         return file_get_contents($this->resolvePath($path));
     }
 

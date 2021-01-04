@@ -10,11 +10,12 @@ namespace Maestro\Core\Task;
  *
  * The path is always absolute even if no leading `/` is provided.
  *
- * ```php
+ * ```php:task
  * new SequentialTask([
  *     new SetDirectoryTask('foobar/baz'),
  *     new SetDirectoryTask('foobar/barfoo')
  * ])
+ * ```
  *
  * The above will change directories to `foobar/baz` and `foobar/barfoo`
  * respectively.

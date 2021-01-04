@@ -12,7 +12,7 @@ use function Clue\Arguments\split;
  *
  * For example, create a pull request with `gh` (Github CLI tool):
  *
- * ```php
+ * ```php:task
  * new ProcessTask(
  *     cmd: [
  *         'gh',
@@ -28,18 +28,18 @@ use function Clue\Arguments\split;
  *
  * Alternatively you can use a string for the command:
  *
- * ```php
+ * ```php:task
  * new ProcessTask(
- *     cmd: 'gh pr create --fill -t "some commit message"'
+ *     cmd: 'gh pr create --fill -t "some commit message"',
  *     allowFailure: true
  * )
  * ```
  *
  * You can specify a closure which can be executed afterwards
  *
- * ```php
+ * ```php:task
  * new ProcessTask(
- *     cmd: 'gh pr create --fill -t "some commit message"'
+ *     cmd: 'gh pr create --fill -t "some commit message"',
  *     after: function (ProcessResult $result, Context $context) {
  *         // do something
  *     }

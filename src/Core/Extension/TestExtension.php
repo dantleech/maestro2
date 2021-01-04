@@ -16,10 +16,13 @@ use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\MapResolver\Resolver;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TestExtension implements Extension
 {
+    const PARAM_BUFFER_OUTPUT = 'buffer_output';
+
     /**
      * {@inheritDoc}
      *
@@ -28,7 +31,11 @@ class TestExtension implements Extension
     public function load(ContainerBuilder $container)
     {
         $container->register(OutputInterface::class, function (Container $container) {
-            return new BufferedOutput();
+            if ($container->getParameter(self::PARAM_BUFFER_OUTPUT)) {
+                return new BufferedOutput();
+            }
+
+            return new ConsoleOutput();
         });
 
         $container->register(Queue::class, function (Container $container) {
@@ -61,5 +68,8 @@ class TestExtension implements Extension
      */
     public function configure(Resolver $schema)
     {
+        $schema->setDefaults([
+            self::PARAM_BUFFER_OUTPUT => true
+        ]);
     }
 }

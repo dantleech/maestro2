@@ -3,7 +3,9 @@
 namespace Maestro\Development;
 
 use Generator;
+use League\CommonMark\Block\Element\FencedCode;
 use League\CommonMark\DocParser;
+use League\CommonMark\Node\NodeWalker;
 use Maestro\Util\ClassNameFromFile;
 use PHPStan\PhpDocParser\Ast\Node;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
@@ -25,7 +27,7 @@ use Webmozart\PathUtil\Path;
 
 class TaskFinder
 {
-    public function __construct(private string $projectRoot, DocParser $parser)
+    public function __construct(private string $projectRoot, private DocParser $parser)
     {
     }
 
@@ -103,11 +105,6 @@ class TaskFinder
         return preg_replace('{Task$}', '', $reflection->getShortName());
     }
 
-    private function extractExamples(string $text): array
-    {
-        return [];
-    }
-
     private function buildTaskMetadata($file): ?TaskMetadata
     {
         assert($file instanceof SplFileInfo);
@@ -149,11 +146,36 @@ class TaskFinder
                 $reflection->getNamespaceName(),
                 $reflection->getShortName()
             ]),
-            $text,
+            preg_replace('{```(\w+):[\w/\.]+}s', '```\1', $text),
             $parameters,
-            $this->extractExamples($text)
+            iterator_to_array($this->extractExamples($text))
         );
 
         return $metadata;
+    }
+
+    private function extractExamples(string $text): Generator
+    {
+        $event = $this->parser->parse($text);
+        $walker = new NodeWalker($event);
+        while ($event = $walker->next()) {
+            $node = $event->getNode();
+            if (!$node instanceof FencedCode) {
+                continue;
+            }
+
+            $parts = explode(':', $node->getInfo());
+            if (count($parts) !== 2) {
+                continue;
+            }
+
+            [$language, $type ] = $parts;
+
+            if (!$language === 'php') {
+                continue;
+            }
+
+            yield new TaskExample($type, $node->getStringContent());
+        }
     }
 }
