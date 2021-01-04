@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GitCommit &#8212; Maestro 0.1 documentation</title>
+    <title>Process &#8212; Maestro 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="GitDiff" href="GitDiff.html" />
-    <link rel="prev" title="File" href="File.html" />
+    <link rel="next" title="ReplaceLine" href="ReplaceLine.html" />
+    <link rel="prev" title="PhpProcess" href="PhpProcess.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -32,27 +32,52 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="gitcommit">
-<h1>GitCommit<a class="headerlink" href="#gitcommit" title="Permalink to this headline">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">Maestro\Core\Task\GitCommitTask</span></code></p>
-<p>Perform a GIT commit</p>
+  <div class="section" id="process">
+<h1>Process<a class="headerlink" href="#process" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Maestro\Core\Task\ProcessTask</span></code></p>
+<p>Run a process</p>
 <div class="section" id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><strong>paths</strong> Paths to commit - <code class="docutils literal notranslate"><span class="pre">list&lt;string&gt;</span></code></p></li>
-<li><p><strong>message</strong> Commit message - <code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><strong>cmd</strong> Command to run - <code class="docutils literal notranslate"><span class="pre">(list&lt;string&gt;</span> <span class="pre">|</span> <span class="pre">string)</span></code></p></li>
+<li><p><strong>after</strong> Closure to run after the process has finished - <code class="docutils literal notranslate"><span class="pre">(Closure(ProcessResult</span> <span class="pre">,</span> <span class="pre">Context</span> <span class="pre">):</span> <span class="pre">Context</span> <span class="pre">|</span> <span class="pre">null)</span></code></p></li>
+<li><p><strong>allowFailure</strong> If failure should be tolerated - <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>Run <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> with a specific set of paths in the current workspace
-directory.</p>
-<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">GitCommitTask</span><span class="p">(</span>
-    <span class="nx">paths</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;src&#39;</span> <span class="p">],</span>
-    <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;Upgraded PHPUnit&#39;</span><span class="p">,</span>
-<span class="p">);</span>
+<p>For example, create a pull request with <code class="docutils literal notranslate"><span class="pre">gh</span></code> (Github CLI tool):</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ProcessTask</span><span class="p">(</span>
+    <span class="nx">cmd</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s1">&#39;gh&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;pr&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;create&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;--fill&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;-t&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Some commit message&#39;</span>
+    <span class="p">],</span>
+    <span class="nx">allowFailure</span><span class="o">:</span> <span class="k">true</span>
+<span class="p">)</span>
 </pre></div>
 </div>
+<p>Alternatively you can use a string for the command:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ProcessTask</span><span class="p">(</span>
+    <span class="nx">cmd</span><span class="o">:</span> <span class="s1">&#39;gh pr create --fill -t &quot;some commit message&quot;&#39;</span>
+    <span class="nx">allowFailure</span><span class="o">:</span> <span class="k">true</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You can specify a closure which can be executed afterwards</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ProcessTask</span><span class="p">(</span>
+    <span class="nx">cmd</span><span class="o">:</span> <span class="s1">&#39;gh pr create --fill -t &quot;some commit message&quot;&#39;</span>
+    <span class="nx">after</span><span class="o">:</span> <span class="k">function</span> <span class="p">(</span><span class="nx">ProcessResult</span> <span class="nv">$result</span><span class="p">,</span> <span class="nx">Context</span> <span class="nv">$context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// do something</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The process will be run in the current working directory of the <code class="docutils literal notranslate"><span class="pre">Filesystem</span></code>
+service, which can be set with the <code class="docutils literal notranslate"><span class="pre">SetDirectoryTask</span></code>.</p>
 </div>
 </div>
 
@@ -81,7 +106,7 @@ directory.</p>
 <li class="toctree-l2"><a class="reference internal" href="Conditional.html">Conditional</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Fact.html">Fact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="File.html">File</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">GitCommit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GitCommit.html">GitCommit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GitDiff.html">GitDiff</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GitRepository.html">GitRepository</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GitSurvey.html">GitSurvey</a></li>
@@ -93,7 +118,7 @@ directory.</p>
 <li class="toctree-l2"><a class="reference internal" href="Null.html">Null</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Parallel.html">Parallel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PhpProcess.html">PhpProcess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Process.html">Process</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Process</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ReplaceLine.html">ReplaceLine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Sequential.html">Sequential</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SetDirectory.html">SetDirectory</a></li>
@@ -109,8 +134,8 @@ directory.</p>
 <ul>
   <li><a href="../contents.html">Documentation overview</a><ul>
   <li><a href="../task.html">Tasks</a><ul>
-      <li>Previous: <a href="File.html" title="previous chapter">File</a></li>
-      <li>Next: <a href="GitDiff.html" title="next chapter">GitDiff</a></li>
+      <li>Previous: <a href="PhpProcess.html" title="previous chapter">PhpProcess</a></li>
+      <li>Next: <a href="ReplaceLine.html" title="next chapter">ReplaceLine</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -145,7 +170,7 @@ directory.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../_sources/task/GitCommit.md.txt"
+      <a href="../_sources/task/Process.md.txt"
           rel="nofollow">Page source</a>
     </div>
 

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GitCommit &#8212; Maestro 0.1 documentation</title>
+    <title>PhpProcess &#8212; Maestro 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="GitDiff" href="GitDiff.html" />
-    <link rel="prev" title="File" href="File.html" />
+    <link rel="next" title="Process" href="Process.html" />
+    <link rel="prev" title="Parallel" href="Parallel.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -32,27 +32,31 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="gitcommit">
-<h1>GitCommit<a class="headerlink" href="#gitcommit" title="Permalink to this headline">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">Maestro\Core\Task\GitCommitTask</span></code></p>
-<p>Perform a GIT commit</p>
+  <div class="section" id="phpprocess">
+<h1>PhpProcess<a class="headerlink" href="#phpprocess" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Maestro\Core\Task\PhpProcessTask</span></code></p>
+<p>Run a PHP process</p>
 <div class="section" id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><strong>paths</strong> Paths to commit - <code class="docutils literal notranslate"><span class="pre">list&lt;string&gt;</span></code></p></li>
-<li><p><strong>message</strong> Commit message - <code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><strong>cmd</strong> Command to run - <code class="docutils literal notranslate"><span class="pre">(list&lt;string&gt;</span> <span class="pre">|</span> <span class="pre">string)</span></code></p></li>
+<li><p><strong>after</strong> Closure to run afterwards, will be passed the proces result and the <code class="docutils literal notranslate"><span class="pre">Context</span></code>. - <code class="docutils literal notranslate"><span class="pre">(Closure(ProcessResult</span> <span class="pre">,</span> <span class="pre">Context</span> <span class="pre">):</span> <span class="pre">Context</span> <span class="pre">|</span> <span class="pre">null)</span></code></p></li>
+<li><p><strong>allowFailure</strong> Ignore failures - <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>Run <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> with a specific set of paths in the current workspace
-directory.</p>
-<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">GitCommitTask</span><span class="p">(</span>
-    <span class="nx">paths</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;src&#39;</span> <span class="p">],</span>
-    <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;Upgraded PHPUnit&#39;</span><span class="p">,</span>
-<span class="p">);</span>
+<p>Similar to the <code class="docutils literal notranslate"><span class="pre">ProcessTask</span></code> but will prefix the PHP binary to the executed
+commands.</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">PhpProcess</span><span class="p">(</span><span class="s1">&#39;./vendor/bin/phpunit&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Is equivilent to running</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ php ./vendor/bin/phpunit
+</pre></div>
+</div>
+<p>By default the PHP binary used by Maestro will be used or you can lay a
+<code class="docutils literal notranslate"><span class="pre">PhpFact</span></code> in the pipeline to specify an alternate PHP binary.</p>
 </div>
 </div>
 
@@ -81,7 +85,7 @@ directory.</p>
 <li class="toctree-l2"><a class="reference internal" href="Conditional.html">Conditional</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Fact.html">Fact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="File.html">File</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">GitCommit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GitCommit.html">GitCommit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GitDiff.html">GitDiff</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GitRepository.html">GitRepository</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GitSurvey.html">GitSurvey</a></li>
@@ -92,7 +96,7 @@ directory.</p>
 <li class="toctree-l2"><a class="reference internal" href="MarkdownSection.html">MarkdownSection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Null.html">Null</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Parallel.html">Parallel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PhpProcess.html">PhpProcess</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PhpProcess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Process.html">Process</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ReplaceLine.html">ReplaceLine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Sequential.html">Sequential</a></li>
@@ -109,8 +113,8 @@ directory.</p>
 <ul>
   <li><a href="../contents.html">Documentation overview</a><ul>
   <li><a href="../task.html">Tasks</a><ul>
-      <li>Previous: <a href="File.html" title="previous chapter">File</a></li>
-      <li>Next: <a href="GitDiff.html" title="next chapter">GitDiff</a></li>
+      <li>Previous: <a href="Parallel.html" title="previous chapter">Parallel</a></li>
+      <li>Next: <a href="Process.html" title="next chapter">Process</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -145,7 +149,7 @@ directory.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../_sources/task/GitCommit.md.txt"
+      <a href="../_sources/task/PhpProcess.md.txt"
           rel="nofollow">Page source</a>
     </div>
 

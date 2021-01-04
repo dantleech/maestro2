@@ -1,0 +1,44 @@
+# Process
+
+`Maestro\Core\Task\ProcessTask`
+
+Run a process
+
+## Parameters
+- **cmd** Command to run - `(list<string> | string)`
+- **after** Closure to run after the process has finished - `(Closure(ProcessResult , Context ): Context | null)`
+- **allowFailure** If failure should be tolerated - `bool`
+
+## Description
+For example, create a pull request with `gh` (Github CLI tool):
+```php
+new ProcessTask(
+    cmd: [
+        'gh',
+        'pr',
+        'create',
+        '--fill',
+        '-t',
+        'Some commit message'
+    ],
+    allowFailure: true
+)
+```
+Alternatively you can use a string for the command:
+```php
+new ProcessTask(
+    cmd: 'gh pr create --fill -t "some commit message"'
+    allowFailure: true
+)
+```
+You can specify a closure which can be executed afterwards
+```php
+new ProcessTask(
+    cmd: 'gh pr create --fill -t "some commit message"'
+    after: function (ProcessResult $result, Context $context) {
+        // do something
+    }
+)
+```
+The process will be run in the current working directory of the `Filesystem`
+service, which can be set with the `SetDirectoryTask`.
