@@ -6,23 +6,7 @@ use Webmozart\PathUtil\Path;
 
 class TaskDocBuilder
 {
-    public function __construct(private TaskFinder $finder, private string $outPath)
-    {
-    }
-
-    public function build(): void
-    {
-        if (!file_exists($this->outPath)) {
-            @mkdir($this->outPath, 0777, true);
-        }
-        foreach ($this->finder->find() as $taskMeta) {
-            file_put_contents(Path::join([$this->outPath, sprintf(
-                '%s.md', $taskMeta->name()
-            )]), implode("\n", $this->buildDoc($taskMeta)));
-        }
-    }
-
-    private function buildDoc(TaskMetadata $taskMeta): array
+    public function buildDoc(TaskMetadata $taskMeta): string
     {
         $out = [];
         $out[] = '# ' . $taskMeta->name();
@@ -33,7 +17,7 @@ class TaskDocBuilder
         $out[] = '';
 
         if ($taskMeta->parameters()) {
-        $out[] = '## Parameters';
+            $out[] = '## Parameters';
             foreach ($taskMeta->parameters() as $parameter) {
                 assert($parameter instanceof TaskParameter);
                 $out[] = sprintf('- **%s** %s - `%s`', ltrim($parameter->name(), '$'), $parameter->description(), $parameter->type());
@@ -43,6 +27,6 @@ class TaskDocBuilder
         $out[] = '## Description';
         $out[] = $taskMeta->documentation();
 
-        return $out;
+        return implode("\n", $out);
     }
 }

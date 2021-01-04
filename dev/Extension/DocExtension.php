@@ -3,6 +3,7 @@
 namespace Maestro\Development\Extension;
 
 use Maestro\Development\Command\BuildCommand;
+use Maestro\Development\TaskCompiler;
 use Maestro\Development\TaskDocBuilder;
 use Maestro\Development\TaskFinder;
 use Phpactor\Container\Container;
@@ -20,7 +21,7 @@ class DocExtension implements Extension
         $container->register(
             BuildCommand::class,
             fn(Container $c) => new BuildCommand(
-                $container->get(TaskDocBuilder::class)
+                $container->get(TaskCompiler::class)
             )
         );
 
@@ -32,10 +33,18 @@ class DocExtension implements Extension
         );
 
         $container->register(
+            TaskCompiler::class,
+            fn(Container $c) => new TaskCompiler(
+                $c->get(TaskFinder::class),
+                $c->get(TaskDocBuilder::class),
+                __DIR__ .'/../../docs/task',
+            )
+        );
+
+        $container->register(
             TaskDocBuilder::class,
             fn(Container $c) => new TaskDocBuilder(
                 $c->get(TaskFinder::class),
-                __DIR__ .'/../../docs/task',
             )
         );
     }
