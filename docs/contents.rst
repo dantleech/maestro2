@@ -6,6 +6,7 @@ Contents
    :glob:
 
    index
+   quickstart
    task
 
 .. toctree::
