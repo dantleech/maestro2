@@ -5,15 +5,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; Maestro 0.1 documentation</title>
+    <title>Quickstart &#8212; Maestro 0.1 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <link rel="index" title="Index" href="#" />
+    <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tasks" href="task.html" />
+    <link rel="prev" title="Introduction" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -30,11 +32,66 @@
 
           <div class="body" role="main">
             
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="you-need-a-project">
+<h2>You need a project<a class="headerlink" href="#you-need-a-project" title="Permalink to this headline">¶</a></h2>
+<p>First of all you need a project. You can include Maestro in an existing
+project, but as Maestro may manage that project too, it’s perhaps better to
+create a new project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ composer create-project my-project-hub
+$ <span class="nb">cd</span> my-project-hub
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-the-project">
+<h2>Setup the project<a class="headerlink" href="#setup-the-project" title="Permalink to this headline">¶</a></h2>
+<p>Require Maestro:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ composer require dantleech/maestro
+</pre></div>
+</div>
+<p>You will also need to setup some autoload paths for your pipelines:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="s2">&quot;autoload&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;psr-4&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;MyProjectHub\\&quot;</span><span class="o">:</span> <span class="s2">&quot;src/&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-pipeline">
+<h2>Create a pipeline<a class="headerlink" href="#create-a-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>Create the following pipeline file: <code class="docutils literal notranslate"><span class="pre">src/Pipeline/EmptyPipeline.php</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;?</span><span class="nx">php</span>
 
-<h1 id="index">Index</h1>
+<span class="k">namespace</span> <span class="nx">MyProjectHub\Pipeline</span><span class="p">;</span>
 
-<div class="genindex-jumpbox">
- 
+<span class="k">use</span> <span class="nx">Maestro\Core\Inventory\MainNode</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Maestro\Core\Pipeline\Pipeline</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Maestro\Core\Task\NullTask</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Maestro\Core\Task\SequentialTask</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Maestro\Core\Task\SetReportingGroupTask</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Maestro\Core\Task\Task</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">EmptyPipeline</span> <span class="k">implements</span> <span class="nx">Pipeline</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">build</span><span class="p">(</span><span class="nx">MainNode</span> <span class="nv">$mainNode</span><span class="p">)</span><span class="o">:</span> <span class="nx">Task</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">SequentialTask</span><span class="p">([</span>
+            <span class="k">new</span> <span class="nx">NullTask</span><span class="p">(),</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then run <code class="docutils literal notranslate"><span class="pre">maestro</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./vendor/bin/maestro run src/Pipeline/EmptyPipeline
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -53,16 +110,16 @@
 
 
 
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="index.html#what-can-it-do">What can it do?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#who-is-it-for">Who is it for?</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#you-need-a-project">You need a project</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#setup-the-project">Setup the project</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#create-a-pipeline">Create a pipeline</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#you-need-a-project">You need a project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-the-project">Setup the project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-pipeline">Create a pipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="task.html">Tasks</a><ul>
@@ -99,6 +156,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="contents.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="task.html" title="next chapter">Tasks</a></li>
   </ul></li>
 </ul>
 </div>
@@ -131,6 +190,9 @@
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
+      |
+      <a href="_sources/quickstart.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
     
