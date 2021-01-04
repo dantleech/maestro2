@@ -71,7 +71,7 @@ class TaskFinder
             }
 
             yield new TaskMetadata(
-                rtrim($reflection->getShortName(), 'Task'),
+                $this->resolveName($reflection),
                 $shortDescription,
                 join('\\', [
                     $reflection->getNamespaceName(),
@@ -124,5 +124,10 @@ class TaskFinder
         }
 
         return $params;
+    }
+
+    private function resolveName(ReflectionClass $reflection): string
+    {
+        return preg_replace('{Task$}', '', $reflection->getShortName());
     }
 }
