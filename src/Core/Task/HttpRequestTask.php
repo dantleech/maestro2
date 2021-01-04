@@ -2,10 +2,43 @@
 
 namespace Maestro\Core\Task;
 
+/**
+ * Perform a HTTP request
+ *
+ * Use this task to send a HTTP request. The response will be made available
+ * in the next task.
+ *
+ * ```
+ * new HttpRequestTask(
+ *     url: 'https://www.example.com/do/something',
+ *     method: 'POST',
+ *     body: 'hello'
+ * );
+ * ```
+ *
+ * You can access the results in the subsequent task:
+ *
+ * ```
+ * new SequenceTask([
+ *     new HttpRequestTask(
+ *         url: 'https://www.example.com/do/something'
+ *     ),
+ *     new ClosureTask(
+ *         closure: function (Context $context) {
+ *             $response = $context->result();
+ *             // do something
+ *             return $context;
+ *         }
+ *     )
+ * ]);
+ */
 class HttpRequestTask implements Task
 {
     /**
+     * @param string $url
+     * @param string $method
      * @param array<string,string|list<string>> $headers
+     * @param ?string $body
      */
     public function __construct(
         private string $url,

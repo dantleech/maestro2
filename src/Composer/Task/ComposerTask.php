@@ -6,7 +6,7 @@ use Maestro\Core\Task\Task;
 use Stringable;
 
 /**
- * Manipulate and use Composer
+ * Manage composer JSON and update dependencies.
  *
  * This task manipulates `composer.json`, uses the `composer` and provides
  * package information to downstream tasks.

@@ -4,6 +4,28 @@ namespace Maestro\Core\Task;
 
 use Stringable;
 
+/**
+ * Checkout a git repository
+ *
+ * Use this task to establish a GIT repository in your workspace.
+ *
+ * ```php
+ * new GitRepositoryTask(
+ *     url: $repositoryNode->url(),
+ *     path: $repositoryNode->name()
+ * );
+ * ```
+ *
+ * Typically you will also want to change the working directory to
+ * this repository so that subsequent tasks operate on it:
+ *
+ * ```php
+ * new SequentialTask([
+ *     new GitRepositoryTask(url: $url, path: 'my-repo'),
+ *     new SetDirectoryTask('my-repo')
+ * ]);
+ * ```
+ */
 class GitRepositoryTask implements Task, Stringable
 {
     public function __construct(

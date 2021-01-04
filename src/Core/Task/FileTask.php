@@ -4,6 +4,38 @@ namespace Maestro\Core\Task;
 
 use Stringable;
 
+/**
+ * Manage a file
+ *
+ * This task can be used to manage the state of a file.
+ *
+ * Ensure file exists:
+ *
+ * ```php
+ * new FileTask(
+ *     path: "README.md",
+ *     contents: "Hello World"
+ * )
+ * ```
+ *
+ * Remove a file:
+ *
+ * ```php
+ * new FileTask(
+ *     path: "README.md",
+ *     exists: false
+ * )
+ * ```
+ *
+ * Create a directory
+ *
+ * ```php
+ * new FileTask(
+ *     path: "myDirectory",
+ *     type: "directory"
+ * )
+ * ```
+ */
 class FileTask implements Task, Stringable
 {
     public function __construct(

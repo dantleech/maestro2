@@ -9,6 +9,7 @@ final class TaskMetadata
      */
     public function __construct(
         private string $name,
+        private string $shortDescription,
         private string $namespacedName,
         private string $documentation,
         private array $parameters
@@ -37,5 +38,10 @@ final class TaskMetadata
     public function namespacedName(): string
     {
         return $this->namespacedName;
+    }
+
+    public function shortDescription(): string
+    {
+        return $this->shortDescription;
     }
 }

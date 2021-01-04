@@ -5,10 +5,16 @@ namespace Maestro\Core\Task;
 use Closure;
 use Stringable;
 
+/**
+ * Conduct a survey on a JSON endpoint
+ *
+ * Use this task to make a request and subsequently publish information
+ */
 class JsonApiSurveyTask implements Task, Stringable
 {
     /**
-     * @param Closure(array<array-key,mixed>):array<string,mixed> $extract
+     * @param Closure(array<array-key,mixed>):array<string,mixed> $extract Closure which is passed the JSON response as an array.
+     * @param string $url
      * @param array<string,string|list<string>> $headers
      */
     public function __construct(

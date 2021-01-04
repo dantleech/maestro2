@@ -6,6 +6,32 @@ use Closure;
 use Stringable;
 use stdClass;
 
+/**
+ * Modify a JSON document
+ *
+ * Merge data into a JSON document or apply a filter.
+ *
+ * ```php
+ * new JsonMergeTask(
+ *     path: 'composer.json',
+ *     data: [
+ *         'minimum-stability' => 'dev',
+ *     ]
+ * );
+ * ```
+ *
+ * You can also filter the object:
+ *
+ * ```php
+ * new JsonMergeTask(
+ *     path: 'composer.json',
+ *     filter: function (stdClass $object) {
+ *         unset($object->{'minimum-stability'});
+ *         return $ibject;
+ *     }
+ * );
+ * ```
+ */
 class JsonMergeTask implements Task, Stringable
 {
     /**

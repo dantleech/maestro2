@@ -4,10 +4,23 @@ namespace Maestro\Core\Task;
 
 use Stringable;
 
+/**
+ * Perform a GIT commit
+ *
+ * Run `git commit` with a specific set of paths in the current workspace
+ * directory.
+ *
+ * ```php
+ * new GitCommitTask(
+ *     paths: [ 'src' ],
+ *     message: 'Upgraded PHPUnit',
+ * );
+ */
 class GitCommitTask implements Task, Stringable
 {
     /**
-     * @param list<string> $paths
+     * @param list<string> $paths Paths to commit
+     * @param string $message Commit message
      */
     public function __construct(
         private array $paths,

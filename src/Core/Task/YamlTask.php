@@ -5,8 +5,21 @@ namespace Maestro\Core\Task;
 use Closure;
 use Stringable;
 
+/**
+ * Manipulate a YAML file
+ *
+ * Merge data or filter a YAML file.
+ *
+ * Note that this command will reformat the YAML file.
+ */
 class YamlTask implements Task, Stringable
 {
+    /**
+     * @param string $path Workspace path
+     * @param array $data Merge this data into the YAML file
+     * @param int $inline Start inlining the YAML at this level
+     * @param ?Closure(array $data): array Filter the data with a Closure which accespts and returns an array.
+     */
     public function __construct(
         private string $path,
         private array $data = [],

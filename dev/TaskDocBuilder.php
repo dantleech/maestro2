@@ -27,11 +27,18 @@ class TaskDocBuilder
         $out = [];
         $out[] = '# ' . $taskMeta->name();
         $out[] = '';
-        $out[] = sprintf('`%s\\%s`', $taskMeta->namespacedName(), $taskMeta->name());
+        $out[] = sprintf('`%s`', $taskMeta->namespacedName());
+        $out[] = '';
+        $out[] = $taskMeta->shortDescription();
+        $out[] = '';
+
+        if ($taskMeta->parameters()) {
         $out[] = '## Parameters';
-        foreach ($taskMeta->parameters() as $parameter) {
-            assert($parameter instanceof TaskParameter);
-            $out[] = sprintf('- **%s** %s - `%s`', ltrim($parameter->name(), '$'), $parameter->description(), $parameter->type());
+            foreach ($taskMeta->parameters() as $parameter) {
+                assert($parameter instanceof TaskParameter);
+                $out[] = sprintf('- **%s** %s - `%s`', ltrim($parameter->name(), '$'), $parameter->description(), $parameter->type());
+            }
+            $out[] = '';
         }
         $out[] = '## Description';
         $out[] = $taskMeta->documentation();

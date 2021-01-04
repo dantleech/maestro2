@@ -2,10 +2,19 @@
 
 namespace Maestro\Core\Task;
 
+/**
+ * Make a JSON API request
+ *
+ * This task is similar to the HttpRequest task, but the body and response are
+ * arrays.
+ */
 class JsonApiTask implements Task
 {
     /**
+     * @param string $url
+     * @param string $method
      * @param array<string,string|list<string>> $headers
+     * @param ?array $body
      */
     public function __construct(
         private string $url,

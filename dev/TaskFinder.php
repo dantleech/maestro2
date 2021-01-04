@@ -53,12 +53,14 @@ class TaskFinder
                 continue;
             }
             
-            $text = trim(implode("\n", array_map(function (string $line) {
+            $lines = array_filter(array_map(function (string $line) {
                 $line = preg_replace('{^\s*/\\*\\*\s*$}', '', $line);
                 $line = preg_replace('{^\s*\\*\s?}', '', $line);
                 $line = preg_replace('{^\s*/\s*$}', '', $line);
                 return $line;
-            }, explode("\n", $comment))));
+            }, explode("\n", $comment)));
+            $shortDescription = array_shift($lines);
+            $text = trim(implode("\n", $lines));
 
             $parameters = [];
             foreach ($reflection->getMethods() as $method) {
@@ -69,8 +71,12 @@ class TaskFinder
             }
 
             yield new TaskMetadata(
-                $reflection->getShortName(),
-                $reflection->getNamespaceName(),
+                rtrim($reflection->getShortName(), 'Task'),
+                $shortDescription,
+                join('\\', [
+                    $reflection->getNamespaceName(),
+                    $reflection->getShortName()
+                ]),
                 $text,
                 $parameters
             );

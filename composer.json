@@ -59,6 +59,9 @@
         "integrate": [
             "./vendor/bin/phpunit",
             "./vendor/bin/psalm",
+            "@docs"
+        ],
+        "docs": [
             "./bin/maestro-build-docs",
             "make html"
         ]

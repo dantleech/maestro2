@@ -1,5 +1,5 @@
-Maestro
-=======
+Introduction
+============
 
 Maestro is a *package maintainence automator for PHP*. It is essentially a
 parallel task runner - think of it as Ansible for packages.
