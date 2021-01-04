@@ -3,6 +3,7 @@
 namespace Maestro\Development;
 
 use Generator;
+use League\CommonMark\DocParser;
 use Maestro\Util\ClassNameFromFile;
 use PHPStan\PhpDocParser\Ast\Node;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
@@ -24,62 +25,33 @@ use Webmozart\PathUtil\Path;
 
 class TaskFinder
 {
-    public function __construct(private string $projectRoot)
+    public function __construct(private string $projectRoot, DocParser $parser)
     {
     }
 
     /**
      * @return Generator<TaskMetadata>
      */
-    public function find(): Generator
+    public function find(?string $path = null): Generator
     {
+        if ($path) {
+            if ($metadata = $this->buildTaskMetadata(new SplFileInfo($path))) {
+                yield $metadata;
+            }
+            return;
+        }
         $finder = new Finder();
         $finder->in($this->projectRoot);
         $finder->name('*Task.php');
 
         foreach ($finder as $file) {
-            assert($file instanceof SplFileInfo);
-            $name = ClassNameFromFile::classNameFromFile(Path::normalize($file->getPathname()));
+            $metadata = $this->buildTaskMetadata($file);
 
-            if (null === $name) {
+            if (null === $metadata) {
                 continue;
             }
 
-            $reflection = new ReflectionClass($name);
-
-            $comment = $reflection->getDocComment();
-
-            if (!$comment) {
-                continue;
-            }
-            
-            $lines = array_filter(array_map(function (string $line) {
-                $line = preg_replace('{^\s*/\\*\\*\s*$}', '', $line);
-                $line = preg_replace('{^\s*\\*\s?}', '', $line);
-                $line = preg_replace('{^\s*/\s*$}', '', $line);
-                return $line;
-            }, explode("\n", $comment)));
-            $shortDescription = array_shift($lines);
-            $text = trim(implode("\n", $lines));
-
-            $parameters = [];
-            foreach ($reflection->getMethods() as $method) {
-                if ($method->getName() === '__construct') {
-                    $parameters = $this->buildParameters($this->parseDoc($method->getDocComment()));
-                    break;
-                }
-            }
-
-            yield new TaskMetadata(
-                $this->resolveName($reflection),
-                $shortDescription,
-                join('\\', [
-                    $reflection->getNamespaceName(),
-                    $reflection->getShortName()
-                ]),
-                $text,
-                $parameters
-            );
+            yield $metadata;
         }
 
     }
@@ -129,5 +101,59 @@ class TaskFinder
     private function resolveName(ReflectionClass $reflection): string
     {
         return preg_replace('{Task$}', '', $reflection->getShortName());
+    }
+
+    private function extractExamples(string $text): array
+    {
+        return [];
+    }
+
+    private function buildTaskMetadata($file): ?TaskMetadata
+    {
+        assert($file instanceof SplFileInfo);
+        $name = ClassNameFromFile::classNameFromFile(Path::normalize($file->getPathname()));
+        
+        if (null === $name) {
+            return null;
+        }
+        
+        $reflection = new ReflectionClass($name);
+        
+        $comment = $reflection->getDocComment();
+        
+        if (!$comment) {
+            return null;
+        }
+        
+        $lines = array_filter(array_map(function (string $line) {
+            $line = preg_replace('{^\s*/\\*\\*\s*$}', '', $line);
+            $line = preg_replace('{^\s*\\*\s?}', '', $line);
+            $line = preg_replace('{^\s*/\s*$}', '', $line);
+            return $line;
+        }, explode("\n", $comment)));
+        $shortDescription = array_shift($lines);
+        $text = trim(implode("\n", $lines));
+        
+        $parameters = [];
+        foreach ($reflection->getMethods() as $method) {
+            if ($method->getName() === '__construct') {
+                $parameters = $this->buildParameters($this->parseDoc($method->getDocComment()));
+                break;
+            }
+        }
+        
+        $metadata = new TaskMetadata(
+            $this->resolveName($reflection),
+            $shortDescription,
+            join('\\', [
+                $reflection->getNamespaceName(),
+                $reflection->getShortName()
+            ]),
+            $text,
+            $parameters,
+            $this->extractExamples($text)
+        );
+
+        return $metadata;
     }
 }

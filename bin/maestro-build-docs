@@ -28,14 +28,15 @@ ErrorHandler::register();
 $cwd = getcwd();
 
 $application = new Application('Maestro 2');
-$application->setDefaultCommand('build');
 $container = PhpactorContainer::fromExtensions([
     DocExtension::class,
     CoreExtension::class,
     RealExtension::class,
+    MarkdownExtension::class,
 ]);
 
 $application->addCommands([
     $container->get(BuildCommand::class),
 ]);
+$application->setDefaultCommand('build', true);
 $application->run();

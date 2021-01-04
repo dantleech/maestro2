@@ -2,9 +2,11 @@
 
 namespace Maestro\Development\Extension;
 
+use League\CommonMark\DocParser;
 use Maestro\Development\Command\BuildCommand;
 use Maestro\Development\TaskCompiler;
 use Maestro\Development\TaskDocBuilder;
+use Maestro\Development\TaskExampleTester;
 use Maestro\Development\TaskFinder;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
@@ -30,6 +32,7 @@ class DocExtension implements Extension
             TaskFinder::class,
             fn(Container $c) => new TaskFinder(
                 __DIR__ . '/../../src',
+                $c->get(DocParser::class)
             )
         );
 
@@ -39,6 +42,7 @@ class DocExtension implements Extension
                 $c->get(LoggerInterface::class),
                 $c->get(TaskFinder::class),
                 $c->get(TaskDocBuilder::class),
+                $c->get(TaskExampleTester::class),
                 __DIR__ .'/../../docs/task',
             )
         );
@@ -48,6 +52,11 @@ class DocExtension implements Extension
             fn(Container $c) => new TaskDocBuilder(
                 $c->get(TaskFinder::class),
             )
+        );
+
+        $container->register(
+            TaskExampleTester::class,
+            fn(Container $c) => new TaskExampleTester()
         );
     }
 
