@@ -5,9 +5,9 @@ Contents
    :maxdepth: 2
    :glob:
 
-   task/*
+   index
+   task
 
 .. toctree::
    :hidden:
 
-   index

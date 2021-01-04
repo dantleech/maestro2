@@ -1,0 +1,15 @@
+# JsonApi
+
+`Maestro\Core\Task\JsonApiTask`
+
+Make a JSON API request
+
+## Parameters
+- **url**  - `string`
+- **method**  - `string`
+- **headers**  - `array<string, (string | list<string>)>`
+- **body**  - `?array`
+
+## Description
+This task is similar to the HttpRequest task, but the body and response are
+arrays.

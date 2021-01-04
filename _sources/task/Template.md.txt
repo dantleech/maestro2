@@ -1,0 +1,32 @@
+# Template
+
+`Maestro\Core\Task\TemplateTask`
+
+Apply a Twig template at a file.
+
+## Parameters
+- **template** Path to template (relative to the template directory) - `string`
+- **target** Path to file to write the rendered template to (in the workspace) - `string`
+- **vars** Variables to pass to the template - `array`
+- **mode** Mode for a newly created file - `int`
+- **overwrite** If any existing file should be overwritten - `bool`
+
+## Description
+Render a twig template and write it to a file.
+Templates are located in `templates/` in the root
+of your Maestro project by default, you can customize
+this location in `maestro.json`:
+```json
+{
+    "core.templatePath": "example/templates",
+}
+```
+Render a README file:
+```
+new TemplateTask(
+    template: 'README.md.twig',
+    target: 'README.md'
+)
+```
+This will look for the template in `<maestro dir>/templates/README.md.twig`
+and subsequently render it to `README.md` at the current workspace path

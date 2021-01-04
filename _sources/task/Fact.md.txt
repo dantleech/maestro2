@@ -1,0 +1,11 @@
+# Fact
+
+`Maestro\Core\Task\FactTask`
+
+Establish a Fact
+
+## Parameters
+- **fact** The fact to inject - `Fact`
+
+## Description
+Inject a Fact into the pipeline. The Fact can be accessed from the `Context`

@@ -1,0 +1,14 @@
+# Yaml
+
+`Maestro\Core\Task\YamlTask`
+
+Manipulate a YAML file
+
+## Parameters
+- **path** Workspace path - `string`
+- **data** Merge this data into the YAML file - `array`
+- **inline** Start inlining the YAML at this level - `int`
+
+## Description
+Merge data or filter a YAML file.
+Note that this command will reformat the YAML file.

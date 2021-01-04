@@ -1,0 +1,36 @@
+# HttpRequest
+
+`Maestro\Core\Task\HttpRequestTask`
+
+Perform a HTTP request
+
+## Parameters
+- **url**  - `string`
+- **method**  - `string`
+- **headers**  - `array<string, (string | list<string>)>`
+- **body**  - `?string`
+
+## Description
+Use this task to send a HTTP request. The response will be made available
+in the next task.
+```
+new HttpRequestTask(
+    url: 'https://www.example.com/do/something',
+    method: 'POST',
+    body: 'hello'
+);
+```
+You can access the results in the subsequent task:
+```
+new SequenceTask([
+    new HttpRequestTask(
+        url: 'https://www.example.com/do/something'
+    ),
+    new ClosureTask(
+        closure: function (Context $context) {
+            $response = $context->result();
+            // do something
+            return $context;
+        }
+    )
+]);

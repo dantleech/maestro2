@@ -1,0 +1,11 @@
+# GitDiff
+
+`Maestro\Core\Task\GitDiffTask`
+
+Publish a GIT diff
+
+## Description
+Use this task to display the GIT diff for inspection.
+```php
+new GitDiff();
+```

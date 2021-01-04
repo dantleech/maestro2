@@ -1,0 +1,21 @@
+# ReplaceLine
+
+`Maestro\Core\Task\ReplaceLineTask`
+
+Replace a line in a file
+
+## Parameters
+- **path** Workspace path to file to replace a line in - `string`
+- **regexp** Regular expression to match - `string`
+- **line** Line which should replace the matched line - `string`
+
+## Description
+For example, replace the Travis badge with the Github actions badge:
+```php
+new ReplaceLineTask(
+    group: $repository->name(),
+    path: 'README.md',
+    regexp: '{Build Status.*travis}',
+    line: sprintf('![CI](https://github.com/phpactor/%s/workflows/CI/badge.svg)', $repository->name()),
+),
+```

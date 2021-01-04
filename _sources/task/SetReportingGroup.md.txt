@@ -1,0 +1,13 @@
+# SetReportingGroup
+
+`Maestro\Core\Task\SetReportingGroupTask`
+
+Set the reporting / publishing group
+
+## Description
+By default all reports are published to the `workspace` group.
+Use this task to specify a reporting group for subsequent tasks. Commonly 
+you would use the name of the repository:
+```php
+new SetReportingGroupTask('my-repo');
+```

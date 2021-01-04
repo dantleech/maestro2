@@ -1,0 +1,13 @@
+# Sequential
+
+`Maestro\Core\Task\SequentialTask`
+
+Run a set of tasks in sequence.
+
+## Parameters
+- **tasks** Tasks to run in sequence - `list<(Task | Fact)>`
+
+## Description
+Use this task to run a series of other tasks, the context
+returned from each task will be passed to the next.
+If the task leaves a `result`, it is only available to the next task.

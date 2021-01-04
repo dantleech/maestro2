@@ -1,0 +1,18 @@
+# GitCommit
+
+`Maestro\Core\Task\GitCommitTask`
+
+Perform a GIT commit
+
+## Parameters
+- **paths** Paths to commit - `list<string>`
+- **message** Commit message - `string`
+
+## Description
+Run `git commit` with a specific set of paths in the current workspace
+directory.
+```php
+new GitCommitTask(
+    paths: [ 'src' ],
+    message: 'Upgraded PHPUnit',
+);

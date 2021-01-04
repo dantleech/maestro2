@@ -1,0 +1,26 @@
+# Parallel
+
+`Maestro\Core\Task\ParallelTask`
+
+Execute multiple tasks in parallel
+
+## Parameters
+- **tasks** Tasks to run in parallel - `array<array-key, Task>`
+
+## Description
+For example to checkout multiple repsoitories at the same time:
+```
+new ParallelTask([
+    new RepositoryTask(url: 'https://example.com/foobar/barfoo', 'barfoo'),
+    new RepositoryTask(url: 'https://example.com/foobar/foobar', 'foobar'),
+])
+```
+Typically you would use this task to setup pipelines in parallel:
+new ParallelTask([
+    new SequenceTask(
+      // other tasks
+    ),
+    new SequenceTask(
+      // other tasks
+    ),
+])

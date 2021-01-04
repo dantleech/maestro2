@@ -1,0 +1,13 @@
+# JsonApiSurvey
+
+`Maestro\Core\Task\JsonApiSurveyTask`
+
+Conduct a survey on a JSON endpoint
+
+## Parameters
+- **extract** Closure which is passed the JSON response as an array. - `Closure(array<array-key, mixed> ): array<string, mixed>`
+- **url**  - `string`
+- **headers**  - `array<string, (string | list<string>)>`
+
+## Description
+Use this task to make a request and subsequently publish information

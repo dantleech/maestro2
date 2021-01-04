@@ -1,0 +1,20 @@
+# SetDirectory
+
+`Maestro\Core\Task\SetDirectoryTask`
+
+Change the workspace directory
+
+## Parameters
+- **path** Workspace path relative to the root. - `string`
+
+## Description
+Use this task to change the workspace/current directory used
+by the Filesystem service.
+The path is always absolute even if no leading `/` is provided.
+```php
+new SequentialTask([
+    new SetDirectoryTask('foobar/baz'),
+    new SetDirectoryTask('foobar/barfoo')
+])
+The above will change directories to `foobar/baz` and `foobar/barfoo`
+respectively.

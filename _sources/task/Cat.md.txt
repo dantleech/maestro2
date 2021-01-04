@@ -1,0 +1,18 @@
+# Cat
+
+`Maestro\Core\Task\CatTask`
+
+Publish contents of text file
+
+## Parameters
+- **path** Path to file in workspace - `string`
+
+## Description
+This task is useful for debugging, for example, to check the contents of
+`README.md`:
+```
+new CatTask(
+   path: 'README.md'
+);
+```
+The contents will be published at level INFO.

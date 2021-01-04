@@ -1,0 +1,25 @@
+# Conditional
+
+`Maestro\Core\Task\ConditionalTask`
+
+Execute another task conditionally
+
+## Parameters
+- **task** Task to execute if predicate is `true` - `Task`
+- **message** Message to show - `?string`
+
+## Description
+```php
+new ConditionalTask(
+    predicate: true,
+    task: new NullTask()
+);
+```
+You can also specify a message which will be shown:
+```php
+new ConditionalTask(
+    predicate: false,
+    task: new NullTask(),
+    message: "Did not do nothing because false"
+);
+```

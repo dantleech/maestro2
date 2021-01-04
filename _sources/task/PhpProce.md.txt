@@ -1,0 +1,23 @@
+# PhpProce
+
+`Maestro\Core\Task\PhpProcessTask`
+
+Run a PHP process
+
+## Parameters
+- **cmd** Command to run - `(list<string> | string)`
+- **after** Closure to run afterwards, will be passed the proces result and the `Context`. - `(Closure(ProcessResult , Context ): Context | null)`
+- **allowFailure** Ignore failures - `bool`
+
+## Description
+Similar to the `ProcessTask` but will prefix the PHP binary to the executed
+commands.
+```php
+new PhpProcess('./vendor/bin/phpunit')
+```
+Is equivilent to running
+```
+$ php ./vendor/bin/phpunit
+```
+By default the PHP binary used by Maestro will be used or you can lay a
+`PhpFact` in the pipeline to specify an alternate PHP binary.

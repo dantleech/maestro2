@@ -1,0 +1,8 @@
+# Null
+
+`Maestro\Core\Task\NullTask`
+
+Does nothing.
+
+## Description
+This task can be used as a placeholder.

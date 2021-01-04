@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitSurvey &#8212; Maestro 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HttpRequest" href="HttpRequest.html" />
+    <link rel="prev" title="GitRepository" href="GitRepository.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="gitsurvey">
+<h1>GitSurvey<a class="headerlink" href="#gitsurvey" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Maestro\Git\Task\GitSurveyTask</span></code></p>
+<p>Perform a GiT survey</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This task will collect and publish information about your GiT repository:</p>
+<ul class="simple">
+<li><p>The latest tag</p></li>
+<li><p>The number of commits ahead of the latest tag</p></li>
+<li><p>The latest commit message
+It will leave a <code class="docutils literal notranslate"><span class="pre">GitSurveyFact</span></code>in the pipeline.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../contents.html">Maestro</a></h1>
+
+
+
+
+
+
+
+
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../task.html">Tasks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Cat.html">Cat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Closure.html">Closure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Composer.html">Composer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Conditional.html">Conditional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Fact.html">Fact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="File.html">File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GitCommit.html">GitCommit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GitDiff.html">GitDiff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GitRepository.html">GitRepository</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GitSurvey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HttpRequest.html">HttpRequest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JsonApi.html">JsonApi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JsonApiSurvey.html">JsonApiSurvey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JsonMerge.html">JsonMerge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkdownSection.html">MarkdownSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Null.html">Null</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel.html">Parallel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PhpProce.html">PhpProce</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ReplaceLine.html">ReplaceLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sequential.html">Sequential</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SetDirectory.html">SetDirectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SetReportingGroup.html">SetReportingGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Template.html">Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Yaml.html">Yaml</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../contents.html">Documentation overview</a><ul>
+  <li><a href="../task.html">Tasks</a><ul>
+      <li>Previous: <a href="GitRepository.html" title="previous chapter">GitRepository</a></li>
+      <li>Next: <a href="HttpRequest.html" title="next chapter">HttpRequest</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Daniel Leech.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/task/GitSurvey.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
