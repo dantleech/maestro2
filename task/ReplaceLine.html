@@ -48,11 +48,11 @@
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>For example, replace the Travis badge with the Github actions badge:</p>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ReplaceLineTask</span><span class="p">(</span>
-    <span class="nx">group</span><span class="o">:</span> <span class="nv">$repository</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">(),</span>
+    <span class="nx">group</span><span class="o">:</span> <span class="s1">&#39;my-repository&#39;</span><span class="p">,</span>
     <span class="nx">path</span><span class="o">:</span> <span class="s1">&#39;README.md&#39;</span><span class="p">,</span>
     <span class="nx">regexp</span><span class="o">:</span> <span class="s1">&#39;{Build Status.*travis}&#39;</span><span class="p">,</span>
-    <span class="nx">line</span><span class="o">:</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;![CI](https://github.com/phpactor/%s/workflows/CI/badge.svg)&#39;</span><span class="p">,</span> <span class="nv">$repository</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">()),</span>
-<span class="p">),</span>
+    <span class="nx">line</span><span class="o">:</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;![CI](https://github.com/phpactor/%s/workflows/CI/badge.svg)&#39;</span><span class="p">,</span> <span class="s1">&#39;my-repository&#39;</span><span class="p">),</span>
+<span class="p">);</span>
 </pre></div>
 </div>
 </div>

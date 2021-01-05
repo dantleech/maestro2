@@ -13,7 +13,7 @@ Run a PHP process
 Similar to the `ProcessTask` but will prefix the PHP binary to the executed
 commands.
 ```php
-new PhpProcess('./vendor/bin/phpunit')
+new PhpProcessTask('./vendor/bin/phpunit')
 ```
 Is equivilent to running
 ```

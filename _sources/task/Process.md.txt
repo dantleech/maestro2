@@ -27,14 +27,14 @@ new ProcessTask(
 Alternatively you can use a string for the command:
 ```php
 new ProcessTask(
-    cmd: 'gh pr create --fill -t "some commit message"'
+    cmd: 'gh pr create --fill -t "some commit message"',
     allowFailure: true
 )
 ```
 You can specify a closure which can be executed afterwards
 ```php
 new ProcessTask(
-    cmd: 'gh pr create --fill -t "some commit message"'
+    cmd: 'gh pr create --fill -t "some commit message"',
     after: function (ProcessResult $result, Context $context) {
         // do something
     }

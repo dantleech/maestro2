@@ -62,14 +62,14 @@
 </div>
 <p>Alternatively you can use a string for the command:</p>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ProcessTask</span><span class="p">(</span>
-    <span class="nx">cmd</span><span class="o">:</span> <span class="s1">&#39;gh pr create --fill -t &quot;some commit message&quot;&#39;</span>
+    <span class="nx">cmd</span><span class="o">:</span> <span class="s1">&#39;gh pr create --fill -t &quot;some commit message&quot;&#39;</span><span class="p">,</span>
     <span class="nx">allowFailure</span><span class="o">:</span> <span class="k">true</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>You can specify a closure which can be executed afterwards</p>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ProcessTask</span><span class="p">(</span>
-    <span class="nx">cmd</span><span class="o">:</span> <span class="s1">&#39;gh pr create --fill -t &quot;some commit message&quot;&#39;</span>
+    <span class="nx">cmd</span><span class="o">:</span> <span class="s1">&#39;gh pr create --fill -t &quot;some commit message&quot;&#39;</span><span class="p">,</span>
     <span class="nx">after</span><span class="o">:</span> <span class="k">function</span> <span class="p">(</span><span class="nx">ProcessResult</span> <span class="nv">$result</span><span class="p">,</span> <span class="nx">Context</span> <span class="nv">$context</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// do something</span>
     <span class="p">}</span>

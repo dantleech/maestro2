@@ -45,21 +45,23 @@
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>For example to checkout multiple repsoitories at the same time:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new</span> <span class="n">ParallelTask</span><span class="p">([</span>
-    <span class="n">new</span> <span class="n">RepositoryTask</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="s1">&#39;https://example.com/foobar/barfoo&#39;</span><span class="p">,</span> <span class="s1">&#39;barfoo&#39;</span><span class="p">),</span>
-    <span class="n">new</span> <span class="n">RepositoryTask</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="s1">&#39;https://example.com/foobar/foobar&#39;</span><span class="p">,</span> <span class="s1">&#39;foobar&#39;</span><span class="p">),</span>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ParallelTask</span><span class="p">([</span>
+    <span class="c1">// repository 1,</span>
+    <span class="c1">// repository 2,</span>
 <span class="p">])</span>
 </pre></div>
 </div>
-<p>Typically you would use this task to setup pipelines in parallel:
-new ParallelTask([
-new SequenceTask(
-// other tasks
-),
-new SequenceTask(
-// other tasks
-),
-])</p>
+<p>Typically you would use this task to setup pipelines in parallel:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ParallelTask</span><span class="p">([</span>
+    <span class="k">new</span> <span class="nx">SequentialTask</span><span class="p">([</span>
+      <span class="c1">// other tasks</span>
+    <span class="p">]),</span>
+    <span class="k">new</span> <span class="nx">SequentialTask</span><span class="p">([</span>
+      <span class="c1">// other tasks</span>
+    <span class="p">]),</span>
+<span class="p">])</span>
+</pre></div>
+</div>
 </div>
 </div>
 

@@ -40,15 +40,15 @@
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>Use this task to establish a GIT repository in your workspace.</p>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">GitRepositoryTask</span><span class="p">(</span>
-    <span class="nx">url</span><span class="o">:</span> <span class="nv">$repositoryNode</span><span class="o">-&gt;</span><span class="na">url</span><span class="p">(),</span>
-    <span class="nx">path</span><span class="o">:</span> <span class="nv">$repositoryNode</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">()</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://example.com/my-repo&#39;</span><span class="p">,</span>
+    <span class="nx">path</span><span class="o">:</span> <span class="s1">&#39;my-repo&#39;</span>
 <span class="p">);</span>
 </pre></div>
 </div>
 <p>Typically you will also want to change the working directory to
 this repository so that subsequent tasks operate on it:</p>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">SequentialTask</span><span class="p">([</span>
-    <span class="k">new</span> <span class="nx">GitRepositoryTask</span><span class="p">(</span><span class="nx">url</span><span class="o">:</span> <span class="nv">$url</span><span class="p">,</span> <span class="nx">path</span><span class="o">:</span> <span class="s1">&#39;my-repo&#39;</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">GitRepositoryTask</span><span class="p">(</span><span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://example.com/my-repo&#39;</span><span class="p">,</span> <span class="nx">path</span><span class="o">:</span> <span class="s1">&#39;my-repo&#39;</span><span class="p">),</span>
     <span class="k">new</span> <span class="nx">SetDirectoryTask</span><span class="p">(</span><span class="s1">&#39;my-repo&#39;</span><span class="p">)</span>
 <span class="p">]);</span>
 </pre></div>

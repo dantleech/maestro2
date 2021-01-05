@@ -22,7 +22,7 @@ this location in `maestro.json`:
 }
 ```
 Render a README file:
-```
+```php
 new TemplateTask(
     template: 'README.md.twig',
     target: 'README.md'

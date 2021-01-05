@@ -8,9 +8,13 @@ Publish contents of text file
 - **path** Path to file in workspace - `string`
 
 ## Description
-This task is useful for debugging, for example, to check the contents of
-`README.md`:
+This task is useful for debugging. If you have a README file in your
+workspace:
+```text
+Hello World
 ```
+And the task:
+```php
 new CatTask(
    path: 'README.md'
 );

@@ -23,7 +23,7 @@ new JsonMergeTask(
     path: 'composer.json',
     filter: function (stdClass $object) {
         unset($object->{'minimum-stability'});
-        return $ibject;
+        return $object;
     }
 );
 ```

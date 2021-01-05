@@ -16,5 +16,6 @@ new SequentialTask([
     new SetDirectoryTask('foobar/baz'),
     new SetDirectoryTask('foobar/barfoo')
 ])
+```
 The above will change directories to `foobar/baz` and `foobar/barfoo`
 respectively.

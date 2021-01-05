@@ -49,26 +49,26 @@
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>Use this task to send a HTTP request. The response will be made available
 in the next task.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new</span> <span class="n">HttpRequestTask</span><span class="p">(</span>
-    <span class="n">url</span><span class="p">:</span> <span class="s1">&#39;https://www.example.com/do/something&#39;</span><span class="p">,</span>
-    <span class="n">method</span><span class="p">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
-    <span class="n">body</span><span class="p">:</span> <span class="s1">&#39;hello&#39;</span>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">HttpRequestTask</span><span class="p">(</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;https://www.example.com/do/something&#39;</span><span class="p">,</span>
+    <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+    <span class="nx">body</span><span class="o">:</span> <span class="s1">&#39;hello&#39;</span>
 <span class="p">);</span>
 </pre></div>
 </div>
 <p>You can access the results in the subsequent task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>new SequenceTask([
-    new HttpRequestTask(
-        url: &#39;https://www.example.com/do/something&#39;
-    ),
-    new ClosureTask(
-        closure: function (Context $context) {
-            $response = $context-&gt;result();
-            // do something
-            return $context;
-        }
-    )
-]);
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">SequentialTask</span><span class="p">([</span>
+    <span class="k">new</span> <span class="nx">HttpRequestTask</span><span class="p">(</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;https://www.example.com/do/something&#39;</span>
+    <span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Maestro\Core\Task\ClosureTask</span><span class="p">(</span>
+        <span class="nx">closure</span><span class="o">:</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Context</span> <span class="nv">$context</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$context</span><span class="o">-&gt;</span><span class="na">result</span><span class="p">();</span>
+            <span class="c1">// do something</span>
+            <span class="k">return</span> <span class="nv">$context</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+<span class="p">]);</span>
 </pre></div>
 </div>
 </div>
