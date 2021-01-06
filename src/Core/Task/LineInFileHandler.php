@@ -59,7 +59,7 @@ class LineInFileHandler implements Handler
 
         if (false === $found && $task->append()) {
             $lastLineOffset = array_key_last($after);
-            if ($after[$lastLineOffset] !== "\n") {
+            if ($lastLineOffset && $after[$lastLineOffset] !== "\n") {
                 $after[] = "\n";
             }
             $after[] = $task->line();
