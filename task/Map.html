@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Parallel &#8212; Maestro 0.1 documentation</title>
+    <title>Map &#8212; Maestro 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="PhpProcess" href="PhpProcess.html" />
-    <link rel="prev" title="Null" href="Null.html" />
+    <link rel="next" title="MarkdownSection" href="MarkdownSection.html" />
+    <link rel="prev" title="LineInFile" href="LineInFile.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -32,34 +32,23 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="parallel">
-<h1>Parallel<a class="headerlink" href="#parallel" title="Permalink to this headline">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">Maestro\Core\Task\ParallelTask</span></code></p>
-<p>Execute multiple tasks in parallel</p>
+  <div class="section" id="map">
+<h1>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Maestro\Core\Task\MapTask</span></code></p>
+<p>Map a values to tasks.</p>
 <div class="section" id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><strong>tasks</strong> Tasks to run in parallel - <code class="docutils literal notranslate"><span class="pre">array&lt;array-key,</span> <span class="pre">Task&gt;</span></code></p></li>
+<li><p><strong>array</strong> Pass each item of this array to the factory. - <code class="docutils literal notranslate"><span class="pre">array</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>For example to checkout multiple repsoitories at the same time:</p>
-<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ParallelTask</span><span class="p">([</span>
-    <span class="c1">// repository 1,</span>
-    <span class="c1">// repository 2,</span>
-<span class="p">])</span>
-</pre></div>
-</div>
-<p>Typically you would use this task to setup pipelines in parallel:</p>
-<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">ParallelTask</span><span class="p">([</span>
-    <span class="k">new</span> <span class="nx">SequentialTask</span><span class="p">([</span>
-      <span class="c1">// other tasks</span>
-    <span class="p">]),</span>
-    <span class="k">new</span> <span class="nx">SequentialTask</span><span class="p">([</span>
-      <span class="c1">// other tasks</span>
-    <span class="p">]),</span>
-<span class="p">])</span>
+<p>Use this to add a <em>sequence</em> of tasks to the pipeline for each item of a given array.</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">new</span> <span class="nx">MapTask</span><span class="p">(</span>
+    <span class="nx">factory</span><span class="o">:</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$var</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">NullTask</span><span class="p">(),</span>
+    <span class="k">array</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">],</span>
+<span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -109,10 +98,10 @@
 <li class="toctree-l2"><a class="reference internal" href="JsonApiSurvey.html">JsonApiSurvey</a></li>
 <li class="toctree-l2"><a class="reference internal" href="JsonMerge.html">JsonMerge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="LineInFile.html">LineInFile</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Map.html">Map</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MarkdownSection.html">MarkdownSection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Null.html">Null</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Parallel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parallel.html">Parallel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PhpProcess.html">PhpProcess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Process.html">Process</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Sequential.html">Sequential</a></li>
@@ -129,8 +118,8 @@
 <ul>
   <li><a href="../contents.html">Documentation overview</a><ul>
   <li><a href="../task.html">Tasks</a><ul>
-      <li>Previous: <a href="Null.html" title="previous chapter">Null</a></li>
-      <li>Next: <a href="PhpProcess.html" title="next chapter">PhpProcess</a></li>
+      <li>Previous: <a href="LineInFile.html" title="previous chapter">LineInFile</a></li>
+      <li>Next: <a href="MarkdownSection.html" title="next chapter">MarkdownSection</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -165,7 +154,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../_sources/task/Parallel.md.txt"
+      <a href="../_sources/task/Map.md.txt"
           rel="nofollow">Page source</a>
     </div>
 

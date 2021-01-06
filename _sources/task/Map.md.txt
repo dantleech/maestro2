@@ -1,0 +1,17 @@
+# Map
+
+`Maestro\Core\Task\MapTask`
+
+Map a values to tasks.
+
+## Parameters
+- **array** Pass each item of this array to the factory. - `array`
+
+## Description
+Use this to add a _sequence_ of tasks to the pipeline for each item of a given array.
+```php
+new MapTask(
+    factory: fn(string $var) => new NullTask(),
+    array: ['one', 'two'],
+);
+```
