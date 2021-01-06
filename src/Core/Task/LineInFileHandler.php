@@ -58,7 +58,11 @@ class LineInFileHandler implements Handler
         )));
 
         if (false === $found && $task->append()) {
-            $after[] = "\n" . $task->line();
+            $lastLineOffset = array_key_last($after);
+            if ($after[$lastLineOffset] !== "\n") {
+                $after[] = "\n";
+            }
+            $after[] = $task->line();
         }
 
         $after = implode('', $after);

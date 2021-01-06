@@ -31,7 +31,7 @@ EOT
         , $this->filesystem()->getContents('text'));
     }
 
-    public function testAddWhenNotExisting(): void
+    public function testAppendWhenNotExisting(): void
     {
         $this->filesystem()->putContents(
             'text',
@@ -39,6 +39,34 @@ EOT
 Line one
 Line two
 Line three
+EOT
+        );
+
+        $this->runTask(new LineInFileTask(
+            path: 'text',
+            regexp: "{four}",
+            line: "Line four",
+            append: true
+        ));
+
+        self::assertEquals(<<<'EOT'
+Line one
+Line two
+Line three
+Line four
+EOT
+        , $this->filesystem()->getContents('text'));
+    }
+
+    public function testTrimTrailingWhitepaceWhenAppending(): void
+    {
+        $this->filesystem()->putContents(
+            'text',
+            <<<'EOT'
+Line one
+Line two
+Line three
+
 EOT
         );
 
