@@ -1,0 +1,24 @@
+# LineInFile
+
+`Maestro\Core\Task\LineInFileTask`
+
+Manage a line in a file
+
+## Parameters
+- **path** Workspace path to file to replace a line in - `string`
+- **regexp** Optional regular expression to match - `string`
+- **line** Line which should replace the matched line - `string`
+- **append** Append line to the end of the file if it does not exist or if the regexp is not found - `bool`
+
+## Description
+Replace or append a line to a file. For example:
+- Replace the Travis badge with the Github actions badge:
+- Manage a `.gitignore` file
+```php
+new LineInFileTask(
+    group: 'my-repository',
+    path: 'README.md',
+    regexp: '{Build Status.*travis}',
+    line: sprintf('![CI](https://github.com/phpactor/%s/workflows/CI/badge.svg)', 'my-repository'),
+);
+```
