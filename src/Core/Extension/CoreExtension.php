@@ -34,7 +34,7 @@ use Maestro\Core\Task\JsonMergeHandler;
 use Maestro\Core\Task\NullTaskHandler;
 use Maestro\Core\Task\ParallelHandler;
 use Maestro\Core\Task\ProcessHandler;
-use Maestro\Core\Task\ReplaceLineHandler;
+use Maestro\Core\Task\LineInFileHandler;
 use Maestro\Core\Task\SequentialHandler;
 use Maestro\Core\Task\TemplateHandler;
 use Maestro\Core\Task\YamlHandler;
@@ -145,7 +145,7 @@ class CoreExtension implements Extension
                 ),
                 new JsonMergeHandler(),
                 new YamlHandler(),
-                new ReplaceLineHandler(),
+                new LineInFileHandler(),
                 new GitDiffHandler($container->get(ProcessRunner::class)),
                 new GitCommitHandler($container->get(Queue::class)),
                 new FactHandler(),

@@ -7,19 +7,20 @@ use Amp\Success;
 use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\Report\Report;
 use Maestro\Core\Report\TaskReportPublisher;
+use Maestro\Core\Task\LineInFileTask;
 
-class ReplaceLineHandler implements Handler
+class LineInFileHandler implements Handler
 {
     private const NEWLINE_PATTERN = '\\r\\n|\\n|\\r';
 
     public function taskFqn(): string
     {
-        return ReplaceLineTask::class;
+        return LineInFileTask::class;
     }
 
     public function run(Task $task, Context $context): Promise
     {
-        assert($task instanceof ReplaceLineTask);
+        assert($task instanceof LineInFileTask);
         $this->runReplaceLine(
             $task,
             $context->service(Filesystem::class),
@@ -29,7 +30,7 @@ class ReplaceLineHandler implements Handler
         return new Success($context);
     }
 
-    private function runReplaceLine(ReplaceLineTask $task, Filesystem $filesystem, TaskReportPublisher $publisher): void
+    private function runReplaceLine(LineInFileTask $task, Filesystem $filesystem, TaskReportPublisher $publisher): void
     {
         if (!$filesystem->exists($task->path())) {
             $publisher->publish(Report::warn(sprintf(
@@ -40,8 +41,11 @@ class ReplaceLineHandler implements Handler
         }
         
         $before = $filesystem->getContents($task->path());
-        $after = implode('', array_map(function (string $lineOrDelim) use ($task): string {
+
+        $found = false;
+        $after = array_map(function (string $lineOrDelim) use ($task, &$found): string {
             if (preg_match($task->regexp(), $lineOrDelim)) {
+                $found = true;
                 return $task->line();
             }
         
@@ -51,7 +55,13 @@ class ReplaceLineHandler implements Handler
             $before,
             -1,
             PREG_SPLIT_DELIM_CAPTURE
-        ))));
+        )));
+
+        if (false === $found && $task->append()) {
+            $after[] = "\n" . $task->line();
+        }
+
+        $after = implode('', $after);
         
         if ($before !== $after) {
             $filesystem->putContents($task->path(), $after);

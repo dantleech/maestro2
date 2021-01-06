@@ -18,18 +18,20 @@ use Stringable;
  * );
  * ```
  */
-class ReplaceLineTask implements Task, Stringable
+class LineInFileTask implements Task, Stringable
 {
     /**
      * @param string $path Workspace path to file to replace a line in
      * @param string $regexp Regular expression to match
      * @param string $line Line which should replace the matched line
+     * @param bool $append Append line to the end of the file if not found with `$regex`
      */
     public function __construct(
         private string $path,
         private string $regexp,
         private string $line,
-        private ?string $group = null
+        private ?string $group = null,
+        private bool $append = false
     ) {
     }
 
@@ -56,5 +58,10 @@ class ReplaceLineTask implements Task, Stringable
     public function __toString(): string
     {
         return 'Replacing line in file';
+    }
+
+    public function append(): bool
+    {
+        return $this->append;
     }
 }
