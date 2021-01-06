@@ -25,9 +25,9 @@ class LineInFileTask implements Task, Stringable
 {
     /**
      * @param string $path Workspace path to file to replace a line in
-     * @param string $regexp Regular expression to match
+     * @param string $regexp Optional regular expression to match
      * @param string $line Line which should replace the matched line
-     * @param bool $append Append line to the end of the file if not found with `$regex`
+     * @param bool $append Append line to the end of the file if it does not exist or if the regexp is not found
      */
     public function __construct(
         private string $path,
