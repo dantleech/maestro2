@@ -5,9 +5,12 @@ namespace Maestro\Core\Task;
 use Stringable;
 
 /**
- * Replace a line in a file
+ * Manage a line in a file
  *
- * For example, replace the Travis badge with the Github actions badge:
+ * Replace or append a line to a file. For example:
+ *
+ * - Replace the Travis badge with the Github actions badge:
+ * - Manage a `.gitignore` file
  *
  * ```php:task
  * new ReplaceLineTask(
@@ -28,8 +31,8 @@ class LineInFileTask implements Task, Stringable
      */
     public function __construct(
         private string $path,
-        private string $regexp,
         private string $line,
+        private ?string $regexp = null,
         private ?string $group = null,
         private bool $append = false
     ) {
@@ -40,7 +43,7 @@ class LineInFileTask implements Task, Stringable
         return $this->path;
     }
 
-    public function regexp(): string
+    public function regexp(): ?string
     {
         return $this->regexp;
     }

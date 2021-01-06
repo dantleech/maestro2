@@ -82,4 +82,41 @@ Line three
 EOT
         , $this->filesystem()->getContents('text'));
     }
+
+    public function testByDefaultRegexIsLine(): void
+    {
+        $this->filesystem()->putContents(
+            'text',
+            <<<'EOT'
+Line one
+Line two
+EOT
+        );
+
+        $this->runTask(new LineInFileTask(
+            path: 'text',
+            line: "Line three",
+            append: true
+        ));
+
+        self::assertEquals(<<<'EOT'
+Line one
+Line two
+Line three
+EOT
+        , $this->filesystem()->getContents('text'));
+
+        $this->runTask(new LineInFileTask(
+            path: 'text',
+            line: "Line three",
+            append: true
+        ));
+
+        self::assertEquals(<<<'EOT'
+Line one
+Line two
+Line three
+EOT
+        , $this->filesystem()->getContents('text'));
+    }
 }

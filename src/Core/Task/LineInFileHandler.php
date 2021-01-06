@@ -44,7 +44,7 @@ class LineInFileHandler implements Handler
 
         $found = false;
         $after = array_map(function (string $lineOrDelim) use ($task, &$found): string {
-            if (preg_match($task->regexp(), $lineOrDelim)) {
+            if ($this->isMatch($task, $lineOrDelim)) {
                 $found = true;
                 return $task->line();
             }
@@ -69,5 +69,15 @@ class LineInFileHandler implements Handler
                 Report::ok(sprintf('Replaced line(s) in "%s"', $task->path()))
             );
         }
+    }
+
+    private function isMatch(LineInFileTask $task, string $lineOrDelim): bool
+    {
+        $regexp = $task->regexp();
+        if ($regexp) {
+            return (bool)preg_match($regexp, $lineOrDelim);
+        }
+
+        return $task->line() === $lineOrDelim;
     }
 }
