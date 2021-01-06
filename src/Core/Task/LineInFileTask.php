@@ -13,7 +13,7 @@ use Stringable;
  * - Manage a `.gitignore` file
  *
  * ```php:task
- * new ReplaceLineTask(
+ * new LineInFileTask(
  *     group: 'my-repository',
  *     path: 'README.md',
  *     regexp: '{Build Status.*travis}',
