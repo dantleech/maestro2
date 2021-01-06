@@ -28,7 +28,7 @@ class MapHandler implements Handler
             $factory = $task->factory();
 
             $context = yield $this->queue->enqueue(new TaskContext(
-                new SequentialTask(array_values(array_map($factory, $task->vars()))),
+                new SequentialTask(array_values(array_map($factory, $task->array()))),
                 $context
             ));
 

@@ -7,15 +7,22 @@ use Closure;
 /**
  * Map a values to tasks.
  *
- * Use this to add a _sequence_ of tasks to the pipeline for each
- * set of values.
+ * Use this to add a _sequence_ of tasks to the pipeline for each item of a given array.
+ *
+ * ```php
+ * new MapTask(
+ *     factory: fn(string $var) => new NullTask(),
+ *     array: ['one', 'two'],
+ * );
+ * ```
  */
 class MapTask implements Task
 {
     /**
-     * @param Closure(array<mixed,mixed>): Task $factory
+     * @param Closure(array<mixed,mixed>): Task factory should return a `Task` for each given item.
+     * @param array $array Pass each item of this array to the factory.
      */
-    public function __construct(private Closure $factory, private array $vars)
+    public function __construct(private Closure $factory, private array $array)
     {
     }
 
@@ -27,8 +34,8 @@ class MapTask implements Task
         return $this->factory;
     }
 
-    public function vars(): array
+    public function array(): array
     {
-        return $this->vars;
+        return $this->array;
     }
 }
